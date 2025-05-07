@@ -52,7 +52,7 @@ const SocialMediaBar = () => {
               <MessageCircle size={36} className="text-flyboy-gold" />
             </div>
           </a>
-          {/* TikTok Icon (using custom SVG since it's not in lucide-react) */}
+          {/* TikTok Icon (improved version) */}
           <a
             href="https://tiktok.com/@flyboy"
             target="_blank"
@@ -70,7 +70,7 @@ const SocialMediaBar = () => {
                 className="text-flyboy-gold"
               >
                 <path 
-                  d="M16.6 5.82C16.6 5.82 16.895 5.82 17.25 5.82C17.7 5.82 18.0332 5.82 18.0332 5.82V9.8C18.0332 9.8 17.0574 9.8 16.6 9.8C13.2 9.8 13.2 13 13.2 13V21.5C13.2 21.5 10 21.5 10 21.5V13C10 13 10 9.8 6.6 9.8C6.6 9.8 6.6 6.8 6.6 6.8C8.98324 6.8 10 4.9 10 4.9V4C10 3.5 10 2.5 11.1 2.5H14.1C14.1 2.5 14.1 4.28647 16.6 5.82Z" 
+                  d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298.001.595.038.88.11V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.95 4.37A6.33 6.33 0 0 0 15.34 16V8.73a8.16 8.16 0 0 0 4.25 1.25V6.69z" 
                   stroke="currentColor" 
                   strokeWidth="1.5" 
                   strokeLinecap="round" 
