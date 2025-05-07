@@ -1,12 +1,36 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Music, Disc, Volume2, Headphones } from 'lucide-react';
 
 const About = () => {
+  useEffect(() => {
+    // Scroll to top on page load
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="min-h-screen py-24 bg-gradient-hero">
-      <div className="container">
+    <div className="min-h-screen py-24 bg-gradient-hero relative overflow-hidden">
+      {/* Animated music elements */}
+      {Array(15).fill(0).map((_, i) => (
+        <div 
+          key={i} 
+          className="absolute animate-float"
+          style={{ 
+            left: `${Math.random() * 100}%`, 
+            top: `${Math.random() * 100}%`,
+            animationDuration: `${3 + Math.random() * 7}s`,
+            animationDelay: `${Math.random() * 5}s`
+          }}
+        >
+          {i % 4 === 0 ? <Music size={20} className="text-flyboy-gold opacity-20" /> : 
+           i % 4 === 1 ? <Disc size={20} className="text-flyboy-gold opacity-20" /> :
+           i % 4 === 2 ? <Volume2 size={20} className="text-flyboy-gold opacity-20" /> :
+           <Headphones size={20} className="text-flyboy-gold opacity-20" />}
+        </div>
+      ))}
+
+      <div className="container relative z-10">
         <div className="flex items-center mb-6">
           <Link to="/" className="text-white hover:text-flyboy-gold flex items-center gap-2 transition-colors">
             <ArrowRight size={20} />
@@ -14,40 +38,44 @@ const About = () => {
           </Link>
         </div>
         
-        <h1 className="text-4xl md:text-5xl font-bold text-flyboy-gold mb-12 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold text-flyboy-gold mb-12 text-center glow-text">
           نبذة عن FLY BOY
         </h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div>
+          <div className="relative group">
+            <div className="absolute inset-0 bg-flyboy-gold blur-md opacity-20 group-hover:opacity-30 transition-opacity rounded-lg"></div>
             <img 
               src="/lovable-uploads/beedc4c4-95b4-4570-b85b-61e8853a966b.png" 
               alt="FLY BOY DJ" 
-              className="w-full h-auto rounded-lg shadow-xl"
+              className="w-full h-auto rounded-lg shadow-xl relative z-10"
             />
+            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-flyboy-purple border-2 border-flyboy-gold rounded-full flex items-center justify-center animate-pulse">
+              <Disc size={32} className="text-flyboy-gold" />
+            </div>
           </div>
           
           <div className="space-y-6 text-white">
-            <p className="text-xl leading-relaxed">
+            <p className="text-xl leading-relaxed animate-fade-in">
               بدأت مسيرتي الموسيقية منذ أكثر من عشر سنوات، حيث وجدت شغفي في عالم تنسيق الموسيقى وفن الـ DJ. تخصصت في البداية في موسيقى الهاوس والإلكترونيك، ثم توسعت لأشمل أنماطًا متنوعة من الموسيقى العربية والعالمية.
             </p>
             
-            <p className="text-xl leading-relaxed">
+            <p className="text-xl leading-relaxed animate-fade-in" style={{animationDelay: "0.2s"}}>
               حصلت على تدريب احترافي في أفضل مدارس الـ DJ العالمية، وعملت مع نخبة من المنتجين الموسيقيين الذين أثروا أسلوبي وطوروا مهاراتي.
             </p>
             
-            <p className="text-xl leading-relaxed">
+            <p className="text-xl leading-relaxed animate-fade-in" style={{animationDelay: "0.4s"}}>
               أقدم حاليًا عروضي في أرقى النوادي والمناسبات في منطقة الخليج والشرق الأوسط، وأتميز بقدرتي على قراءة الجمهور وتلبية أذواقهم الموسيقية المختلفة.
             </p>
             
-            <div className="pt-6">
-              <h3 className="text-2xl font-bold text-flyboy-gold mb-4">خبراتي تشمل:</h3>
+            <div className="pt-6 animate-fade-in" style={{animationDelay: "0.6s"}}>
+              <h3 className="text-2xl font-bold text-flyboy-gold mb-4 glow-text">خبراتي تشمل:</h3>
               <ul className="list-disc list-inside space-y-2 text-lg">
-                <li>حفلات الشاطئ وأمسيات البحر</li>
-                <li>المهرجانات الموسيقية الكبرى</li>
-                <li>النوادي الليلية والحفلات الخاصة</li>
-                <li>المناسبات الشخصية والشركات</li>
-                <li>تنسيق وإنتاج المقاطع الموسيقية</li>
+                <li className="hover:text-flyboy-gold transition-colors cursor-default">حفلات الشاطئ وأمسيات البحر</li>
+                <li className="hover:text-flyboy-gold transition-colors cursor-default">المهرجانات الموسيقية الكبرى</li>
+                <li className="hover:text-flyboy-gold transition-colors cursor-default">النوادي الليلية والحفلات الخاصة</li>
+                <li className="hover:text-flyboy-gold transition-colors cursor-default">المناسبات الشخصية والشركات</li>
+                <li className="hover:text-flyboy-gold transition-colors cursor-default">تنسيق وإنتاج المقاطع الموسيقية</li>
               </ul>
             </div>
           </div>

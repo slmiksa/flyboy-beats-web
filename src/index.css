@@ -71,4 +71,52 @@
     content: '';
     @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-flyboy-gold -mb-2;
   }
+  
+  .glow-text {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 0 0 20px rgba(212, 175, 55, 0.3);
+  }
+  
+  .pulse-glow {
+    animation: pulse-glow 2s infinite;
+  }
 }
+
+/* New animations */
+@keyframes equalizer {
+  0% { height: 5%; }
+  100% { height: 90%; }
+}
+
+@keyframes pulse-glow {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.6));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.8));
+  }
+  100% {
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.6));
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-20px) rotate(10deg);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.2;
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
+  }
+}
+
