@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,19 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// FlyBoy Custom Colors
+				flyboy: {
+					dark: '#1a0933',
+					purple: '#4a1a6c',
+					gold: '#d4af37',
+					light: '#f7f7f7',
+					accent: '#6c2e9c'
+				},
+				whatsapp: '#25D366'
+			},
+			backgroundImage: {
+				'gradient-hero': 'linear-gradient(to bottom right, #4a1a6c, #1a0933)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +97,21 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				marquee: {
+					'0%': { transform: 'translateX(0%)' },
+					'100%': { transform: 'translateX(-100%)' }
+				},
+				fadeIn: {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'marquee': 'marquee 25s linear infinite',
+				'fade-in': 'fadeIn 1.5s ease-in-out'
 			}
 		}
 	},
