@@ -1,17 +1,18 @@
 
 import React from 'react';
+import { Headphones } from 'lucide-react';
 
 const events = [
   {
     id: 1,
     title: 'Festival',
-    image: 'https://images.unsplash.com/photo-1522008629172-0c17a4294bfb',
+    image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3',
     whatsapp: 'https://wa.me/966500000000?text=استفسار%20عن%20فعالية%20Festival'
   },
   {
     id: 2,
     title: 'Beach Party',
-    image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3',
+    image: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec',
     whatsapp: 'https://wa.me/966500000000?text=استفسار%20عن%20فعالية%20Beach%20Party'
   },
   {
@@ -23,7 +24,7 @@ const events = [
   {
     id: 4,
     title: 'Club Mix',
-    image: 'https://images.unsplash.com/photo-1571266752271-5cc6e71de3c4',
+    image: 'https://images.unsplash.com/photo-1576525865260-9f0e7cfb02b3',
     whatsapp: 'https://wa.me/966500000000?text=استفسار%20عن%20فعالية%20Club%20Mix'
   },
 ];
@@ -32,7 +33,17 @@ const EventsSection = () => {
   return (
     <section className="py-16 bg-flyboy-dark">
       <div className="container">
-        <h2 className="section-title text-flyboy-gold">حفلاتي</h2>
+        <h2 className="section-title text-flyboy-gold relative">
+          حفلاتي
+          <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 text-flyboy-gold animate-float pulse-glow">
+            <Headphones className="w-10 h-10" />
+            <div className="equalizer-container absolute left-1/2 -top-1 transform -translate-x-1/2">
+              <div className="equalizer-bar"></div>
+              <div className="equalizer-bar"></div>
+              <div className="equalizer-bar"></div>
+            </div>
+          </div>
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {events.map((event) => (
             <div 
