@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Music, Headphones, Star } from 'lucide-react';
 const Footer = () => {
@@ -21,9 +22,17 @@ const Footer = () => {
           </div>
           
           <div className="mt-8 text-center">
-            <p className="text-white opacity-75">
+            <p className="text-white opacity-75 mb-2">
               جميع الحقوق محفوظة &copy; {new Date().getFullYear()} - FLY BOY
             </p>
+            <a 
+              href="https://www.trndsky.com/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-flyboy-gold hover:text-white transition-colors text-sm inline-block"
+            >
+              برمجة وتطوير TRNDSKY
+            </a>
           </div>
         </div>
       </div>
