@@ -1,7 +1,6 @@
 
 import React from 'react';
 import Footer from './Footer';
-import SocialMediaBar from './SocialMediaBar';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,7 +12,6 @@ const Layout = ({ children }: LayoutProps) => {
       <main className="flex-1">
         {children}
       </main>
-      <SocialMediaBar />
       <Footer />
     </div>
   );
