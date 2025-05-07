@@ -26,7 +26,7 @@ const Footer = () => {
               جميع الحقوق محفوظة &copy; {new Date().getFullYear()} - FLY BOY
             </p>
             <a 
-              href="https://www.trndsky.com/" 
+              href="http://trndsky.com" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-flyboy-gold hover:text-white transition-colors text-sm inline-block"
