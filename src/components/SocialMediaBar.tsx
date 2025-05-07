@@ -91,7 +91,7 @@ const SocialMediaBar = () => {
               <Youtube size={36} className="text-flyboy-gold" />
             </div>
           </a>
-          {/* Jako Icon (custom text) */}
+          {/* Jako Icon (using the provided image) */}
           <a
             href="#jako"
             target="_blank"
@@ -100,7 +100,13 @@ const SocialMediaBar = () => {
             aria-label="Jako"
           >
             <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40 flex items-center justify-center" style={{ minWidth: '60px', minHeight: '60px' }}>
-              <span className="text-flyboy-gold font-bold text-xl">جاكو</span>
+              <img 
+                src="/lovable-uploads/8bb79f14-bc71-4f2d-9894-5f4e7915da4b.png" 
+                alt="Jako" 
+                width="36" 
+                height="36" 
+                className="object-contain"
+              />
             </div>
           </a>
         </div>
