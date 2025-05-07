@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Snapchat, Instagram, Twitter } from 'lucide-react';
+import { MessageCircle, Instagram, Twitter } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -16,7 +16,7 @@ const Footer = () => {
               className="text-white hover:text-flyboy-gold transition-colors"
               aria-label="Snapchat"
             >
-              <Snapchat size={30} />
+              <MessageCircle size={30} />
             </a>
             <a
               href="https://instagram.com/flyboy"
