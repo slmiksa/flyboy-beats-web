@@ -1,6 +1,5 @@
 
 import React, { useEffect, useRef } from 'react';
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 // قائمة شركاء النجاح الموسعة مع إضافة شعارات وهمية تخص الموسيقى
 const partners = [
@@ -60,39 +59,40 @@ const partners = [
 const allPartners = [...partners, ...partners];
 
 const PartnersSection = () => {
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    let position = 0;
-    const speed = 0.3; // Adjust scrolling speed - slower for smoother movement
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
     
-    const animate = () => {
-      if (carouselRef.current) {
-        // Increment position for scrolling
-        position += speed;
-        
-        // When we reach the end of first set, reset position
-        const scrollWidth = carouselRef.current.scrollWidth / 2;
-        if (position >= scrollWidth) {
-          position = 0;
-          carouselRef.current.scrollLeft = 0;
-        } else {
-          carouselRef.current.scrollLeft = position;
-        }
+    // Set initial scroll position to 0
+    let scrollPosition = 0;
+    // Adjust scrolling speed - slower is smoother
+    const scrollSpeed = 0.5;
+    let animationId: number;
+    
+    const scroll = () => {
+      // Increment scroll position
+      scrollPosition += scrollSpeed;
+      
+      // If we've scrolled past half the content, reset to beginning
+      if (scrollPosition >= scrollContainer.scrollWidth / 2) {
+        scrollPosition = 0;
       }
       
-      animationRef.current = requestAnimationFrame(animate);
+      // Apply the scroll position
+      scrollContainer.scrollLeft = scrollPosition;
+      
+      // Continue animation
+      animationId = requestAnimationFrame(scroll);
     };
     
-    // Start the animation
-    animationRef.current = requestAnimationFrame(animate);
+    // Start scrolling animation immediately
+    animationId = requestAnimationFrame(scroll);
     
-    // Cleanup function to cancel animation frame when component unmounts
+    // Clean up animation on unmount
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      cancelAnimationFrame(animationId);
     };
   }, []);
 
@@ -103,7 +103,7 @@ const PartnersSection = () => {
         
         <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-8">
           <div 
-            ref={carouselRef}
+            ref={scrollContainerRef}
             className="overflow-hidden whitespace-nowrap"
           >
             <div className="inline-flex gap-8">
