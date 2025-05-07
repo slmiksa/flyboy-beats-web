@@ -58,14 +58,6 @@ const HeroSlider = () => {
     setCurrentSlide(index);
   };
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  };
-
   return (
     <div className="py-6 overflow-hidden bg-flyboy-dark">
       <div className="container">
@@ -141,22 +133,6 @@ const HeroSlider = () => {
               />
             ))}
           </div>
-          
-          {/* Navigation arrows */}
-          <button 
-            onClick={prevSlide}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all"
-            aria-label="Previous slide"
-          >
-            ◀
-          </button>
-          <button 
-            onClick={nextSlide}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all"
-            aria-label="Next slide"
-          >
-            ▶
-          </button>
         </div>
       </div>
     </div>

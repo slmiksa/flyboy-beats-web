@@ -1,7 +1,7 @@
 
 import React, { useRef, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+// قائمة شركاء النجاح الموسعة مع إضافة شعارات وهمية تخص الموسيقى
 const partners = [
   {
     id: 1,
@@ -33,6 +33,26 @@ const partners = [
     name: 'Sound Garden',
     logo: 'https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=200&h=100&fit=crop&auto=format',
   },
+  {
+    id: 7,
+    name: 'Rhythm Records',
+    logo: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=100&fit=crop&auto=format',
+  },
+  {
+    id: 8,
+    name: 'Beats Studio',
+    logo: 'https://images.unsplash.com/photo-1507676184212-d03ab07a01bf?w=200&h=100&fit=crop&auto=format',
+  },
+  {
+    id: 9,
+    name: 'Melody Mix',
+    logo: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=200&h=100&fit=crop&auto=format',
+  },
+  {
+    id: 10,
+    name: 'DJ Collective',
+    logo: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=100&fit=crop&auto=format',
+  },
 ];
 
 const PartnersSection = () => {
@@ -57,10 +77,6 @@ const PartnersSection = () => {
 
   const nextSlide = () => {
     goToSlide(currentIndexRef.current + 1);
-  };
-
-  const prevSlide = () => {
-    goToSlide(currentIndexRef.current - 1);
   };
 
   // Touch handling
@@ -92,7 +108,7 @@ const PartnersSection = () => {
         nextSlide();
       } else {
         // Swipe right, go prev
-        prevSlide();
+        goToSlide(currentIndexRef.current - 1);
       }
     }
     
@@ -160,23 +176,6 @@ const PartnersSection = () => {
               ))}
             </div>
           </div>
-          
-          {/* Navigation buttons */}
-          <button 
-            className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-flyboy-gold text-flyboy-dark flex items-center justify-center z-10 hover:bg-opacity-80 transition-all"
-            onClick={prevSlide}
-            aria-label="Previous partner"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          
-          <button 
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-flyboy-gold text-flyboy-dark flex items-center justify-center z-10 hover:bg-opacity-80 transition-all"
-            onClick={nextSlide}
-            aria-label="Next partner"
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
           
           {/* Indicators */}
           <div className="flex justify-center mt-4 gap-2">
