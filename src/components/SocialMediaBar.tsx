@@ -7,8 +7,8 @@ const SocialMediaBar = () => {
   const isMobile = useIsMobile();
   const iconSize = isMobile ? 20 : 28;
   const iconContainerSize = isMobile ? "w-10 h-10" : "w-14 h-14";
-  // Increase spacing between icons
-  const spacingClass = "space-x-4 md:space-x-6";
+  // Use consistent spacing for all screen sizes
+  const spacingClass = "gap-4 md:gap-6";
 
   return (
     <div className="bg-flyboy-dark py-4">
