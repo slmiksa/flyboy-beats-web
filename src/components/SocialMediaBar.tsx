@@ -1,50 +1,58 @@
+
 import React from 'react';
 import { MessageCircle, Instagram, Twitter, Youtube, Facebook } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
+
 const SocialMediaBar = () => {
+  const isMobile = useIsMobile();
+  const iconSize = isMobile ? 24 : 36;
+  const iconContainerSize = isMobile ? "p-2" : "p-3";
+
   return <div className="bg-flyboy-dark py-3">
       <div className="container flex justify-center">
-        <div className="flex items-center space-x-8 space-x-reverse flex-wrap justify-center gap-y-4">
+        <div className="flex items-center space-x-4 md:space-x-8 space-x-reverse flex-nowrap overflow-x-auto">
           <a href="https://snapchat.com/add/flyboy" target="_blank" rel="noopener noreferrer" className="group" aria-label="Snapchat">
             
           </a>
           <a href="https://instagram.com/flyboy" target="_blank" rel="noopener noreferrer" className="group" aria-label="Instagram">
-            <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40">
-              <Instagram size={36} className="text-flyboy-gold" />
+            <div className={`bg-flyboy-gold bg-opacity-20 rounded-full ${iconContainerSize} transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40`}>
+              <Instagram size={iconSize} className="text-flyboy-gold" />
             </div>
           </a>
           <a href="https://twitter.com/flyboy" target="_blank" rel="noopener noreferrer" className="group" aria-label="Twitter">
-            <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40">
-              <Twitter size={36} className="text-flyboy-gold" />
+            <div className={`bg-flyboy-gold bg-opacity-20 rounded-full ${iconContainerSize} transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40`}>
+              <Twitter size={iconSize} className="text-flyboy-gold" />
             </div>
           </a>
           {/* WhatsApp Icon */}
           <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" className="group" aria-label="WhatsApp">
-            <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40">
-              <MessageCircle size={36} className="text-flyboy-gold" />
+            <div className={`bg-flyboy-gold bg-opacity-20 rounded-full ${iconContainerSize} transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40`}>
+              <MessageCircle size={iconSize} className="text-flyboy-gold" />
             </div>
           </a>
           {/* TikTok Icon */}
           <a href="https://tiktok.com/@flyboy" target="_blank" rel="noopener noreferrer" className="group" aria-label="TikTok">
-            <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-flyboy-gold">
+            <div className={`bg-flyboy-gold bg-opacity-20 rounded-full ${iconContainerSize} transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40`}>
+              <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-flyboy-gold">
                 <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298.001.595.038.88.11V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.95 4.37A6.33 6.33 0 0 0 15.34 16V8.73a8.16 8.16 0 0 0 4.25 1.25V6.69z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </a>
           {/* YouTube Icon */}
           <a href="https://youtube.com/c/flyboy" target="_blank" rel="noopener noreferrer" className="group" aria-label="YouTube">
-            <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40">
-              <Youtube size={36} className="text-flyboy-gold" />
+            <div className={`bg-flyboy-gold bg-opacity-20 rounded-full ${iconContainerSize} transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40`}>
+              <Youtube size={iconSize} className="text-flyboy-gold" />
             </div>
           </a>
           {/* JACO Text Icon */}
           <a href="#jako" target="_blank" rel="noopener noreferrer" className="group" aria-label="JACO">
-            <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40 flex items-center justify-center min-w-[60px]">
-              <span className="text-flyboy-gold font-bold text-xl">JACO</span>
+            <div className={`bg-flyboy-gold bg-opacity-20 rounded-full ${iconContainerSize} transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40 flex items-center justify-center ${isMobile ? "min-w-[48px]" : "min-w-[60px]"}`}>
+              <span className="text-flyboy-gold font-bold text-lg md:text-xl">JACO</span>
             </div>
           </a>
         </div>
       </div>
     </div>;
 };
+
 export default SocialMediaBar;
