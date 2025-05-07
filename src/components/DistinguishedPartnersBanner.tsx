@@ -34,9 +34,12 @@ const DistinguishedPartnersBanner = () => {
         </div>
         
         <div className="flex items-center justify-center mb-2">
-          <h3 className="text-xl font-bold text-flyboy-gold relative inline-block">
-            المتميزين
+          <h3 className="text-xl font-bold text-flyboy-gold relative inline-flex items-center">
             <span className="absolute -top-4 -right-6">
+              <Star className="text-flyboy-gold animate-pulse h-5 w-5" fill="#d4af37" />
+            </span>
+            المتميزين
+            <span className="absolute -top-4 -left-6">
               <Star className="text-flyboy-gold animate-pulse h-5 w-5" fill="#d4af37" />
             </span>
           </h3>
