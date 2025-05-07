@@ -91,7 +91,7 @@ const SocialMediaBar = () => {
               <Youtube size={36} className="text-flyboy-gold" />
             </div>
           </a>
-          {/* Jako Icon (redesigned to match other icons) */}
+          {/* Jako Icon (improved design) */}
           <a
             href="#jako"
             target="_blank"
@@ -109,34 +109,28 @@ const SocialMediaBar = () => {
                 className="text-flyboy-gold"
               >
                 <path 
-                  d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" 
+                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" 
                   stroke="currentColor" 
                   strokeWidth="1.5" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  fill="none"
                 />
                 <path 
-                  d="M9 8.5C9 7.67 9.67 7 10.5 7H13.5C14.33 7 15 7.67 15 8.5V15.5C15 16.33 14.33 17 13.5 17H10.5C9.67 17 9 16.33 9 15.5V8.5Z" 
-                  stroke="currentColor" 
-                  strokeWidth="1.5" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  fill="none"
-                />
-                <path 
-                  d="M9 10.5H15" 
+                  d="M8 7.5H16V16.5H8V7.5Z" 
                   stroke="currentColor" 
                   strokeWidth="1.5" 
                   strokeLinecap="round" 
                   strokeLinejoin="round"
                 />
                 <path 
-                  d="M9 13.5H15" 
+                  d="M11 10.5H13" 
                   stroke="currentColor" 
                   strokeWidth="1.5" 
                   strokeLinecap="round" 
-                  strokeLinejoin="round"
+                />
+                <path 
+                  d="M11 13.5H13" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
                 />
               </svg>
             </div>
