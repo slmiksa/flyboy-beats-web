@@ -1,7 +1,7 @@
 import React from 'react';
 import { Music, Headphones, Star } from 'lucide-react';
 const Footer = () => {
-  return <footer className="bg-flyboy-purple mt-16 relative overflow-hidden py-[35px] mx-0 my-[24px]">
+  return <footer className="bg-flyboy-purple mt-16 relative overflow-hidden py-[35px] mx-0 my-[26px]">
       {/* Animated music notes */}
       <div className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none">
         {Array(10).fill(0).map((_, i) => <div key={i} className="absolute animate-float" style={{
