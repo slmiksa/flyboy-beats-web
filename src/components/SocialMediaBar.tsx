@@ -91,48 +91,16 @@ const SocialMediaBar = () => {
               <Youtube size={36} className="text-flyboy-gold" />
             </div>
           </a>
-          {/* Jako Icon (improved design) */}
+          {/* JACO Text Icon */}
           <a
             href="#jako"
             target="_blank"
             rel="noopener noreferrer"
             className="group"
-            aria-label="Jako"
+            aria-label="JACO"
           >
-            <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40">
-              <svg 
-                width="36" 
-                height="36" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="text-flyboy-gold"
-              >
-                <path 
-                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" 
-                  stroke="currentColor" 
-                  strokeWidth="1.5" 
-                />
-                <path 
-                  d="M8 7.5H16V16.5H8V7.5Z" 
-                  stroke="currentColor" 
-                  strokeWidth="1.5" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                />
-                <path 
-                  d="M11 10.5H13" 
-                  stroke="currentColor" 
-                  strokeWidth="1.5" 
-                  strokeLinecap="round" 
-                />
-                <path 
-                  d="M11 13.5H13" 
-                  stroke="currentColor" 
-                  strokeWidth="1.5" 
-                  strokeLinecap="round" 
-                />
-              </svg>
+            <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40 flex items-center justify-center min-w-[60px]">
+              <span className="text-flyboy-gold font-bold text-xl">JACO</span>
             </div>
           </a>
         </div>
