@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from 'react';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const partners = [
   {
@@ -36,118 +36,162 @@ const partners = [
 ];
 
 const PartnersSection = () => {
-  const marqueeRef = useRef<HTMLDivElement>(null);
-  const touchStartXRef = useRef<number | null>(null);
-  const touchEndXRef = useRef<number | null>(null);
-  const animationRef = useRef<Animation | null>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const autoScrollRef = useRef<NodeJS.Timeout | null>(null);
+  const currentIndexRef = useRef(0);
+
+  const goToSlide = (index: number) => {
+    if (!sliderRef.current) return;
+    
+    if (index < 0) {
+      currentIndexRef.current = partners.length - 1;
+    } else if (index >= partners.length) {
+      currentIndexRef.current = 0;
+    } else {
+      currentIndexRef.current = index;
+    }
+    
+    const translateX = currentIndexRef.current * -100;
+    sliderRef.current.style.transform = `translateX(${translateX}%)`;
+  };
+
+  const nextSlide = () => {
+    goToSlide(currentIndexRef.current + 1);
+  };
+
+  const prevSlide = () => {
+    goToSlide(currentIndexRef.current - 1);
+  };
+
+  // Touch handling
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    
+    // Pause auto scroll when touching
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    
+    const diff = touchStartX.current - touchEndX.current;
+    
+    // If swipe is significant enough (more than 50px)
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        // Swipe left, go next
+        nextSlide();
+      } else {
+        // Swipe right, go prev
+        prevSlide();
+      }
+    }
+    
+    // Reset touch positions
+    touchStartX.current = null;
+    touchEndX.current = null;
+    
+    // Restart auto scroll
+    startAutoScroll();
+  };
+
+  // Auto scroll
+  const startAutoScroll = () => {
+    if (autoScrollRef.current) {
+      clearInterval(autoScrollRef.current);
+    }
+    
+    autoScrollRef.current = setInterval(() => {
+      nextSlide();
+    }, 3000); // Change slide every 3 seconds
+  };
 
   useEffect(() => {
-    if (!marqueeRef.current) return;
-    
-    // Set up touch handling
-    const marquee = marqueeRef.current;
-    
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartXRef.current = e.touches[0].clientX;
-      
-      // Pause animation when touch starts
-      if (animationRef.current) {
-        animationRef.current.pause();
-      }
-    };
-    
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!touchStartXRef.current) return;
-      touchEndXRef.current = e.touches[0].clientX;
-      
-      if (touchStartXRef.current && touchEndXRef.current && marquee) {
-        // Calculate movement and apply as transform
-        const diff = touchEndXRef.current - touchStartXRef.current;
-        marquee.style.transform = `translateX(${diff}px)`;
-      }
-    };
-    
-    const handleTouchEnd = () => {
-      // Reset and resume animation
-      if (marquee && animationRef.current) {
-        marquee.style.transform = '';
-        animationRef.current.play();
-      }
-      
-      touchStartXRef.current = null;
-      touchEndXRef.current = null;
-    };
-    
-    marquee.addEventListener('touchstart', handleTouchStart);
-    marquee.addEventListener('touchmove', handleTouchMove);
-    marquee.addEventListener('touchend', handleTouchEnd);
+    startAutoScroll();
     
     return () => {
-      marquee.removeEventListener('touchstart', handleTouchStart);
-      marquee.removeEventListener('touchmove', handleTouchMove);
-      marquee.removeEventListener('touchend', handleTouchEnd);
+      if (autoScrollRef.current) {
+        clearInterval(autoScrollRef.current);
+      }
     };
   }, []);
 
   return (
     <section className="py-16 bg-flyboy-purple">
       <div className="container">
-        <h2 className="section-title text-flyboy-gold">شركاء النجاح</h2>
+        <h2 className="section-title text-flyboy-gold mb-12">شركاء النجاح</h2>
         
-        <div className="mt-10">
-          <Carousel
-            opts={{
-              align: 'start',
-              loop: true,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-1">
-              {partners.map((partner) => (
-                <CarouselItem key={partner.id} className="pl-1 md:basis-1/2 lg:basis-1/4">
-                  <div className="p-1 h-full">
-                    <div className="bg-flyboy-dark border border-flyboy-gold p-4 rounded-xl flex flex-col items-center justify-center h-full transition-all hover:transform hover:scale-105">
-                      <div className="w-32 h-24 bg-white p-2 rounded-lg flex items-center justify-center mb-2">
-                        <img
-                          src={partner.logo}
-                          alt={partner.name}
-                          className="max-w-full max-h-full object-contain"
-                        />
-                      </div>
-                      <span className="text-white font-medium mt-2">{partner.name}</span>
-                    </div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-0 bg-flyboy-gold text-flyboy-dark hover:bg-flyboy-gold hover:text-flyboy-dark hover:opacity-80" />
-            <CarouselNext className="right-0 bg-flyboy-gold text-flyboy-dark hover:bg-flyboy-gold hover:text-flyboy-dark hover:opacity-80" />
-          </Carousel>
-        </div>
-        
-        <div className="mt-12 relative overflow-hidden">
-          <h3 className="text-center text-flyboy-gold text-xl mb-6">جميع الشركاء</h3>
-          <div className="relative overflow-hidden">
+        <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-6">
+          <div className="overflow-hidden">
             <div 
-              ref={marqueeRef}
-              className="flex whitespace-nowrap animate-marquee touch-pan-x"
+              ref={sliderRef} 
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{ width: `${partners.length * 100}%` }}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
-              {[...partners, ...partners].map((partner, index) => (
-                <div
-                  key={`${partner.id}-${index}`}
-                  className="inline-flex flex-col items-center justify-center mx-8"
+              {partners.map((partner) => (
+                <div 
+                  key={partner.id} 
+                  className="w-full flex flex-col items-center justify-center px-4"
+                  style={{ width: `${100 / partners.length}%` }}
                 >
-                  <div className="w-24 h-20 bg-white p-2 rounded-lg flex items-center justify-center mb-2 hover:transform hover:scale-110 transition-all duration-300">
-                    <img
-                      src={partner.logo}
-                      alt={partner.name}
-                      className="max-w-full max-h-full object-contain"
-                    />
+                  <div className="relative w-full">
+                    <div className="w-40 h-32 mx-auto bg-white p-3 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-110">
+                      <img
+                        src={partner.logo}
+                        alt={partner.name}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                    <h3 className="text-white text-xl font-bold text-center">{partner.name}</h3>
                   </div>
-                  <span className="text-white font-medium">{partner.name}</span>
                 </div>
               ))}
             </div>
+          </div>
+          
+          {/* Navigation buttons */}
+          <button 
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-flyboy-gold text-flyboy-dark flex items-center justify-center z-10 hover:bg-opacity-80 transition-all"
+            onClick={prevSlide}
+            aria-label="Previous partner"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          
+          <button 
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-flyboy-gold text-flyboy-dark flex items-center justify-center z-10 hover:bg-opacity-80 transition-all"
+            onClick={nextSlide}
+            aria-label="Next partner"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+          
+          {/* Indicators */}
+          <div className="flex justify-center mt-4 gap-2">
+            {partners.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all ${
+                  currentIndexRef.current === index 
+                    ? 'bg-flyboy-gold w-6' 
+                    : 'bg-white bg-opacity-30'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>
