@@ -31,7 +31,7 @@ const About = () => {
       ))}
 
       <div className="container relative z-10">
-        <div className="flex items-center mb-6">
+        <div className="flex items-center justify-between mb-6">
           <Link 
             to="/" 
             className="bg-flyboy-gold text-flyboy-dark hover:bg-flyboy-gold/90 px-4 py-2 rounded-md flex items-center gap-2 transition-all"
@@ -39,6 +39,14 @@ const About = () => {
             <ArrowRight size={20} />
             <span>العودة للرئيسية</span>
           </Link>
+          
+          <div className="pulse-glow">
+            <img 
+              src="/lovable-uploads/391e10d1-c56a-4816-ad0c-15fd941a3b2f.png" 
+              alt="FLY BOY Logo" 
+              className="w-24 h-24 object-contain"
+            />
+          </div>
         </div>
         
         <h1 className="text-4xl md:text-5xl font-bold text-flyboy-gold mb-12 text-center glow-text">
@@ -49,7 +57,7 @@ const About = () => {
           <div className="relative group">
             <div className="absolute inset-0 bg-flyboy-gold blur-md opacity-20 group-hover:opacity-30 transition-opacity rounded-lg"></div>
             <img 
-              src="/lovable-uploads/beedc4c4-95b4-4570-b85b-61e8853a966b.png" 
+              src="/lovable-uploads/a53aebe7-eb44-4525-83c9-581553dea80c.png" 
               alt="FLY BOY DJ" 
               className="w-full h-auto rounded-lg shadow-xl relative z-10"
             />
