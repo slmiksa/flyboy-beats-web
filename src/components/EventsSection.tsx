@@ -5,25 +5,25 @@ const events = [
   {
     id: 1,
     title: 'Festival',
-    image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3',
+    image: 'https://images.unsplash.com/photo-1522008629172-0c17a4294bfb',
     whatsapp: 'https://wa.me/966500000000?text=استفسار%20عن%20فعالية%20Festival'
   },
   {
     id: 2,
     title: 'Beach Party',
-    image: 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21',
+    image: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3',
     whatsapp: 'https://wa.me/966500000000?text=استفسار%20عن%20فعالية%20Beach%20Party'
   },
   {
     id: 3,
     title: 'Night Sound',
-    image: 'https://images.unsplash.com/photo-1500673922987-e212871fec22',
+    image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
     whatsapp: 'https://wa.me/966500000000?text=استفسار%20عن%20فعالية%20Night%20Sound'
   },
   {
     id: 4,
     title: 'Club Mix',
-    image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5',
+    image: 'https://images.unsplash.com/photo-1571266752271-5cc6e71de3c4',
     whatsapp: 'https://wa.me/966500000000?text=استفسار%20عن%20فعالية%20Club%20Mix'
   },
 ];
@@ -39,7 +39,7 @@ const EventsSection = () => {
               key={event.id} 
               className="bg-flyboy-purple rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105"
             >
-              <div className="relative pb-[70%]">
+              <div className="relative pb-[90%]">
                 <img 
                   src={event.image} 
                   alt={event.title} 
