@@ -3,7 +3,9 @@ import React from 'react';
 import {
   Carousel,
   CarouselContent,
-  CarouselItem
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext
 } from "@/components/ui/carousel";
 
 // قائمة شركاء النجاح الموسعة مع إضافة شعارات وهمية تخص الموسيقى
@@ -60,39 +62,34 @@ const partners = [
   },
 ];
 
-// Create a duplicate set of partners for seamless scrolling
-const allPartners = [...partners, ...partners];
-
 const PartnersSection = () => {
   return (
     <section className="py-16 bg-flyboy-purple">
       <div className="container">
         <h2 className="section-title text-flyboy-gold mb-12">شركاء النجاح</h2>
         
-        <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-6">
-          <div className="overflow-hidden">
-            {/* Marquee container */}
-            <div className="w-full relative overflow-hidden">
-              {/* First marquee - right to left */}
-              <div className="animate-marquee inline-flex gap-4">
-                {allPartners.map((partner, index) => (
-                  <div 
-                    key={`${partner.id}-${index}`} 
-                    className="flex flex-col items-center justify-center min-w-[150px]"
-                  >
-                    <div className="w-32 h-24 bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-110">
+        <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-8">
+          <Carousel className="w-full">
+            <CarouselContent>
+              {partners.map((partner) => (
+                <CarouselItem key={partner.id} className="flex flex-col items-center justify-center">
+                  <div className="w-full h-48 flex flex-col items-center justify-center">
+                    <div className="w-48 h-36 bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
                       <img
                         src={partner.logo}
                         alt={partner.name}
                         className="max-w-full max-h-full object-contain"
                       />
                     </div>
-                    <h3 className="text-white text-sm font-bold text-center">{partner.name}</h3>
+                    <h3 className="text-white text-lg font-bold text-center mt-2">{partner.name}</h3>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            
+            <CarouselPrevious className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-flyboy-gold text-flyboy-dark hover:bg-flyboy-gold/90 hover:text-flyboy-dark border-none h-12 w-12 rounded-full" />
+            <CarouselNext className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-flyboy-gold text-flyboy-dark hover:bg-flyboy-gold/90 hover:text-flyboy-dark border-none h-12 w-12 rounded-full" />
+          </Carousel>
         </div>
       </div>
     </section>
