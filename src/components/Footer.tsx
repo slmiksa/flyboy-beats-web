@@ -27,9 +27,9 @@ const Footer = () => {
         <div className="flex flex-col items-center justify-center">
           <div className="mb-8 pulse-glow">
             <img 
-              src="/lovable-uploads/beedc4c4-95b4-4570-b85b-61e8853a966b.png" 
+              src="/lovable-uploads/391e10d1-c56a-4816-ad0c-15fd941a3b2f.png" 
               alt="FLY BOY Logo" 
-              className="w-32 h-32 object-contain"
+              className="w-40 h-40 object-contain"
             />
           </div>
           

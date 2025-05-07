@@ -29,6 +29,14 @@ const PartnersSection = () => {
   return (
     <section className="py-16 bg-flyboy-purple">
       <div className="container">
+        <div className="mb-10 flex justify-center">
+          <img 
+            src="/lovable-uploads/391e10d1-c56a-4816-ad0c-15fd941a3b2f.png" 
+            alt="FLY BOY Logo" 
+            className="w-32 h-32 object-contain pulse-glow"
+          />
+        </div>
+        
         <h2 className="section-title text-flyboy-gold mb-12">شركاء النجاح</h2>
         
         <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-8">
