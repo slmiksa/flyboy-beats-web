@@ -5,9 +5,9 @@ const SuccessPartnersBanner = () => {
   return (
     <div className="bg-flyboy-purple py-4 border-b-2 border-flyboy-gold">
       <div className="container">
-        <h2 className="text-2xl md:text-3xl font-bold text-flyboy-gold text-center relative mb-0 pb-1">
-          شركاء النجاح المتميزيين
-          <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-36 h-0.5 bg-flyboy-gold"></div>
+        <h2 className="text-xl md:text-2xl font-bold text-flyboy-gold text-center relative mb-0 pb-1">
+          شركاء النجاح
+          <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-28 h-0.5 bg-flyboy-gold"></div>
           <span className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-flyboy-gold text-sm">★★★</span>
           <span className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-flyboy-gold text-sm">★★★</span>
         </h2>

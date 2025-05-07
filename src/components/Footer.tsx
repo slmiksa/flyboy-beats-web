@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Music, Headphones } from 'lucide-react';
+import { Music, Headphones, Star } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -18,7 +18,9 @@ const Footer = () => {
               animationDelay: `${Math.random() * 5}s`
             }}
           >
-            {i % 2 === 0 ? <Music size={24} className="text-flyboy-gold" /> : <Headphones size={24} className="text-flyboy-gold" />}
+            {i % 3 === 0 ? <Music size={24} className="text-flyboy-gold" /> : 
+             i % 3 === 1 ? <Headphones size={24} className="text-flyboy-gold" /> :
+             <Star size={24} className="text-flyboy-gold" />}
           </div>
         ))}
       </div>
