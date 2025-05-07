@@ -38,10 +38,10 @@ const Index = () => {
       ))}
 
       <SocialMediaBar />
-      <DistinguishedPartnersBanner />
-      <SuccessPartnersBanner />
       <HeroSlider />
       <EventsSection />
+      <DistinguishedPartnersBanner />
+      <SuccessPartnersBanner />
       <AboutSection />
     </div>
   );
