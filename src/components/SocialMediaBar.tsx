@@ -7,13 +7,13 @@ const SocialMediaBar = () => {
   const isMobile = useIsMobile();
   const iconSize = isMobile ? 20 : 28;
   const iconContainerSize = isMobile ? "w-10 h-10" : "w-14 h-14";
-  // Make spacing consistent across all screen sizes
-  const spacingClass = "space-x-2 md:space-x-3";
+  // Increase spacing between icons
+  const spacingClass = "space-x-4 md:space-x-6";
 
   return (
     <div className="bg-flyboy-dark py-4">
       <div className={`flex justify-center items-center ${spacingClass}`}>
-        {/* JACO */}
+        {/* JACO - Now properly circular */}
         <div className={`${iconContainerSize} rounded-full bg-flyboy-dark border-2 border-flyboy-gold border-opacity-40 flex items-center justify-center hover:border-opacity-60 transition-all duration-300`}>
           <span className="text-flyboy-gold text-xs md:text-sm font-bold">JACO</span>
         </div>
