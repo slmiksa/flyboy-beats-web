@@ -21,6 +21,9 @@ const partners = [{
 }];
 
 const SuccessPartnersBanner = () => {
+  // Duplicate partners for a continuous flow effect
+  const scrollPartners = [...partners, ...partners, ...partners];
+  
   return (
     <section className="bg-flyboy-dark py-6 text-center">
       <div className="container">
@@ -29,19 +32,21 @@ const SuccessPartnersBanner = () => {
         </div>
         
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {partners.map((partner) => (
-              <div key={partner.id} className="flex flex-col items-center">
-                <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
-                  <img
-                    src={partner.logo}
-                    alt={partner.name}
-                    className="max-w-full max-h-full object-contain"
-                  />
+          <div className="partners-container">
+            <div className="partners-scroll">
+              {scrollPartners.map((partner, index) => (
+                <div key={`${partner.id}-${index}`} className="partner-item px-2">
+                  <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
+                    <img
+                      src={partner.logo}
+                      alt={partner.name}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                  <h3 className="text-white text-sm md:text-base font-medium text-center">{partner.name}</h3>
                 </div>
-                <h3 className="text-white text-sm md:text-base font-medium text-center">{partner.name}</h3>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
