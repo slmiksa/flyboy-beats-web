@@ -5,10 +5,11 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 const SocialMediaBar = () => {
   const isMobile = useIsMobile();
-  const iconSize = isMobile ? 20 : 28;
-  const iconContainerSize = isMobile ? "w-10 h-10" : "w-14 h-14";
+  // Make icons smaller for better mobile display
+  const iconSize = isMobile ? 16 : 22;
+  const iconContainerSize = isMobile ? "w-8 h-8" : "w-12 h-12";
   // Use consistent spacing for all screen sizes
-  const spacingClass = "gap-4 md:gap-6";
+  const spacingClass = "gap-3 md:gap-4";
 
   return (
     <div className="bg-flyboy-dark py-4">
