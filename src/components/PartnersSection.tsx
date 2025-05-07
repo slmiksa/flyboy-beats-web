@@ -59,10 +59,10 @@ const PartnersSection = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   
   useEffect(() => {
-    // Animation speed - lower is slower
-    const scrollSpeed = 1;
+    // Animation speed - higher is faster - increasing from 1 to 3
+    const scrollSpeed = 3;
     
-    // Initialize animation interval
+    // Initialize animation interval - decreasing update time for smoother animation
     const animationInterval = setInterval(() => {
       setScrollPosition(prev => {
         // When we reach the end of partners, loop back to start
@@ -71,7 +71,7 @@ const PartnersSection = () => {
         }
         return prev + scrollSpeed;
       });
-    }, 30); // Update every 30ms for smooth animation
+    }, 20); // Update every 20ms (down from 30ms) for smoother and faster animation
     
     // Clean up interval on unmount
     return () => clearInterval(animationInterval);
