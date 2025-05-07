@@ -33,8 +33,8 @@ const PartnersSection = () => {
         
         <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-8">
           <div className="overflow-hidden">
-            <div className="animate-rtl-marquee flex">
-              {/* First set of partners - showing from right to left */}
+            <div className="animate-ltr-marquee flex">
+              {/* First set of partners - showing from left to right */}
               {partners.map((partner) => (
                 <div 
                   key={`first-${partner.id}`} 

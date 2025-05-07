@@ -124,10 +124,26 @@
   }
 }
 
+@keyframes ltr-marquee {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
+}
+
 .animate-marquee {
   display: inline-block;
   white-space: nowrap;
   animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+
+.animate-ltr-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ltr-marquee 20s linear infinite;
   will-change: transform;
 }
 
