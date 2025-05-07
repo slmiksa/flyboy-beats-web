@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // قائمة شركاء النجاح الموسعة مع إضافة شعارات وهمية تخص الموسيقى
 const partners = [
@@ -55,45 +55,26 @@ const partners = [
   },
 ];
 
-// Duplicate partners for seamless scrolling effect
-const allPartners = [...partners, ...partners];
-
 const PartnersSection = () => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
   
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
+    // Animation speed - lower is slower
+    const scrollSpeed = 1;
     
-    // Set initial scroll position to 0
-    let scrollPosition = 0;
-    // Adjust scrolling speed - slower is smoother
-    const scrollSpeed = 0.5;
-    let animationId: number;
+    // Initialize animation interval
+    const animationInterval = setInterval(() => {
+      setScrollPosition(prev => {
+        // When we reach the end of partners, loop back to start
+        if (prev >= 2000) {
+          return 0;
+        }
+        return prev + scrollSpeed;
+      });
+    }, 30); // Update every 30ms for smooth animation
     
-    const scroll = () => {
-      // Increment scroll position
-      scrollPosition += scrollSpeed;
-      
-      // If we've scrolled past half the content, reset to beginning
-      if (scrollPosition >= scrollContainer.scrollWidth / 2) {
-        scrollPosition = 0;
-      }
-      
-      // Apply the scroll position
-      scrollContainer.scrollLeft = scrollPosition;
-      
-      // Continue animation
-      animationId = requestAnimationFrame(scroll);
-    };
-    
-    // Start scrolling animation immediately
-    animationId = requestAnimationFrame(scroll);
-    
-    // Clean up animation on unmount
-    return () => {
-      cancelAnimationFrame(animationId);
-    };
+    // Clean up interval on unmount
+    return () => clearInterval(animationInterval);
   }, []);
 
   return (
@@ -102,14 +83,33 @@ const PartnersSection = () => {
         <h2 className="section-title text-flyboy-gold mb-12">شركاء النجاح</h2>
         
         <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-8">
-          <div 
-            ref={scrollContainerRef}
-            className="overflow-hidden whitespace-nowrap"
-          >
-            <div className="inline-flex gap-8">
-              {allPartners.map((partner, index) => (
+          <div className="overflow-hidden whitespace-nowrap">
+            {/* First set of partners */}
+            <div 
+              className="inline-flex gap-8 transition-transform" 
+              style={{ transform: `translateX(-${scrollPosition}px)` }}
+            >
+              {partners.map((partner) => (
                 <div 
-                  key={`${partner.id}-${index}`} 
+                  key={`first-${partner.id}`} 
+                  className="inline-flex flex-col items-center justify-center"
+                  style={{ minWidth: '200px' }}
+                >
+                  <div className="w-48 h-36 bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
+                    <img
+                      src={partner.logo}
+                      alt={partner.name}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                  <h3 className="text-white text-lg font-bold text-center mt-2">{partner.name}</h3>
+                </div>
+              ))}
+              
+              {/* Duplicate set for seamless looping */}
+              {partners.map((partner) => (
+                <div 
+                  key={`second-${partner.id}`} 
                   className="inline-flex flex-col items-center justify-center"
                   style={{ minWidth: '200px' }}
                 >
