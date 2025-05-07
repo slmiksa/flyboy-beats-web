@@ -32,7 +32,10 @@ const About = () => {
 
       <div className="container relative z-10">
         <div className="flex items-center mb-6">
-          <Link to="/" className="text-white hover:text-flyboy-gold flex items-center gap-2 transition-colors">
+          <Link 
+            to="/" 
+            className="bg-flyboy-gold text-flyboy-dark hover:bg-flyboy-gold/90 px-4 py-2 rounded-md flex items-center gap-2 transition-all"
+          >
             <ArrowRight size={20} />
             <span>العودة للرئيسية</span>
           </Link>

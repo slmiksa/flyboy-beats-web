@@ -65,7 +65,7 @@ const PartnersSection = () => {
   
   useEffect(() => {
     let position = 0;
-    const speed = 1; // Adjust scrolling speed (lower is faster)
+    const speed = 0.5; // Reduced speed for smoother scrolling (was 1)
     
     const autoPlay = () => {
       if (carouselRef.current) {
