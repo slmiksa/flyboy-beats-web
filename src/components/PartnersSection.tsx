@@ -1,5 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
+import { 
+  Carousel, 
+  CarouselContent, 
+  CarouselItem 
+} from "@/components/ui/carousel";
 
 // قائمة شركاء النجاح الموسعة مع إضافة شعارات وهمية تخص الموسيقى
 const partners = [
@@ -56,43 +61,19 @@ const partners = [
 ];
 
 const PartnersSection = () => {
-  const [scrollPosition, setScrollPosition] = useState(0);
-  
-  useEffect(() => {
-    // Animation speed - higher is faster - increasing from 1 to 3
-    const scrollSpeed = 3;
-    
-    // Initialize animation interval - decreasing update time for smoother animation
-    const animationInterval = setInterval(() => {
-      setScrollPosition(prev => {
-        // When we reach the end of partners, loop back to start
-        if (prev >= 2000) {
-          return 0;
-        }
-        return prev + scrollSpeed;
-      });
-    }, 20); // Update every 20ms (down from 30ms) for smoother and faster animation
-    
-    // Clean up interval on unmount
-    return () => clearInterval(animationInterval);
-  }, []);
-
   return (
     <section className="py-16 bg-flyboy-purple">
       <div className="container">
         <h2 className="section-title text-flyboy-gold mb-12">شركاء النجاح</h2>
         
         <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-8">
-          <div className="overflow-hidden whitespace-nowrap">
-            {/* First set of partners */}
-            <div 
-              className="inline-flex gap-8 transition-transform" 
-              style={{ transform: `translateX(-${scrollPosition}px)` }}
-            >
+          <div className="overflow-hidden">
+            <div className="animate-marquee whitespace-nowrap flex flex-row-reverse">
+              {/* First set of partners */}
               {partners.map((partner) => (
                 <div 
                   key={`first-${partner.id}`} 
-                  className="inline-flex flex-col items-center justify-center"
+                  className="inline-flex flex-col items-center justify-center px-4"
                   style={{ minWidth: '200px' }}
                 >
                   <div className="w-48 h-36 bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
@@ -110,7 +91,7 @@ const PartnersSection = () => {
               {partners.map((partner) => (
                 <div 
                   key={`second-${partner.id}`} 
-                  className="inline-flex flex-col items-center justify-center"
+                  className="inline-flex flex-col items-center justify-center px-4"
                   style={{ minWidth: '200px' }}
                 >
                   <div className="w-48 h-36 bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
