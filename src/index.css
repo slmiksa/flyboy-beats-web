@@ -102,15 +102,21 @@
 @keyframes float {
   0% {
     transform: translateY(0) rotate(0deg);
-    opacity: 0.2;
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.4;
   }
   50% {
     transform: translateY(-20px) rotate(10deg);
     opacity: 0.6;
   }
+  75% {
+    opacity: 0.4;
+  }
   100% {
     transform: translateY(0) rotate(0deg);
-    opacity: 0.2;
+    opacity: 0;
   }
 }
 
@@ -175,6 +181,6 @@
 
 @layer utilities {
   .animate-float {
-    animation: float 5s ease-in-out infinite;
+    animation: float 10s ease-in-out infinite;
   }
 }

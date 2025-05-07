@@ -1,21 +1,39 @@
+
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Music, Disc, Volume2, Headphones } from 'lucide-react';
+import { ArrowRight, Music, Disc, Volume2, Headphones, Mic, Radio, Music4, FileMusic } from 'lucide-react';
+
 const About = () => {
   useEffect(() => {
     // Scroll to top on page load
     window.scrollTo(0, 0);
   }, []);
+  
   return <div className="min-h-screen py-24 bg-gradient-hero relative overflow-hidden">
       {/* Animated music elements */}
-      {Array(15).fill(0).map((_, i) => <div key={i} className="absolute animate-float" style={{
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      animationDuration: `${3 + Math.random() * 7}s`,
-      animationDelay: `${Math.random() * 5}s`
-    }}>
-          {i % 4 === 0 ? <Music size={20} className="text-flyboy-gold opacity-20" /> : i % 4 === 1 ? <Disc size={20} className="text-flyboy-gold opacity-20" /> : i % 4 === 2 ? <Volume2 size={20} className="text-flyboy-gold opacity-20" /> : <Headphones size={20} className="text-flyboy-gold opacity-20" />}
-        </div>)}
+      {Array(20).fill(0).map((_, i) => (
+        <div 
+          key={i} 
+          className="absolute animate-float" 
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            animationDuration: `${3 + Math.random() * 7}s`,
+            animationDelay: `${Math.random() * 5}s`,
+            opacity: 0.2,
+            filter: 'drop-shadow(0 0 3px rgba(212, 175, 55, 0.5))'
+          }}
+        >
+          {i % 8 === 0 ? <Music size={20} className="text-flyboy-gold" /> : 
+           i % 8 === 1 ? <Disc size={20} className="text-flyboy-gold" /> : 
+           i % 8 === 2 ? <Volume2 size={20} className="text-flyboy-gold" /> : 
+           i % 8 === 3 ? <Headphones size={20} className="text-flyboy-gold" /> :
+           i % 8 === 4 ? <Mic size={20} className="text-flyboy-gold" /> :
+           i % 8 === 5 ? <Radio size={20} className="text-flyboy-gold" /> :
+           i % 8 === 6 ? <Music4 size={20} className="text-flyboy-gold" /> :
+           <FileMusic size={20} className="text-flyboy-gold" />}
+        </div>
+      ))}
 
       <div className="container relative z-10">
         <div className="flex items-center justify-between mb-6">
@@ -76,4 +94,5 @@ const About = () => {
       </div>
     </div>;
 };
+
 export default About;
