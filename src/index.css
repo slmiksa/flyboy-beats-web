@@ -114,13 +114,39 @@
   }
 }
 
-/* Partners marquee animation */
+/* Partners section styles */
+.partners-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.partners-scroll {
+  display: flex;
+  width: max-content;
+  animation: scrollPartners 30s linear infinite;
+}
+
+.partner-item {
+  width: 200px;
+}
+
+@keyframes scrollPartners {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Existing animation keyframes */
 @keyframes marquee {
   from {
     transform: translateX(0%);
   }
   to {
-    transform: translateX(-50%);
+    transform: translateX(-100%);
   }
 }
 

@@ -5,8 +5,8 @@ import React from 'react';
 const partners = [
   {
     id: 1,
-    name: 'Sancy Club',
-    logo: 'https://images.unsplash.com/photo-1516876437184-593fda40c542?w=200&h=100&fit=crop&auto=format',
+    name: 'Night Vision',
+    logo: 'https://images.unsplash.com/photo-1485359466996-ba9c9b4afb63?w=200&h=100&fit=crop&auto=format',
   },
   {
     id: 2,
@@ -15,8 +15,8 @@ const partners = [
   },
   {
     id: 3,
-    name: 'Night Vision',
-    logo: 'https://images.unsplash.com/photo-1485359466996-ba9c9b4afb63?w=200&h=100&fit=crop&auto=format',
+    name: 'Sancy Club',
+    logo: 'https://images.unsplash.com/photo-1516876437184-593fda40c542?w=200&h=100&fit=crop&auto=format',
   },
   {
     id: 4,
@@ -32,32 +32,12 @@ const PartnersSection = () => {
         <h2 className="section-title text-flyboy-gold mb-12">شركاء النجاح</h2>
         
         <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-8">
-          <div className="overflow-hidden">
-            <div className="animate-ltr-marquee flex">
-              {/* First set of partners - showing from left to right */}
+          <div className="partners-container overflow-hidden">
+            <div className="partners-scroll flex">
               {partners.map((partner) => (
                 <div 
-                  key={`first-${partner.id}`} 
-                  className="flex-shrink-0 flex flex-col items-center justify-center px-4"
-                  style={{ width: '200px' }}
-                >
-                  <div className="w-48 h-36 bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
-                    <img
-                      src={partner.logo}
-                      alt={partner.name}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-                  <h3 className="text-white text-lg font-bold text-center mt-2">{partner.name}</h3>
-                </div>
-              ))}
-              
-              {/* Duplicate set for seamless looping */}
-              {partners.map((partner) => (
-                <div 
-                  key={`second-${partner.id}`} 
-                  className="flex-shrink-0 flex flex-col items-center justify-center px-4"
-                  style={{ width: '200px' }}
+                  key={partner.id} 
+                  className="partner-item flex-shrink-0 flex flex-col items-center justify-center px-8"
                 >
                   <div className="w-48 h-36 bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
                     <img
