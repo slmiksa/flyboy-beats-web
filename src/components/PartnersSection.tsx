@@ -1,12 +1,6 @@
 
-import React from 'react';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext
-} from "@/components/ui/carousel";
+import React, { useEffect, useRef } from 'react';
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 // قائمة شركاء النجاح الموسعة مع إضافة شعارات وهمية تخص الموسيقى
 const partners = [
@@ -62,34 +56,74 @@ const partners = [
   },
 ];
 
+// Duplicate partners for seamless scrolling effect
+const allPartners = [...partners, ...partners];
+
 const PartnersSection = () => {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const autoPlayRef = useRef<number | null>(null);
+  
+  useEffect(() => {
+    let position = 0;
+    const speed = 1; // Adjust scrolling speed (lower is faster)
+    
+    const autoPlay = () => {
+      if (carouselRef.current) {
+        position += speed;
+        
+        // When we reach the end of first set, reset position
+        const scrollWidth = carouselRef.current.scrollWidth / 2;
+        if (position >= scrollWidth) {
+          position = 0;
+          carouselRef.current.scrollLeft = 0;
+        } else {
+          carouselRef.current.scrollLeft = position;
+        }
+      }
+      
+      autoPlayRef.current = requestAnimationFrame(autoPlay);
+    };
+    
+    autoPlayRef.current = requestAnimationFrame(autoPlay);
+    
+    // Cleanup
+    return () => {
+      if (autoPlayRef.current) {
+        cancelAnimationFrame(autoPlayRef.current);
+      }
+    };
+  }, []);
+
   return (
     <section className="py-16 bg-flyboy-purple">
       <div className="container">
         <h2 className="section-title text-flyboy-gold mb-12">شركاء النجاح</h2>
         
         <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-8">
-          <Carousel className="w-full">
-            <CarouselContent>
-              {partners.map((partner) => (
-                <CarouselItem key={partner.id} className="flex flex-col items-center justify-center">
-                  <div className="w-full h-48 flex flex-col items-center justify-center">
-                    <div className="w-48 h-36 bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
-                      <img
-                        src={partner.logo}
-                        alt={partner.name}
-                        className="max-w-full max-h-full object-contain"
-                      />
-                    </div>
-                    <h3 className="text-white text-lg font-bold text-center mt-2">{partner.name}</h3>
+          <div 
+            ref={carouselRef}
+            className="overflow-hidden whitespace-nowrap"
+            style={{ scrollBehavior: 'smooth' }}
+          >
+            <div className="inline-flex gap-8">
+              {allPartners.map((partner, index) => (
+                <div 
+                  key={`${partner.id}-${index}`} 
+                  className="inline-flex flex-col items-center justify-center"
+                  style={{ minWidth: '200px' }}
+                >
+                  <div className="w-48 h-36 bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
+                    <img
+                      src={partner.logo}
+                      alt={partner.name}
+                      className="max-w-full max-h-full object-contain"
+                    />
                   </div>
-                </CarouselItem>
+                  <h3 className="text-white text-lg font-bold text-center mt-2">{partner.name}</h3>
+                </div>
               ))}
-            </CarouselContent>
-            
-            <CarouselPrevious className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-flyboy-gold text-flyboy-dark hover:bg-flyboy-gold/90 hover:text-flyboy-dark border-none h-12 w-12 rounded-full" />
-            <CarouselNext className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-flyboy-gold text-flyboy-dark hover:bg-flyboy-gold/90 hover:text-flyboy-dark border-none h-12 w-12 rounded-full" />
-          </Carousel>
+            </div>
+          </div>
         </div>
       </div>
     </section>
