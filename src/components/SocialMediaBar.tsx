@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MessageCircle, Instagram, Twitter, Youtube } from 'lucide-react';
+import { MessageCircle, Instagram, Twitter, Youtube, Facebook } from 'lucide-react';
 
 const SocialMediaBar = () => {
   return (
@@ -52,7 +52,7 @@ const SocialMediaBar = () => {
               <MessageCircle size={36} className="text-flyboy-gold" />
             </div>
           </a>
-          {/* TikTok Icon (improved version) */}
+          {/* TikTok Icon */}
           <a
             href="https://tiktok.com/@flyboy"
             target="_blank"
@@ -91,7 +91,7 @@ const SocialMediaBar = () => {
               <Youtube size={36} className="text-flyboy-gold" />
             </div>
           </a>
-          {/* Jako Icon (using the provided image) */}
+          {/* Jako Icon (redesigned to match other icons) */}
           <a
             href="#jako"
             target="_blank"
@@ -99,14 +99,46 @@ const SocialMediaBar = () => {
             className="group"
             aria-label="Jako"
           >
-            <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40 flex items-center justify-center" style={{ minWidth: '60px', minHeight: '60px' }}>
-              <img 
-                src="/lovable-uploads/8bb79f14-bc71-4f2d-9894-5f4e7915da4b.png" 
-                alt="Jako" 
+            <div className="bg-flyboy-gold bg-opacity-20 rounded-full p-3 transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40">
+              <svg 
                 width="36" 
                 height="36" 
-                className="object-contain"
-              />
+                viewBox="0 0 24 24" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="text-flyboy-gold"
+              >
+                <path 
+                  d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  fill="none"
+                />
+                <path 
+                  d="M9 8.5C9 7.67 9.67 7 10.5 7H13.5C14.33 7 15 7.67 15 8.5V15.5C15 16.33 14.33 17 13.5 17H10.5C9.67 17 9 16.33 9 15.5V8.5Z" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  fill="none"
+                />
+                <path 
+                  d="M9 10.5H15" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+                <path 
+                  d="M9 13.5H15" 
+                  stroke="currentColor" 
+                  strokeWidth="1.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                />
+              </svg>
             </div>
           </a>
         </div>
