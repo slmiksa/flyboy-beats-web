@@ -61,14 +61,15 @@ const allPartners = [...partners, ...partners];
 
 const PartnersSection = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
-  const autoPlayRef = useRef<number | null>(null);
+  const animationRef = useRef<number | null>(null);
   
   useEffect(() => {
     let position = 0;
-    const speed = 0.5; // Reduced speed for smoother scrolling (was 1)
+    const speed = 0.3; // Adjust scrolling speed - slower for smoother movement
     
-    const autoPlay = () => {
+    const animate = () => {
       if (carouselRef.current) {
+        // Increment position for scrolling
         position += speed;
         
         // When we reach the end of first set, reset position
@@ -81,15 +82,16 @@ const PartnersSection = () => {
         }
       }
       
-      autoPlayRef.current = requestAnimationFrame(autoPlay);
+      animationRef.current = requestAnimationFrame(animate);
     };
     
-    autoPlayRef.current = requestAnimationFrame(autoPlay);
+    // Start the animation
+    animationRef.current = requestAnimationFrame(animate);
     
-    // Cleanup
+    // Cleanup function to cancel animation frame when component unmounts
     return () => {
-      if (autoPlayRef.current) {
-        cancelAnimationFrame(autoPlayRef.current);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
       }
     };
   }, []);
@@ -103,7 +105,6 @@ const PartnersSection = () => {
           <div 
             ref={carouselRef}
             className="overflow-hidden whitespace-nowrap"
-            style={{ scrollBehavior: 'smooth' }}
           >
             <div className="inline-flex gap-8">
               {allPartners.map((partner, index) => (
