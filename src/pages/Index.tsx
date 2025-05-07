@@ -42,7 +42,6 @@ const Index = () => {
       <SuccessPartnersBanner />
       <HeroSlider />
       <EventsSection />
-      <PartnersSection />
       <AboutSection />
     </div>
   );
