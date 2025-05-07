@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MessageCircle, Instagram, Twitter, Music, Headphones } from 'lucide-react';
+import { Music, Headphones } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -33,36 +33,6 @@ const Footer = () => {
             />
           </div>
           
-          <h3 className="text-flyboy-gold text-xl font-bold mb-4">تابعني على وسائل التواصل الاجتماعي</h3>
-          <div className="flex space-x-6 space-x-reverse">
-            <a
-              href="https://snapchat.com/add/flyboy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white hover:text-flyboy-gold transition-all duration-300 transform hover:scale-125"
-              aria-label="Snapchat"
-            >
-              <MessageCircle size={30} />
-            </a>
-            <a
-              href="https://instagram.com/flyboy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white hover:text-flyboy-gold transition-all duration-300 transform hover:scale-125"
-              aria-label="Instagram"
-            >
-              <Instagram size={30} />
-            </a>
-            <a
-              href="https://twitter.com/flyboy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white hover:text-flyboy-gold transition-all duration-300 transform hover:scale-125"
-              aria-label="Twitter"
-            >
-              <Twitter size={30} />
-            </a>
-          </div>
           <div className="mt-8 text-center">
             <p className="text-white opacity-75">
               جميع الحقوق محفوظة &copy; {new Date().getFullYear()} - FLY BOY

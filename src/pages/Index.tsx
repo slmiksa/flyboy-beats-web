@@ -4,6 +4,8 @@ import HeroSlider from '@/components/HeroSlider';
 import EventsSection from '@/components/EventsSection';
 import PartnersSection from '@/components/PartnersSection';
 import AboutSection from '@/components/AboutSection';
+import SuccessPartnersBanner from '@/components/SuccessPartnersBanner';
+import SocialMediaBar from '@/components/SocialMediaBar';
 import { Music, Disc, Volume2, Headphones, Mic, Radio, Music4, FileMusic } from 'lucide-react';
 
 const Index = () => {
@@ -34,6 +36,8 @@ const Index = () => {
         </div>
       ))}
 
+      <SocialMediaBar />
+      <SuccessPartnersBanner />
       <HeroSlider />
       <EventsSection />
       <PartnersSection />
