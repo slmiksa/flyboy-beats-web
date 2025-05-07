@@ -8,7 +8,7 @@ const SocialMediaBar = () => {
   // Make spacing consistent across all screen sizes
   const spacingClass = "space-x-3 md:space-x-3";
   return <div className="bg-flyboy-dark py-3">
-      <div className="container flex justify-center mx-0 my-0 py-0 rounded-full px-0">
+      <div className="container flex justify-center rounded-full my-0 px-0 py-0 mx-[131px]">
         <div className={`flex items-center ${spacingClass} space-x-reverse flex-nowrap overflow-x-auto`}>
           <a href="https://snapchat.com/add/flyboy" target="_blank" rel="noopener noreferrer" aria-label="Snapchat" className="group mx-0 px-0 py-0 my-0">
             <div className={`bg-flyboy-gold bg-opacity-20 rounded-full ${iconContainerSize} transform transition-all duration-300 group-hover:scale-110 group-hover:bg-opacity-40`}>
