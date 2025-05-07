@@ -1,11 +1,8 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-
 const AboutSection = () => {
-  return (
-    <section className="py-16 bg-gradient-hero">
+  return <section className="bg-gradient-hero px-0 py-[50px] my-[34px]">
       <div className="container">
         <h2 className="section-title text-flyboy-gold">نبذة عني</h2>
         <div className="max-w-3xl mx-auto text-center">
@@ -14,17 +11,12 @@ const AboutSection = () => {
             أتميز بأسلوبي الفريد في دمج الموسيقى العربية والعالمية، وأمتلك القدرة على إضفاء أجواء مميزة تناسب مختلف أنواع المناسبات والحفلات.
             تتنوع خبراتي بين حفلات الشاطئ، النوادي الليلية، المهرجانات الموسيقية، والمناسبات الخاصة.
           </p>
-          <Link
-            to="/about"
-            className="inline-flex items-center gap-2 bg-flyboy-gold text-flyboy-dark px-6 py-3 rounded-md font-bold transition-all hover:bg-opacity-90"
-          >
+          <Link to="/about" className="inline-flex items-center gap-2 bg-flyboy-gold text-flyboy-dark px-6 py-3 rounded-md font-bold transition-all hover:bg-opacity-90">
             المزيد عني
             <ArrowLeft size={18} />
           </Link>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default AboutSection;
