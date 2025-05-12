@@ -72,7 +72,8 @@ const SuccessPartnersBanner = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>
+        {`
         .partners-slider {
           --scroll-duration: 20s;
           direction: rtl;
@@ -98,7 +99,8 @@ const SuccessPartnersBanner = () => {
             transform: translateX(0%);
           }
         }
-      `}</style>
+        `}
+      </style>
     </section>
   );
 };

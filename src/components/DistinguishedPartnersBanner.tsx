@@ -89,7 +89,8 @@ const DistinguishedPartnersBanner = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>
+        {`
         .partners-slider {
           --scroll-duration: 20s;
           direction: rtl;
@@ -115,7 +116,8 @@ const DistinguishedPartnersBanner = () => {
             transform: translateX(0%);
           }
         }
-      `}</style>
+        `}
+      </style>
     </section>
   );
 };
