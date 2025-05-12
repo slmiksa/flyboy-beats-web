@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from '@/components/ui/button';
 
 // Partners list (limited to 3)
 const partners = [{
@@ -40,9 +41,11 @@ const SuccessPartnersBanner = () => {
           </div>
         </div>
         
-        <Link to="/all-partners" className="inline-block text-flyboy-gold hover:text-flyboy-gold/80 text-sm font-medium">
-          مشاهدة الكل
-        </Link>
+        <Button asChild variant="secondary" className="mt-2 text-sm font-medium">
+          <Link to="/all-partners">
+            مشاهدة الكل
+          </Link>
+        </Button>
       </div>
     </section>;
 };

@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from '@/components/ui/button';
 
 // Partners list (same as in SuccessPartnersBanner)
 const partners = [{
@@ -30,13 +31,12 @@ const AllPartners = () => {
     <div className="bg-flyboy-dark py-16">
       <div className="container max-w-5xl px-4 mx-auto">
         <div className="mb-8 flex items-center">
-          <Link 
-            to="/" 
-            className="text-flyboy-gold hover:text-flyboy-gold/80 flex items-center gap-2 mb-6"
-          >
-            <ChevronRight className="rotate-180 h-5 w-5" />
-            <span>العودة للرئيسية</span>
-          </Link>
+          <Button asChild variant="outline" className="text-flyboy-gold hover:text-flyboy-gold/80 flex items-center gap-2">
+            <Link to="/">
+              <ChevronRight className="rotate-180 h-5 w-5" />
+              <span>العودة للرئيسية</span>
+            </Link>
+          </Button>
         </div>
         
         <h1 className="text-3xl md:text-4xl font-bold text-flyboy-gold mb-12 text-center">

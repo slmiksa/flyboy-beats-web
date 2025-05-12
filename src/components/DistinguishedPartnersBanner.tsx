@@ -3,6 +3,7 @@ import React from 'react';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Button } from '@/components/ui/button';
 
 // Distinguished partners - these will be shown in the top banner
 const distinguishedPartners = [{
@@ -55,9 +56,11 @@ const DistinguishedPartnersBanner = () => {
           </div>
         </div>
         
-        <Link to="/distinguished-partners" className="inline-block text-flyboy-gold hover:text-flyboy-gold/80 text-sm font-medium">
-          مشاهدة الكل
-        </Link>
+        <Button asChild variant="secondary" className="mt-2 text-sm font-medium">
+          <Link to="/distinguished-partners">
+            مشاهدة الكل
+          </Link>
+        </Button>
       </div>
     </section>;
 };
