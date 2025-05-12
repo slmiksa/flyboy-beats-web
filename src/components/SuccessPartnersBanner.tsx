@@ -22,7 +22,7 @@ const partners = [{
 
 const SuccessPartnersBanner = () => {
   // Create multiple copies to ensure continuous animation with minimal gaps
-  const duplicateCount = 5;
+  const duplicateCount = 8;
   const scrollPartners = Array(duplicateCount).fill(partners).flat();
   
   return (
@@ -38,7 +38,7 @@ const SuccessPartnersBanner = () => {
               {scrollPartners.map((partner, index) => (
                 <div 
                   key={`${partner.id}-${index}`} 
-                  className="flex-shrink-0 w-[150px] mx-1 rtl-item"
+                  className="flex-shrink-0 w-[140px] mx-[2px] rtl-item"
                 >
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
                     <img
@@ -60,7 +60,7 @@ const SuccessPartnersBanner = () => {
           .rtl-slider {
             display: flex;
             width: max-content;
-            animation: slideRTL 30s linear infinite;
+            animation: slideRTL 40s linear infinite;
           }
           
           .rtl-item {
@@ -69,10 +69,10 @@ const SuccessPartnersBanner = () => {
           
           @keyframes slideRTL {
             0% {
-              transform: translateX(100%);
+              transform: translateX(0);
             }
             100% {
-              transform: translateX(-100%);
+              transform: translateX(-${100/duplicateCount*4}%);
             }
           }
         `}

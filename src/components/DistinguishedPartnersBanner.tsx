@@ -25,7 +25,7 @@ const distinguishedPartners = [{
 
 const DistinguishedPartnersBanner = () => {
   // Create multiple copies to ensure continuous animation with minimal gaps
-  const duplicateCount = 5;
+  const duplicateCount = 8;
   const scrollPartners = Array(duplicateCount).fill(distinguishedPartners).flat();
   
   return (
@@ -40,11 +40,11 @@ const DistinguishedPartnersBanner = () => {
         <div className="flex items-center justify-center mb-2">
           <h3 className="text-xl font-bold text-flyboy-gold relative inline-flex items-center">
             <span className="absolute -top-4 -right-6">
-              <Star className="text-flyboy-gold animate-pulse h-5 w-5" fill="#d4af37" />
+              <Star className="text-flyboy-gold h-5 w-5" fill="#d4af37" />
             </span>
             المتميزين
             <span className="absolute -top-4 -left-6">
-              <Star className="text-flyboy-gold animate-pulse h-5 w-5" fill="#d4af37" />
+              <Star className="text-flyboy-gold h-5 w-5" fill="#d4af37" />
             </span>
           </h3>
         </div>
@@ -55,7 +55,7 @@ const DistinguishedPartnersBanner = () => {
               {scrollPartners.map((partner, index) => (
                 <div 
                   key={`${partner.id}-${index}`} 
-                  className="flex-shrink-0 w-[150px] mx-1 rtl-item"
+                  className="flex-shrink-0 w-[140px] mx-[2px] rtl-item"
                 >
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
                     <img
@@ -77,7 +77,7 @@ const DistinguishedPartnersBanner = () => {
           .rtl-slider {
             display: flex;
             width: max-content;
-            animation: slideRTL 30s linear infinite;
+            animation: slideRTL 40s linear infinite;
           }
           
           .rtl-item {
@@ -86,10 +86,10 @@ const DistinguishedPartnersBanner = () => {
           
           @keyframes slideRTL {
             0% {
-              transform: translateX(100%);
+              transform: translateX(0);
             }
             100% {
-              transform: translateX(-100%);
+              transform: translateX(-${100/duplicateCount*4}%);
             }
           }
         `}
