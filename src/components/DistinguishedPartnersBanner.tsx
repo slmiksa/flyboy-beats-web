@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Star } from 'lucide-react';
+import { Star, Flame } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
@@ -47,7 +47,19 @@ const DistinguishedPartnersBanner = () => {
           <div className={`grid ${isMobile ? 'grid-cols-1 gap-6' : 'grid-cols-3 gap-8'} justify-items-center`}>
             {distinguishedPartners.map(partner => (
               <div key={partner.id} className="partner-item flex flex-col items-center w-full max-w-[200px]">
-                <div className="w-full aspect-[4/3] bg-white p-3 rounded-lg flex items-center justify-center mb-3 transform transition-transform hover:scale-105">
+                <div className="w-full aspect-[4/3] bg-white p-3 rounded-lg flex items-center justify-center mb-3 transform transition-transform hover:scale-105 relative partner-flame-border">
+                  <div className="absolute -top-2 -right-2">
+                    <Flame className="text-flyboy-gold h-5 w-5 animate-pulse" fill="#d4af37" />
+                  </div>
+                  <div className="absolute -top-2 -left-2">
+                    <Flame className="text-flyboy-gold h-5 w-5 animate-pulse" fill="#d4af37" />
+                  </div>
+                  <div className="absolute -bottom-2 -right-2">
+                    <Flame className="text-flyboy-gold h-5 w-5 animate-pulse" fill="#d4af37" />
+                  </div>
+                  <div className="absolute -bottom-2 -left-2">
+                    <Flame className="text-flyboy-gold h-5 w-5 animate-pulse" fill="#d4af37" />
+                  </div>
                   <img src={partner.logo} alt={partner.name} className="max-w-full max-h-full object-contain" />
                 </div>
                 <h3 className="text-white text-base font-medium text-center">{partner.name}</h3>
