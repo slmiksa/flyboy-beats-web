@@ -39,7 +39,7 @@ const SuccessPartnersBanner = () => {
               style={{
                 width: 'max-content',
                 gap: '1rem',
-                animation: 'scrollLogos 40s linear infinite'
+                animation: 'scrollLogos 20s linear infinite'
               }}
             >
               {scrollPartners.map((partner, index) => (
