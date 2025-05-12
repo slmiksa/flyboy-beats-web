@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -17,10 +16,8 @@ const distinguishedPartners = [{
   name: 'Sancy Club',
   logo: 'https://images.unsplash.com/photo-1516876437184-593fda40c542?w=200&h=100&fit=crop&auto=format'
 }];
-
 const DistinguishedPartnersBanner = () => {
-  return (
-    <section className="bg-flyboy-dark py-10 text-center border-b border-flyboy-gold/30">
+  return <section className="bg-flyboy-dark py-10 text-center border-b border-flyboy-gold/30">
       <div className="container max-w-5xl px-4 mx-auto">
         <div className="mb-8 flex items-center justify-center">
           <h2 className="text-2xl font-bold text-flyboy-gold text-center">
@@ -40,35 +37,21 @@ const DistinguishedPartnersBanner = () => {
           </h3>
         </div>
         
-        <div className="mx-auto border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-6 mb-4">
+        <div className="mx-auto border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-6 mb-4 py-[28px] px-[133px]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {distinguishedPartners.map((partner) => (
-              <div 
-                key={partner.id} 
-                className="partner-item flex flex-col items-center"
-              >
+            {distinguishedPartners.map(partner => <div key={partner.id} className="partner-item flex flex-col items-center">
                 <div className="w-full aspect-[4/3] bg-white p-3 rounded-lg flex items-center justify-center mb-3 transform transition-transform hover:scale-105">
-                  <img
-                    src={partner.logo}
-                    alt={partner.name}
-                    className="max-w-full max-h-full object-contain"
-                  />
+                  <img src={partner.logo} alt={partner.name} className="max-w-full max-h-full object-contain" />
                 </div>
                 <h3 className="text-white text-base font-medium text-center">{partner.name}</h3>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
         
-        <Link 
-          to="/distinguished-partners" 
-          className="inline-block text-flyboy-gold hover:text-flyboy-gold/80 text-sm font-medium"
-        >
+        <Link to="/distinguished-partners" className="inline-block text-flyboy-gold hover:text-flyboy-gold/80 text-sm font-medium">
           مشاهدة الكل
         </Link>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default DistinguishedPartnersBanner;
