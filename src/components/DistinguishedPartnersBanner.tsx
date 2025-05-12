@@ -24,8 +24,8 @@ const distinguishedPartners = [{
 }];
 
 const DistinguishedPartnersBanner = () => {
-  // Create multiple copies to ensure no gaps in scroll - but use fewer copies for better performance
-  const duplicateCount = 10;
+  // Create multiple copies to ensure continuous animation
+  const duplicateCount = 3;
   const scrollPartners = Array(duplicateCount).fill(distinguishedPartners).flat();
   
   return (
@@ -51,15 +51,13 @@ const DistinguishedPartnersBanner = () => {
         
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
           <div className="overflow-hidden relative w-full">
-            <div className="flex animate-rtl-marquee" style={{width: 'max-content', gap: '1rem'}}>
+            <div className="flex logo-slider">
               {scrollPartners.map((partner, index) => (
                 <div 
                   key={`${partner.id}-${index}`} 
-                  className="flex-shrink-0 w-[180px]"
+                  className="flex-shrink-0 w-[180px] mx-2 logo-item"
                   style={{
-                    animation: `fadeInRight 0.6s ease-out forwards`,
-                    animationDelay: `${index * 0.1}s`,
-                    opacity: 0
+                    animationDelay: `${index * 0.2}s`
                   }}
                 >
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
@@ -79,14 +77,33 @@ const DistinguishedPartnersBanner = () => {
 
       <style>
         {`
-          @keyframes fadeInRight {
-            from {
-              opacity: 0;
-              transform: translateX(-20px);
+          .logo-slider {
+            display: flex;
+            width: max-content;
+            animation: continuousSlide 20s linear infinite;
+          }
+          
+          .logo-item {
+            opacity: 0;
+            animation: fadeInOut 4s ease-in-out infinite;
+            animation-fill-mode: both;
+          }
+          
+          @keyframes continuousSlide {
+            0% {
+              transform: translateX(100%);
             }
-            to {
+            100% {
+              transform: translateX(-100%);
+            }
+          }
+          
+          @keyframes fadeInOut {
+            0%, 100% {
+              opacity: 0;
+            }
+            20%, 80% {
               opacity: 1;
-              transform: translateX(0);
             }
           }
         `}
