@@ -22,7 +22,7 @@ const partners = [{
 
 const SuccessPartnersBanner = () => {
   // Create multiple copies to ensure no gaps in scroll - but use fewer copies for better performance
-  const duplicateCount = 15;
+  const duplicateCount = 10;
   const scrollPartners = Array(duplicateCount).fill(partners).flat();
   
   return (
@@ -34,16 +34,17 @@ const SuccessPartnersBanner = () => {
         
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
           <div className="overflow-hidden relative w-full">
-            <div 
-              className="flex"
-              style={{
-                width: 'max-content',
-                gap: '1rem',
-                animation: 'scrollLogos 20s linear infinite'
-              }}
-            >
+            <div className="flex animate-rtl-marquee" style={{width: 'max-content', gap: '1rem'}}>
               {scrollPartners.map((partner, index) => (
-                <div key={`${partner.id}-${index}`} className="flex-shrink-0 w-[180px]">
+                <div 
+                  key={`${partner.id}-${index}`} 
+                  className="flex-shrink-0 w-[180px]"
+                  style={{
+                    animation: `fadeInRight 0.6s ease-out forwards`,
+                    animationDelay: `${index * 0.1}s`,
+                    opacity: 0
+                  }}
+                >
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
                     <img
                       src={partner.logo}
@@ -61,12 +62,14 @@ const SuccessPartnersBanner = () => {
 
       <style>
         {`
-          @keyframes scrollLogos {
-            0% {
-              transform: translateX(0);
+          @keyframes fadeInRight {
+            from {
+              opacity: 0;
+              transform: translateX(-20px);
             }
-            100% {
-              transform: translateX(calc(-180px * ${partners.length} - ${partners.length * 1}rem));
+            to {
+              opacity: 1;
+              transform: translateX(0);
             }
           }
         `}
