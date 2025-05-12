@@ -21,8 +21,8 @@ const partners = [{
 }];
 
 const SuccessPartnersBanner = () => {
-  // Duplicate partners for a continuous flow effect - more duplicates to prevent gaps
-  const scrollPartners = [...partners, ...partners, ...partners, ...partners, ...partners, ...partners];
+  // Create multiple copies to ensure no gaps in scroll
+  const scrollPartners = [...partners, ...partners, ...partners, ...partners, ...partners, ...partners, ...partners, ...partners];
   
   return (
     <section className="bg-flyboy-dark py-6 text-center">
@@ -32,21 +32,20 @@ const SuccessPartnersBanner = () => {
         </div>
         
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
-          <div className="partners-container overflow-hidden" style={{ position: 'relative' }}>
+          <div className="overflow-hidden relative w-full">
             <div 
-              className="partners-scroll flex" 
-              style={{ 
-                animationDuration: '40s', // Slower animation
-                animationName: 'marquee',
-                animationIterationCount: 'infinite',
+              className="flex"
+              style={{
+                animationName: 'scrollPartners',
+                animationDuration: '60s',
                 animationTimingFunction: 'linear',
-                display: 'flex',
-                gap: '1rem',
-                width: 'max-content'
+                animationIterationCount: 'infinite',
+                width: 'max-content',
+                gap: '2rem'
               }}
             >
               {scrollPartners.map((partner, index) => (
-                <div key={`${partner.id}-${index}`} className="partner-item px-2">
+                <div key={`${partner.id}-${index}`} className="px-2 w-[200px]">
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
                     <img
                       src={partner.logo}
@@ -61,6 +60,17 @@ const SuccessPartnersBanner = () => {
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes scrollPartners {
+          0% {
+            transform: translateX(0%);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
     </section>
   );
 };
