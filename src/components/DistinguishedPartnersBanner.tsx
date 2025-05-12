@@ -24,8 +24,8 @@ const distinguishedPartners = [{
 }];
 
 const DistinguishedPartnersBanner = () => {
-  // Create multiple copies to ensure continuous animation
-  const duplicateCount = 3;
+  // Create multiple copies to ensure continuous animation with minimal gaps
+  const duplicateCount = 5;
   const scrollPartners = Array(duplicateCount).fill(distinguishedPartners).flat();
   
   return (
@@ -51,11 +51,11 @@ const DistinguishedPartnersBanner = () => {
         
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
           <div className="overflow-hidden relative w-full">
-            <div className="flex logo-slider-continuous">
+            <div className="flex rtl-slider">
               {scrollPartners.map((partner, index) => (
                 <div 
                   key={`${partner.id}-${index}`} 
-                  className="flex-shrink-0 w-[180px] mx-2 logo-item-continuous"
+                  className="flex-shrink-0 w-[150px] mx-1 rtl-item"
                 >
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
                     <img
@@ -74,22 +74,22 @@ const DistinguishedPartnersBanner = () => {
 
       <style>
         {`
-          .logo-slider-continuous {
+          .rtl-slider {
             display: flex;
             width: max-content;
-            animation: continuousSlideRTL 20s linear infinite;
+            animation: slideRTL 30s linear infinite;
           }
           
-          .logo-item-continuous {
+          .rtl-item {
             opacity: 1;
           }
           
-          @keyframes continuousSlideRTL {
+          @keyframes slideRTL {
             0% {
-              transform: translateX(-100%);
+              transform: translateX(100%);
             }
             100% {
-              transform: translateX(100%);
+              transform: translateX(-100%);
             }
           }
         `}
