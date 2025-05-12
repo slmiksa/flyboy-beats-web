@@ -1,6 +1,7 @@
 
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Distinguished partners - these will be shown in the top banner
 const distinguishedPartners = [{
@@ -15,35 +16,9 @@ const distinguishedPartners = [{
   id: 3,
   name: 'Sancy Club',
   logo: 'https://images.unsplash.com/photo-1516876437184-593fda40c542?w=200&h=100&fit=crop&auto=format'
-}, {
-  id: 4,
-  name: 'Beach Waves',
-  logo: 'https://images.unsplash.com/photo-1525268771113-32d9e9021a97?w=200&h=100&fit=crop&auto=format'
 }];
 
 const DistinguishedPartnersBanner = () => {
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  
-  useEffect(() => {
-    if (!scrollerRef.current) return;
-    
-    // Clone items for seamless scrolling
-    const scrollerInner = scrollerRef.current.querySelector('.scroller-inner') as HTMLElement;
-    const scrollerContent = Array.from(scrollerInner.children);
-    
-    // Clone enough items to ensure we have a good number for smooth looping
-    scrollerContent.forEach(item => {
-      const clone = item.cloneNode(true);
-      scrollerInner.appendChild(clone);
-    });
-    
-    // If we need even more clones for wider screens
-    scrollerContent.forEach(item => {
-      const clone = item.cloneNode(true);
-      scrollerInner.appendChild(clone);
-    });
-  }, []);
-  
   return (
     <section className="bg-flyboy-dark py-6 text-center border-b border-flyboy-gold/30">
       <div className="container">
@@ -65,70 +40,33 @@ const DistinguishedPartnersBanner = () => {
           </h3>
         </div>
         
-        <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
-          <div className="scroller" ref={scrollerRef}>
-            <div className="scroller-inner">
-              {distinguishedPartners.map((partner) => (
-                <div 
-                  key={partner.id} 
-                  className="partner-item"
-                >
-                  <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
-                    <img
-                      src={partner.logo}
-                      alt={partner.name}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  </div>
-                  <h3 className="text-white text-sm md:text-base font-medium text-center">{partner.name}</h3>
+        <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4 mb-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {distinguishedPartners.map((partner) => (
+              <div 
+                key={partner.id} 
+                className="partner-item"
+              >
+                <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
+                    className="max-w-full max-h-full object-contain"
+                  />
                 </div>
-              ))}
-            </div>
+                <h3 className="text-white text-sm md:text-base font-medium text-center">{partner.name}</h3>
+              </div>
+            ))}
           </div>
         </div>
+        
+        <Link 
+          to="/distinguished-partners" 
+          className="inline-block text-flyboy-gold hover:text-flyboy-gold/80 text-sm font-medium"
+        >
+          مشاهدة الكل
+        </Link>
       </div>
-
-      <style>
-        {`
-        .scroller {
-          max-width: 100%;
-          overflow: hidden;
-        }
-        
-        .scroller-inner {
-          display: flex;
-          flex-wrap: nowrap;
-          animation: scroll var(--scroll-duration, 30s) linear infinite;
-          width: max-content;
-        }
-        
-        .partner-item {
-          flex: 0 0 auto;
-          width: 130px;
-          padding: 0 3px;
-        }
-        
-        @keyframes scroll {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(calc(-50%));
-          }
-        }
-        
-        /* Adjust direction for RTL */
-        .scroller {
-          direction: rtl;
-        }
-        
-        @media (prefers-reduced-motion: reduce) {
-          .scroller-inner {
-            animation-play-state: paused;
-          }
-        }
-        `}
-      </style>
     </section>
   );
 };
