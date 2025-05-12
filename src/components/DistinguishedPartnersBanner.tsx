@@ -24,8 +24,8 @@ const distinguishedPartners = [{
 }];
 
 const DistinguishedPartnersBanner = () => {
-  // Create multiple copies to ensure no gaps in scroll - duplicate more times for a smoother experience
-  const duplicateCount = 30;
+  // Create multiple copies to ensure no gaps in scroll - but use fewer copies for better performance
+  const duplicateCount = 15;
   const scrollPartners = Array(duplicateCount).fill(distinguishedPartners).flat();
   
   return (
@@ -56,7 +56,7 @@ const DistinguishedPartnersBanner = () => {
               style={{
                 width: 'max-content',
                 gap: '1rem',
-                animation: 'scrollLogos 120s linear infinite'
+                animation: 'scrollLogos 40s linear infinite'
               }}
             >
               {scrollPartners.map((partner, index) => (
