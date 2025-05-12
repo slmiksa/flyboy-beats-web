@@ -21,8 +21,8 @@ const partners = [{
 }];
 
 const SuccessPartnersBanner = () => {
-  // Duplicate partners for a continuous flow effect
-  const scrollPartners = [...partners, ...partners, ...partners];
+  // Duplicate partners for a continuous flow effect - more duplicates to prevent gaps
+  const scrollPartners = [...partners, ...partners, ...partners, ...partners, ...partners, ...partners];
   
   return (
     <section className="bg-flyboy-dark py-6 text-center">
@@ -32,8 +32,19 @@ const SuccessPartnersBanner = () => {
         </div>
         
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
-          <div className="partners-container">
-            <div className="partners-scroll">
+          <div className="partners-container overflow-hidden" style={{ position: 'relative' }}>
+            <div 
+              className="partners-scroll flex" 
+              style={{ 
+                animationDuration: '40s', // Slower animation
+                animationName: 'marquee',
+                animationIterationCount: 'infinite',
+                animationTimingFunction: 'linear',
+                display: 'flex',
+                gap: '1rem',
+                width: 'max-content'
+              }}
+            >
               {scrollPartners.map((partner, index) => (
                 <div key={`${partner.id}-${index}`} className="partner-item px-2">
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">

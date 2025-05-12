@@ -25,7 +25,7 @@ const distinguishedPartners = [{
 
 const DistinguishedPartnersBanner = () => {
   // Duplicate partners multiple times to ensure no empty space in the scrolling
-  const scrollPartners = [...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners];
+  const scrollPartners = [...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners];
   
   return (
     <section className="bg-flyboy-dark py-6 text-center border-b border-flyboy-gold/30">
@@ -49,11 +49,14 @@ const DistinguishedPartnersBanner = () => {
         </div>
         
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
-          <div className="partners-container">
+          <div className="partners-container overflow-hidden" style={{ position: 'relative' }}>
             <div 
-              className="partners-scroll" 
+              className="partners-scroll flex" 
               style={{ 
-                animationDuration: '25s',
+                animationDuration: '40s', // Slower animation
+                animationName: 'marquee',
+                animationIterationCount: 'infinite',
+                animationTimingFunction: 'linear',
                 display: 'flex',
                 gap: '1rem',
                 width: 'max-content'
