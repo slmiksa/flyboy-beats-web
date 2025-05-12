@@ -1,8 +1,6 @@
 
 import React, { useRef, useEffect } from 'react';
 import { Star } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 
 // Distinguished partners - these will be shown in the top banner
 const distinguishedPartners = [{
@@ -24,25 +22,26 @@ const distinguishedPartners = [{
 }];
 
 const DistinguishedPartnersBanner = () => {
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    const slider = sliderRef.current;
-    const content = contentRef.current;
+    if (!scrollerRef.current) return;
     
-    if (!slider || !content) return;
+    // Clone items for seamless scrolling
+    const scrollerInner = scrollerRef.current.querySelector('.scroller-inner') as HTMLElement;
+    const scrollerContent = Array.from(scrollerInner.children);
     
-    // Clone the content twice to ensure seamless looping
-    const originalContent = content.innerHTML;
-    content.innerHTML = originalContent + originalContent;
+    // Clone enough items to ensure we have a good number for smooth looping
+    scrollerContent.forEach(item => {
+      const clone = item.cloneNode(true);
+      scrollerInner.appendChild(clone);
+    });
     
-    // Calculate animation duration based on content width
-    const scrollDistance = content.scrollWidth / 2;
-    const scrollDuration = scrollDistance / 30; // pixels per second
-    
-    // Update CSS animation with calculated duration
-    slider.style.setProperty('--scroll-duration', `${scrollDuration}s`);
+    // If we need even more clones for wider screens
+    scrollerContent.forEach(item => {
+      const clone = item.cloneNode(true);
+      scrollerInner.appendChild(clone);
+    });
   }, []);
   
   return (
@@ -67,11 +66,11 @@ const DistinguishedPartnersBanner = () => {
         </div>
         
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
-          <div ref={sliderRef} className="overflow-hidden relative w-full partners-slider">
-            <div ref={contentRef} className="partners-scroll">
-              {distinguishedPartners.map((partner, index) => (
+          <div className="scroller" ref={scrollerRef}>
+            <div className="scroller-inner">
+              {distinguishedPartners.map((partner) => (
                 <div 
-                  key={`${partner.id}-${index}`} 
+                  key={partner.id} 
                   className="partner-item"
                 >
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
@@ -91,29 +90,41 @@ const DistinguishedPartnersBanner = () => {
 
       <style>
         {`
-        .partners-slider {
-          --scroll-duration: 20s;
-          direction: rtl;
+        .scroller {
+          max-width: 100%;
+          overflow: hidden;
         }
         
-        .partners-scroll {
+        .scroller-inner {
           display: flex;
           flex-wrap: nowrap;
-          animation: scroll-rtl var(--scroll-duration) linear infinite;
+          animation: scroll var(--scroll-duration, 30s) linear infinite;
+          width: max-content;
         }
         
         .partner-item {
-          flex: 0 0 130px;
+          flex: 0 0 auto;
+          width: 130px;
           padding: 0 3px;
-          opacity: 1;
         }
         
-        @keyframes scroll-rtl {
-          0% {
-            transform: translateX(-50%);
+        @keyframes scroll {
+          from {
+            transform: translateX(0);
           }
-          100% {
-            transform: translateX(0%);
+          to {
+            transform: translateX(calc(-50%));
+          }
+        }
+        
+        /* Adjust direction for RTL */
+        .scroller {
+          direction: rtl;
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+          .scroller-inner {
+            animation-play-state: paused;
           }
         }
         `}
