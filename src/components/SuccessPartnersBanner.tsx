@@ -22,7 +22,8 @@ const partners = [{
 
 const SuccessPartnersBanner = () => {
   // Create multiple copies to ensure no gaps in scroll
-  const scrollPartners = [...partners, ...partners, ...partners, ...partners, ...partners, ...partners, ...partners, ...partners];
+  const duplicateCount = 30;
+  const scrollPartners = Array(duplicateCount).fill(partners).flat();
   
   return (
     <section className="bg-flyboy-dark py-6 text-center">
@@ -37,12 +38,12 @@ const SuccessPartnersBanner = () => {
               className="flex"
               style={{
                 width: 'max-content',
-                gap: '2rem',
-                animation: 'scrollPartners 60s linear infinite'
+                gap: '1rem',
+                animation: 'scrollLogos 120s linear infinite'
               }}
             >
               {scrollPartners.map((partner, index) => (
-                <div key={`${partner.id}-${index}`} className="px-2 w-[200px]">
+                <div key={`${partner.id}-${index}`} className="flex-shrink-0 w-[180px]">
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
                     <img
                       src={partner.logo}
@@ -60,12 +61,12 @@ const SuccessPartnersBanner = () => {
 
       <style>
         {`
-          @keyframes scrollPartners {
+          @keyframes scrollLogos {
             0% {
-              transform: translateX(0%);
+              transform: translateX(0);
             }
             100% {
-              transform: translateX(-50%);
+              transform: translateX(calc(-180px * ${partners.length} - ${partners.length * 1}rem));
             }
           }
         `}

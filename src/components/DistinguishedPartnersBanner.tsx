@@ -24,8 +24,9 @@ const distinguishedPartners = [{
 }];
 
 const DistinguishedPartnersBanner = () => {
-  // Create multiple copies to ensure no gaps in scroll
-  const scrollPartners = [...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners, ...distinguishedPartners];
+  // Create multiple copies to ensure no gaps in scroll - duplicate more times for a smoother experience
+  const duplicateCount = 30;
+  const scrollPartners = Array(duplicateCount).fill(distinguishedPartners).flat();
   
   return (
     <section className="bg-flyboy-dark py-6 text-center border-b border-flyboy-gold/30">
@@ -51,15 +52,15 @@ const DistinguishedPartnersBanner = () => {
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
           <div className="overflow-hidden relative w-full">
             <div 
-              className="flex animate-scroll"
+              className="flex"
               style={{
                 width: 'max-content',
-                gap: '2rem',
-                animation: 'scrollPartners 60s linear infinite'
+                gap: '1rem',
+                animation: 'scrollLogos 120s linear infinite'
               }}
             >
               {scrollPartners.map((partner, index) => (
-                <div key={`${partner.id}-${index}`} className="px-2 w-[200px]">
+                <div key={`${partner.id}-${index}`} className="flex-shrink-0 w-[180px]">
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
                     <img
                       src={partner.logo}
@@ -77,12 +78,12 @@ const DistinguishedPartnersBanner = () => {
 
       <style>
         {`
-          @keyframes scrollPartners {
+          @keyframes scrollLogos {
             0% {
-              transform: translateX(0%);
+              transform: translateX(0);
             }
             100% {
-              transform: translateX(-50%);
+              transform: translateX(calc(-180px * ${distinguishedPartners.length} - ${distinguishedPartners.length * 1}rem));
             }
           }
         `}
