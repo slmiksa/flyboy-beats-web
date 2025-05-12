@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Star } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -24,9 +24,26 @@ const distinguishedPartners = [{
 }];
 
 const DistinguishedPartnersBanner = () => {
-  // Create multiple copies to ensure continuous animation with minimal gaps
-  const duplicateCount = 8;
-  const scrollPartners = Array(duplicateCount).fill(distinguishedPartners).flat();
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    const slider = sliderRef.current;
+    const content = contentRef.current;
+    
+    if (!slider || !content) return;
+    
+    // Clone the content twice to ensure seamless looping
+    const originalContent = content.innerHTML;
+    content.innerHTML = originalContent + originalContent;
+    
+    // Calculate animation duration based on content width
+    const scrollDistance = content.scrollWidth / 2;
+    const scrollDuration = scrollDistance / 30; // pixels per second
+    
+    // Update CSS animation with calculated duration
+    slider.style.setProperty('--scroll-duration', `${scrollDuration}s`);
+  }, []);
   
   return (
     <section className="bg-flyboy-dark py-6 text-center border-b border-flyboy-gold/30">
@@ -50,12 +67,12 @@ const DistinguishedPartnersBanner = () => {
         </div>
         
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
-          <div className="overflow-hidden relative w-full">
-            <div className="flex rtl-slider">
-              {scrollPartners.map((partner, index) => (
+          <div ref={sliderRef} className="overflow-hidden relative w-full partners-slider">
+            <div ref={contentRef} className="partners-scroll">
+              {distinguishedPartners.map((partner, index) => (
                 <div 
                   key={`${partner.id}-${index}`} 
-                  className="flex-shrink-0 w-[140px] mx-[2px] rtl-item"
+                  className="partner-item"
                 >
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
                     <img
@@ -72,28 +89,33 @@ const DistinguishedPartnersBanner = () => {
         </div>
       </div>
 
-      <style>
-        {`
-          .rtl-slider {
-            display: flex;
-            width: max-content;
-            animation: slideRTL 40s linear infinite;
+      <style jsx>{`
+        .partners-slider {
+          --scroll-duration: 20s;
+          direction: rtl;
+        }
+        
+        .partners-scroll {
+          display: flex;
+          flex-wrap: nowrap;
+          animation: scroll-rtl var(--scroll-duration) linear infinite;
+        }
+        
+        .partner-item {
+          flex: 0 0 130px;
+          padding: 0 3px;
+          opacity: 1;
+        }
+        
+        @keyframes scroll-rtl {
+          0% {
+            transform: translateX(-50%);
           }
-          
-          .rtl-item {
-            opacity: 1;
+          100% {
+            transform: translateX(0%);
           }
-          
-          @keyframes slideRTL {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-${100/duplicateCount*4}%);
-            }
-          }
-        `}
-      </style>
+        }
+      `}</style>
     </section>
   );
 };
