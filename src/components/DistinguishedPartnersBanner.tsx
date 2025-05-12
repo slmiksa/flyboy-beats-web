@@ -20,15 +20,15 @@ const distinguishedPartners = [{
 
 const DistinguishedPartnersBanner = () => {
   return (
-    <section className="bg-flyboy-dark py-6 text-center border-b border-flyboy-gold/30">
-      <div className="container">
-        <div className="mb-6 flex items-center justify-center">
+    <section className="bg-flyboy-dark py-10 text-center border-b border-flyboy-gold/30">
+      <div className="container max-w-5xl px-4 mx-auto">
+        <div className="mb-8 flex items-center justify-center">
           <h2 className="text-2xl font-bold text-flyboy-gold text-center">
             شركاء النجاح
           </h2>
         </div>
         
-        <div className="flex items-center justify-center mb-2">
+        <div className="flex items-center justify-center mb-4">
           <h3 className="text-xl font-bold text-flyboy-gold relative inline-flex items-center">
             <span className="absolute -top-4 -right-6">
               <Star className="text-flyboy-gold h-5 w-5" fill="#d4af37" />
@@ -40,21 +40,21 @@ const DistinguishedPartnersBanner = () => {
           </h3>
         </div>
         
-        <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4 mb-3">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="mx-auto border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-6 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {distinguishedPartners.map((partner) => (
               <div 
                 key={partner.id} 
-                className="partner-item"
+                className="partner-item flex flex-col items-center"
               >
-                <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
+                <div className="w-full aspect-[4/3] bg-white p-3 rounded-lg flex items-center justify-center mb-3 transform transition-transform hover:scale-105">
                   <img
                     src={partner.logo}
                     alt={partner.name}
                     className="max-w-full max-h-full object-contain"
                   />
                 </div>
-                <h3 className="text-white text-sm md:text-base font-medium text-center">{partner.name}</h3>
+                <h3 className="text-white text-base font-medium text-center">{partner.name}</h3>
               </div>
             ))}
           </div>

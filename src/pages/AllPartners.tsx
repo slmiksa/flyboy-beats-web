@@ -25,7 +25,7 @@ const partners = [{
 const AllPartners = () => {
   return (
     <div className="bg-flyboy-dark py-16">
-      <div className="container">
+      <div className="container max-w-5xl px-4 mx-auto">
         <div className="mb-8 flex items-center">
           <Link 
             to="/" 
@@ -40,13 +40,13 @@ const AllPartners = () => {
           كل شركاء النجاح
         </h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto">
           {partners.map((partner) => (
             <div 
               key={partner.id} 
               className="border-2 border-flyboy-gold rounded-xl overflow-hidden bg-flyboy-purple p-6 flex flex-col items-center"
             >
-              <div className="w-full aspect-[4/3] bg-white p-4 rounded-lg flex items-center justify-center mb-6 transform transition-transform hover:scale-105">
+              <div className="w-full aspect-[4/3] bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
                 <img
                   src={partner.logo}
                   alt={partner.name}
