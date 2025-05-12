@@ -36,12 +36,9 @@ const SuccessPartnersBanner = () => {
             <div 
               className="flex"
               style={{
-                animationName: 'scrollPartners',
-                animationDuration: '60s',
-                animationTimingFunction: 'linear',
-                animationIterationCount: 'infinite',
                 width: 'max-content',
-                gap: '2rem'
+                gap: '2rem',
+                animation: 'scrollPartners 60s linear infinite'
               }}
             >
               {scrollPartners.map((partner, index) => (
@@ -61,16 +58,18 @@ const SuccessPartnersBanner = () => {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes scrollPartners {
-          0% {
-            transform: translateX(0%);
+      <style>
+        {`
+          @keyframes scrollPartners {
+            0% {
+              transform: translateX(0%);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
           }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
+        `}
+      </style>
     </section>
   );
 };

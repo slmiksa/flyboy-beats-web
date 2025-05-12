@@ -51,14 +51,11 @@ const DistinguishedPartnersBanner = () => {
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
           <div className="overflow-hidden relative w-full">
             <div 
-              className="flex"
+              className="flex animate-scroll"
               style={{
-                animationName: 'scrollPartners',
-                animationDuration: '60s',
-                animationTimingFunction: 'linear',
-                animationIterationCount: 'infinite',
                 width: 'max-content',
-                gap: '2rem'
+                gap: '2rem',
+                animation: 'scrollPartners 60s linear infinite'
               }}
             >
               {scrollPartners.map((partner, index) => (
@@ -78,16 +75,18 @@ const DistinguishedPartnersBanner = () => {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes scrollPartners {
-          0% {
-            transform: translateX(0%);
+      <style>
+        {`
+          @keyframes scrollPartners {
+            0% {
+              transform: translateX(0%);
+            }
+            100% {
+              transform: translateX(-50%);
+            }
           }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
+        `}
+      </style>
     </section>
   );
 };
