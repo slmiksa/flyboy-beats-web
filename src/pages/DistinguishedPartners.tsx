@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Distinguished partners list (same as in DistinguishedPartnersBanner)
 const distinguishedPartners = [{
@@ -23,6 +24,8 @@ const distinguishedPartners = [{
 }];
 
 const DistinguishedPartners = () => {
+  const isMobile = useIsMobile();
+  
   return (
     <div className="bg-flyboy-dark py-16">
       <div className="container max-w-5xl px-4 mx-auto">
@@ -40,11 +43,11 @@ const DistinguishedPartners = () => {
           شركاء النجاح المتميزين
         </h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto">
+        <div className={`grid grid-cols-1 ${isMobile ? 'gap-6' : 'md:grid-cols-2 lg:grid-cols-3 gap-8'} mx-auto justify-items-center`}>
           {distinguishedPartners.map((partner) => (
             <div 
               key={partner.id} 
-              className="border-2 border-flyboy-gold rounded-xl overflow-hidden bg-flyboy-purple p-6 flex flex-col items-center"
+              className="border-2 border-flyboy-gold rounded-xl overflow-hidden bg-flyboy-purple p-6 flex flex-col items-center w-full max-w-[280px]"
             >
               <div className="w-full aspect-[4/3] bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
                 <img
