@@ -22,7 +22,7 @@ const SuccessPartnersBanner = () => {
           <h3 className="text-xl font-bold text-flyboy-gold">الكل</h3>
         </div>
         
-        <div className="mx-auto border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-6 mb-4 px-[133px]">
+        <div className="border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-6 mb-4 my-[10px] py-[28px] px-[88px] mx-[31px]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {partners.map(partner => <div key={partner.id} className="partner-item flex flex-col items-center">
                 <div className="w-full aspect-[4/3] bg-white p-3 rounded-lg flex items-center justify-center mb-3 transform transition-transform hover:scale-105">
