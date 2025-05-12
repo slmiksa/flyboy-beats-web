@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Flame } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 
@@ -47,20 +47,8 @@ const DistinguishedPartners = () => {
           {distinguishedPartners.map((partner) => (
             <div 
               key={partner.id} 
-              className="border-2 border-flyboy-gold rounded-xl overflow-hidden bg-flyboy-purple p-6 flex flex-col items-center w-full max-w-[280px] relative"
+              className="border-2 border-flyboy-gold rounded-xl overflow-hidden bg-flyboy-purple p-6 flex flex-col items-center w-full max-w-[280px]"
             >
-              <div className="absolute -top-1 -right-1">
-                <Flame className="text-flyboy-gold h-6 w-6 animate-pulse" fill="#d4af37" />
-              </div>
-              <div className="absolute -top-1 -left-1">
-                <Flame className="text-flyboy-gold h-6 w-6 animate-pulse" fill="#d4af37" />
-              </div>
-              <div className="absolute -bottom-1 -right-1">
-                <Flame className="text-flyboy-gold h-6 w-6 animate-pulse" fill="#d4af37" />
-              </div>
-              <div className="absolute -bottom-1 -left-1">
-                <Flame className="text-flyboy-gold h-6 w-6 animate-pulse" fill="#d4af37" />
-              </div>
               <div className="w-full aspect-[4/3] bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
                 <img
                   src={partner.logo}
