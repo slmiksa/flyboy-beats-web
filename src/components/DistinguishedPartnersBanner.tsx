@@ -51,14 +51,11 @@ const DistinguishedPartnersBanner = () => {
         
         <div className="mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-4">
           <div className="overflow-hidden relative w-full">
-            <div className="flex logo-slider">
+            <div className="flex logo-slider-continuous">
               {scrollPartners.map((partner, index) => (
                 <div 
                   key={`${partner.id}-${index}`} 
-                  className="flex-shrink-0 w-[180px] mx-2 logo-item"
-                  style={{
-                    animationDelay: `${index * 0.2}s`
-                  }}
+                  className="flex-shrink-0 w-[180px] mx-2 logo-item-continuous"
                 >
                   <div className="w-full aspect-[4/3] bg-white p-2 rounded-lg flex items-center justify-center mb-2 transform transition-transform hover:scale-105">
                     <img
@@ -77,33 +74,22 @@ const DistinguishedPartnersBanner = () => {
 
       <style>
         {`
-          .logo-slider {
+          .logo-slider-continuous {
             display: flex;
             width: max-content;
-            animation: continuousSlide 20s linear infinite;
+            animation: continuousSlideRTL 20s linear infinite;
           }
           
-          .logo-item {
-            opacity: 0;
-            animation: fadeInOut 4s ease-in-out infinite;
-            animation-fill-mode: both;
+          .logo-item-continuous {
+            opacity: 1;
           }
           
-          @keyframes continuousSlide {
+          @keyframes continuousSlideRTL {
             0% {
-              transform: translateX(100%);
-            }
-            100% {
               transform: translateX(-100%);
             }
-          }
-          
-          @keyframes fadeInOut {
-            0%, 100% {
-              opacity: 0;
-            }
-            20%, 80% {
-              opacity: 1;
+            100% {
+              transform: translateX(100%);
             }
           }
         `}
