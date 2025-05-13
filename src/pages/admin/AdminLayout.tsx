@@ -27,21 +27,21 @@ const AdminLayoutContent = () => {
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        console.log("Verifying admin authorization...");
+        console.log("Verifying admin authorization in AdminLayout...");
         const isAuth = await checkAuth();
-        console.log("Auth verification result:", isAuth);
+        console.log("Auth verification result in AdminLayout:", isAuth);
         
         setIsAuthorized(isAuth);
         setIsVerifying(false);
         
         if (!isAuth) {
-          console.log("User not authorized, redirecting to login");
+          console.log("User not authorized, redirecting to login from AdminLayout");
           navigate("/admin/login", { replace: true });
         } else {
           console.log("User is authorized, showing admin layout");
         }
       } catch (error) {
-        console.error("Error during auth verification:", error);
+        console.error("Error during auth verification in AdminLayout:", error);
         setIsAuthorized(false);
         setIsVerifying(false);
         navigate("/admin/login", { replace: true });
@@ -55,7 +55,7 @@ const AdminLayoutContent = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate("/admin/login");
+    navigate("/admin/login", { replace: true });
   };
 
   if (loading || isVerifying) {
@@ -67,7 +67,7 @@ const AdminLayoutContent = () => {
   }
 
   if (!isAuthorized) {
-    console.log("Not authorized, rendering Navigate component to login");
+    console.log("Not authorized in AdminLayout, redirecting to login");
     return <Navigate to="/admin/login" replace />;
   }
 
@@ -172,6 +172,7 @@ const AdminLayoutContent = () => {
 };
 
 const AdminLayout = () => {
+  console.log("Rendering AdminLayout component");
   return (
     <AdminAuthProvider>
       <AdminLayoutContent />

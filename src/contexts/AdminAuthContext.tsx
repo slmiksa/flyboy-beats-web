@@ -19,9 +19,11 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAuth = async () => {
     try {
+      console.log("Checking authentication status...");
       const { data: sessionData } = await supabase.auth.getSession();
       
       if (sessionData?.session) {
+        console.log("Session found, fetching admin user data...");
         // Fetch admin user from the admin_users table using the email prefix
         const email = sessionData.session.user.email;
         const username = email ? email.split('@')[0] : '';
@@ -38,10 +40,12 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
           return false;
         }
         
+        console.log("Admin user data found:", adminData);
         setAdminUser(adminData as AdminUser);
         return true;
       }
       
+      console.log("No valid session found");
       return false;
     } catch (error) {
       console.error("Auth check error:", error);
@@ -51,6 +55,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const initAuth = async () => {
+      console.log("Initializing authentication...");
       await checkAuth();
       setLoading(false);
     };
@@ -59,7 +64,8 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async () => {
+      async (event, session) => {
+        console.log("Auth state changed:", event);
         await checkAuth();
       }
     );
@@ -71,6 +77,8 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (username: string, password: string) => {
     try {
+      console.log("Starting login process for:", username);
+      
       // First, check if the admin user exists in our admin_users table
       const { data: adminData, error: adminError } = await supabase
         .from('admin_users')
@@ -89,9 +97,10 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
       // For the special flyboy admin account, we need to directly create a session
       if (username === "flyboy" && password === "Ksa@123456") {
         try {
-          console.log("Trying special login flow for flyboy account");
+          console.log("Using special login flow for flyboy account");
           
           // Try to sign in directly with the fixed credentials
+          console.log("Attempting sign in with email:", email);
           const signInResult = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
@@ -120,31 +129,32 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
             if (signUpResult.error.message.includes("already registered")) {
               console.log("User already exists, trying to sign in again with auto confirm");
               
-              // Try a different approach since the user exists but might need email confirmation bypass
+              // Special handling for email confirmation
               try {
-                // Force another sign in attempt
-                const retrySignIn = await supabase.auth.signInWithPassword({
+                // Force sign in without email verification (for this special account only)
+                const { data, error } = await supabase.auth.signInWithPassword({
                   email: email,
                   password: password,
                 });
                 
-                if (!retrySignIn.error) {
-                  console.log("Second sign-in attempt successful!");
-                  setAdminUser(adminData as AdminUser);
-                  return { success: true };
-                } else {
-                  console.error("Second sign-in attempt failed:", retrySignIn.error);
+                if (error) {
+                  console.error("Second sign-in attempt error:", error);
                   
-                  // Check if the error is about email confirmation
-                  if (retrySignIn.error.message.includes("Email not confirmed")) {
-                    console.log("Email not confirmed error, proceeding anyway for flyboy account");
-                    // For the special account, we'll override this error
+                  // If error is about email confirmation, we'll override for this special account
+                  if (error.message.includes("Email not confirmed")) {
+                    console.log("Email not confirmed error, continuing anyway for flyboy account");
+                    
+                    // Force session creation for this special account
                     setAdminUser(adminData as AdminUser);
                     return { success: true };
                   }
                   
-                  return { success: false, error: "حدث خطأ في تسجيل الدخول" };
+                  return { success: false, error: error.message };
                 }
+                
+                console.log("Second sign-in attempt successful!");
+                setAdminUser(adminData as AdminUser);
+                return { success: true };
               } catch (innerError) {
                 console.error("Inner auth error:", innerError);
                 return { success: false, error: "حدث خطأ داخلي في التحقق" };
@@ -157,14 +167,14 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
           console.log("Sign up successful, setting admin user");
           setAdminUser(adminData as AdminUser);
           return { success: true };
-        } catch (error) {
+        } catch (error: any) {
           console.error("Auth error:", error);
           return { success: false, error: "حدث خطأ في عملية تسجيل الدخول" };
         }
       } else {
         // Standard login attempt for other admin users
         console.log("Using standard login flow");
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email: email,
           password: password,
         });
@@ -174,17 +184,18 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
           return { success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" };
         }
         
-        console.log("Standard login successful");
+        console.log("Standard login successful:", data);
         setAdminUser(adminData as AdminUser);
         return { success: true };
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login error:", error);
       return { success: false, error: "حدث خطأ أثناء تسجيل الدخول" };
     }
   };
 
   const logout = async () => {
+    console.log("Logging out...");
     await supabase.auth.signOut();
     setAdminUser(null);
   };
