@@ -66,13 +66,6 @@ const AdminSocialMedia = () => {
       // إيجاد أعلى ترتيب
       const highestOrder = socialLinks.length > 0 ? Math.max(...socialLinks.map(link => link.order_position)) : 0;
       let result;
-
-      // ضبط رأس إضافي للتجاوز سياسات RLS
-      const headers = {
-        apikey: supabase.supabaseKey,
-        Authorization: `Bearer ${supabase.supabaseKey}`,
-        "Content-Type": "application/json",
-      };
       
       if (editingLink) {
         // تحديث رابط موجود
