@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Partner } from "@/types/database.types";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, Trash, Pencil, Plus, Check } from "lucide-react";
+import { Star, Trash, Pencil, Plus, Check, Upload } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -56,6 +56,9 @@ const AdminPartners = () => {
   const [newPartnerName, setNewPartnerName] = useState("");
   const [newPartnerLogo, setNewPartnerLogo] = useState("");
   const [isDistinguished, setIsDistinguished] = useState(false);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const { toast: uiToast } = useToast();
 
   useEffect(() => {
@@ -83,18 +86,92 @@ const AdminPartners = () => {
     }
   };
 
+  const handleLogoFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check file type
+    if (!file.type.match('image.*')) {
+      toast.error('الرجاء اختيار ملف صورة صالح');
+      return;
+    }
+
+    // Check file size (limit to 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('حجم الصورة كبير جدًا. الحد الأقصى هو 2 ميجابايت');
+      return;
+    }
+
+    setLogoFile(file);
+    
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setPreviewImage(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+    
+    // Clear URL input when file is selected
+    setNewPartnerLogo("");
+  };
+
+  const uploadLogo = async (file: File) => {
+    try {
+      setIsUploading(true);
+      
+      // Generate a unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = `partners/${fileName}`;
+      
+      // Upload to Supabase storage
+      const { data, error } = await supabase.storage
+        .from('logos')
+        .upload(filePath, file);
+        
+      if (error) {
+        throw error;
+      }
+      
+      // Get public URL
+      const { data: publicURLData } = supabase.storage
+        .from('logos')
+        .getPublicUrl(filePath);
+        
+      return publicURLData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading logo:', error);
+      toast.error('حدث خطأ أثناء رفع الشعار');
+      throw error;
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleAddPartner = async () => {
     try {
-      if (!newPartnerName.trim() || !newPartnerLogo.trim()) {
-        toast.error("يرجى إدخال اسم الشريك ورابط الشعار");
+      if (!newPartnerName.trim()) {
+        toast.error("يرجى إدخال اسم الشريك");
         return;
+      }
+
+      if (!logoFile && !newPartnerLogo.trim()) {
+        toast.error("يرجى إدخال رابط الشعار أو رفع ملف");
+        return;
+      }
+
+      let logoUrl = newPartnerLogo;
+
+      // Upload logo file if provided
+      if (logoFile) {
+        logoUrl = await uploadLogo(logoFile);
       }
 
       const { data, error } = await supabase
         .from("partners")
         .insert({
           name: newPartnerName.trim(),
-          logo_url: newPartnerLogo.trim(),
+          logo_url: logoUrl.trim(),
           is_distinguished: isDistinguished,
         })
         .select();
@@ -112,6 +189,8 @@ const AdminPartners = () => {
       setNewPartnerName("");
       setNewPartnerLogo("");
       setIsDistinguished(false);
+      setLogoFile(null);
+      setPreviewImage(null);
       
       toast.success("تمت إضافة الشريك بنجاح");
     } catch (error) {
@@ -124,16 +203,28 @@ const AdminPartners = () => {
     if (!editingPartner) return;
 
     try {
-      if (!newPartnerName.trim() || !newPartnerLogo.trim()) {
-        toast.error("يرجى إدخال اسم الشريك ورابط الشعار");
+      if (!newPartnerName.trim()) {
+        toast.error("يرجى إدخال اسم الشريك");
         return;
+      }
+
+      if (!logoFile && !newPartnerLogo.trim()) {
+        toast.error("يرجى إدخال رابط الشعار أو رفع ملف");
+        return;
+      }
+
+      let logoUrl = newPartnerLogo;
+
+      // Upload logo file if provided
+      if (logoFile) {
+        logoUrl = await uploadLogo(logoFile);
       }
 
       const { error } = await supabase
         .from("partners")
         .update({
           name: newPartnerName.trim(),
-          logo_url: newPartnerLogo.trim(),
+          logo_url: logoUrl.trim(),
           is_distinguished: isDistinguished,
           updated_at: new Date().toISOString(),
         })
@@ -150,7 +241,7 @@ const AdminPartners = () => {
             ? {
                 ...p,
                 name: newPartnerName.trim(),
-                logo_url: newPartnerLogo.trim(),
+                logo_url: logoUrl.trim(),
                 is_distinguished: isDistinguished,
                 updated_at: new Date().toISOString(),
               }
@@ -159,6 +250,8 @@ const AdminPartners = () => {
       );
 
       setIsEditDialogOpen(false);
+      setLogoFile(null);
+      setPreviewImage(null);
       toast.success("تم تحديث بيانات الشريك بنجاح");
     } catch (error) {
       console.error("Error updating partner:", error);
@@ -195,6 +288,8 @@ const AdminPartners = () => {
     setNewPartnerName(partner.name);
     setNewPartnerLogo(partner.logo_url);
     setIsDistinguished(partner.is_distinguished);
+    setLogoFile(null);
+    setPreviewImage(null);
     setIsEditDialogOpen(true);
   };
 
@@ -326,7 +421,23 @@ const AdminPartners = () => {
                   placeholder="أدخل رابط صورة الشعار"
                   value={newPartnerLogo}
                   onChange={(e) => setNewPartnerLogo(e.target.value)}
+                  disabled={!!logoFile}
                 />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="logoFile">أو قم برفع صورة من جهازك</Label>
+              <div className="flex flex-col gap-4">
+                <Input
+                  id="logoFile"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoFileChange}
+                  className="cursor-pointer"
+                />
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <span>الحد الأقصى: 2 ميجابايت | الصيغ: JPG, PNG, SVG, GIF</span>
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-2 rtl:space-x-reverse">
@@ -340,12 +451,12 @@ const AdminPartners = () => {
                 <Star className="h-4 w-4 text-flyboy-gold mr-2 rtl:ml-2" fill={isDistinguished ? "#d4af37" : "none"} />
               </Label>
             </div>
-            {newPartnerLogo && (
+            {(previewImage || newPartnerLogo) && (
               <div className="space-y-2">
                 <Label>معاينة الشعار</Label>
                 <div className="w-40 h-28 rounded border bg-white p-2 flex items-center justify-center">
                   <img
-                    src={newPartnerLogo}
+                    src={previewImage || newPartnerLogo}
                     alt="معاينة الشعار"
                     className="max-w-full max-h-full object-contain"
                     onError={(e) => {
@@ -356,9 +467,18 @@ const AdminPartners = () => {
                 </div>
               </div>
             )}
-            <Button onClick={handleAddPartner} className="w-full mt-2">
-              <Plus className="h-4 w-4 ml-2" />
-              إضافة الشريك
+            <Button onClick={handleAddPartner} className="w-full mt-2" disabled={isUploading}>
+              {isUploading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>
+                  جاري الرفع...
+                </>
+              ) : (
+                <>
+                  <Plus className="h-4 w-4 ml-2" />
+                  إضافة الشريك
+                </>
+              )}
             </Button>
           </div>
         </CardContent>
@@ -422,7 +542,21 @@ const AdminPartners = () => {
                 id="edit-logo"
                 value={newPartnerLogo}
                 onChange={(e) => setNewPartnerLogo(e.target.value)}
+                disabled={!!logoFile}
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-logo-file">أو قم برفع صورة من جهازك</Label>
+              <Input
+                id="edit-logo-file"
+                type="file"
+                accept="image/*"
+                onChange={handleLogoFileChange}
+                className="cursor-pointer"
+              />
+              <div className="text-xs text-muted-foreground mt-1">
+                الحد الأقصى: 2 ميجابايت | الصيغ: JPG, PNG, SVG, GIF
+              </div>
             </div>
             <div className="flex items-center space-x-2 rtl:space-x-reverse">
               <Switch
@@ -435,12 +569,12 @@ const AdminPartners = () => {
                 <Star className="h-4 w-4 text-flyboy-gold mr-2 rtl:ml-2" fill={isDistinguished ? "#d4af37" : "none"} />
               </Label>
             </div>
-            {newPartnerLogo && (
+            {(previewImage || newPartnerLogo) && (
               <div className="space-y-2">
                 <Label>معاينة الشعار</Label>
                 <div className="w-full h-36 rounded border bg-white p-2 flex items-center justify-center">
                   <img
-                    src={newPartnerLogo}
+                    src={previewImage || newPartnerLogo}
                     alt="معاينة الشعار"
                     className="max-w-full max-h-full object-contain"
                     onError={(e) => {
@@ -456,9 +590,18 @@ const AdminPartners = () => {
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
               إلغاء
             </Button>
-            <Button onClick={handleEditPartner}>
-              <Check className="h-4 w-4 ml-2" />
-              حفظ التغييرات
+            <Button onClick={handleEditPartner} disabled={isUploading}>
+              {isUploading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white ml-2"></div>
+                  جاري الرفع...
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4 ml-2" />
+                  حفظ التغييرات
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
