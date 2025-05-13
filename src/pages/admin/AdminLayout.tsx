@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { 
-  LayoutSidebarRight, 
+  LayoutDashboard, 
   Home, 
   Users, 
   Image, 
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/sidebar";
 
 const AdminLayout = () => {
-  const { user, logout } = useAdminAuth();
+  const { adminUser, logout } = useAdminAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -42,10 +42,10 @@ const AdminLayout = () => {
   }, []);
 
   useEffect(() => {
-    if (mounted && !user) {
+    if (mounted && !adminUser) {
       navigate("/admin/login");
     }
-  }, [user, mounted, navigate]);
+  }, [adminUser, mounted, navigate]);
 
   const handleLogout = async () => {
     try {
@@ -65,7 +65,7 @@ const AdminLayout = () => {
     }
   };
 
-  if (!mounted || !user) {
+  if (!mounted || !adminUser) {
     return null;
   }
 
@@ -77,7 +77,7 @@ const AdminLayout = () => {
             <div className="flex items-center justify-between w-full text-flyboy-gold">
               <SidebarTrigger className="md:hidden text-flyboy-gold" />
               <h1 className="text-lg font-bold">لوحة تحكم FLY BOY</h1>
-              <LayoutSidebarRight className="h-5 w-5" />
+              <LayoutDashboard className="h-5 w-5" />
             </div>
           </SidebarHeader>
           
@@ -177,7 +177,7 @@ const AdminLayout = () => {
           <div className="flex items-center justify-between p-4 md:p-6 bg-flyboy-purple border-b border-flyboy-gold/20">
             <SidebarTrigger className="md:hidden text-flyboy-gold" />
             <div className="text-flyboy-gold text-sm">
-              مرحباً، {user?.email || "مستخدم"}
+              مرحباً، {adminUser?.username || "مستخدم"}
             </div>
           </div>
           
