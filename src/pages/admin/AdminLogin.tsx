@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { useAdminAuth, AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
-const AdminLogin = () => {
+const AdminLoginContent = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -100,6 +100,14 @@ const AdminLogin = () => {
         </Card>
       </div>
     </div>
+  );
+};
+
+const AdminLogin = () => {
+  return (
+    <AdminAuthProvider>
+      <AdminLoginContent />
+    </AdminAuthProvider>
   );
 };
 
