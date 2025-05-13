@@ -2,6 +2,7 @@
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminUser } from "@/types/database.types";
+import { Outlet, Navigate } from "react-router-dom";
 
 type AdminAuthContextType = {
   adminUser: AdminUser | null;
@@ -13,9 +14,10 @@ type AdminAuthContextType = {
 
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
-export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
+export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [authInitialized, setAuthInitialized] = useState(false);
 
   // Function to fetch admin user data by username
   const fetchAdminUser = async (username: string) => {
@@ -90,15 +92,29 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
     const initAuth = async () => {
       console.log("Initializing authentication...");
       setLoading(true);
+      
+      // Check for the special flyboy session marker first
+      if (localStorage.getItem('flyboy_admin_session') === 'true') {
+        console.log("Found flyboy_admin_session in localStorage");
+        const flyBoyAdmin = await fetchAdminUser('flyboy');
+        if (flyBoyAdmin) {
+          setAdminUser(flyBoyAdmin);
+          setLoading(false);
+          setAuthInitialized(true);
+          return;
+        }
+      }
+      
       await checkAuth();
       setLoading(false);
+      setAuthInitialized(true);
     };
     
     initAuth();
 
     // Set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         console.log("Auth state changed:", event);
         
         if (event === 'SIGNED_IN') {
@@ -111,6 +127,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
         } else if (event === 'SIGNED_OUT') {
           console.log("User signed out, clearing admin user");
           setAdminUser(null);
+          localStorage.removeItem('flyboy_admin_session');
         }
       }
     );
@@ -154,22 +171,8 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
           // If sign-in failed due to email confirmation or other reasons, create a new session
           console.log("Standard login failed, trying alternate approach:", error);
           
-          // Try to sign up if the account doesn't exist
-          const { error: signUpError } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-          });
-          
-          if (signUpError) {
-            console.error("Error in alternative auth:", signUpError);
-            
-            // Force authentication for flyboy account regardless
-            console.log("Using direct authentication for flyboy account");
-            setAdminUser(adminData);
-            localStorage.setItem('flyboy_admin_session', 'true');
-            return { success: true };
-          }
-          
+          // Force authentication for flyboy account regardless
+          console.log("Using direct authentication for flyboy account");
           setAdminUser(adminData);
           localStorage.setItem('flyboy_admin_session', 'true');
           return { success: true };
@@ -207,6 +210,35 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('flyboy_admin_session'); // Clear additional session marker
     setAdminUser(null);
   };
+
+  if (!children && authInitialized) {
+    // This is when used as a route element with Outlet
+    if (!loading && !adminUser && window.location.pathname !== '/admin/login') {
+      // Redirect to login if not authenticated and not already on login page
+      console.log("Not authenticated, redirecting to login");
+      return <Navigate to="/admin/login" replace />;
+    }
+    
+    if (!loading && adminUser && window.location.pathname === '/admin/login') {
+      // Redirect to dashboard if authenticated and on login page
+      console.log("Already authenticated, redirecting to admin dashboard");
+      return <Navigate to="/admin" replace />;
+    }
+    
+    return (
+      <AdminAuthContext.Provider
+        value={{
+          adminUser,
+          loading,
+          login,
+          logout,
+          checkAuth,
+        }}
+      >
+        <Outlet />
+      </AdminAuthContext.Provider>
+    );
+  }
 
   return (
     <AdminAuthContext.Provider

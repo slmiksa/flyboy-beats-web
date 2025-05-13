@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
@@ -35,20 +35,18 @@ const App = () => (
           <Route path="/distinguished-partners" element={<Layout><DistinguishedPartners /></Layout>} />
           <Route path="/all-partners" element={<Layout><AllPartners /></Layout>} />
           
-          {/* Admin Routes */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={
-            <AdminAuthProvider>
-              <AdminLayout />
-            </AdminAuthProvider>
-          }>
-            <Route index element={<AdminDashboard />} />
-            <Route path="slides" element={<AdminSlides />} />
-            <Route path="events" element={<AdminEvents />} />
-            <Route path="partners" element={<AdminPartners />} />
-            <Route path="about" element={<AdminAbout />} />
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="social-media" element={<AdminSocialMedia />} />
+          {/* Admin Routes - All wrapped within a single AdminAuthProvider */}
+          <Route element={<AdminAuthProvider />}>
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="slides" element={<AdminSlides />} />
+              <Route path="events" element={<AdminEvents />} />
+              <Route path="partners" element={<AdminPartners />} />
+              <Route path="about" element={<AdminAbout />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="social-media" element={<AdminSocialMedia />} />
+            </Route>
           </Route>
           
           <Route path="*" element={<Layout><NotFound /></Layout>} />
@@ -59,4 +57,3 @@ const App = () => (
 );
 
 export default App;
-

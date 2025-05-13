@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAdminAuth, AdminAuthProvider } from "@/contexts/AdminAuthContext";
+import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -19,18 +19,6 @@ const loginSchema = z.object({
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
-
-const AdminLogin = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  
-  return (
-    <AdminAuthProvider>
-      <AdminLoginContent />
-    </AdminAuthProvider>
-  );
-};
 
 const AdminLoginContent = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -61,7 +49,7 @@ const AdminLoginContent = () => {
     };
     
     checkExistingAuth();
-  }, [checkAuth, navigate]);
+  }, [checkAuth, navigate, adminUser]);
 
   // Initialize form with validation
   const form = useForm<LoginFormValues>({
@@ -86,13 +74,7 @@ const AdminLoginContent = () => {
           description: "أهلاً بك في لوحة التحكم",
         });
         console.log("Login successful in AdminLogin, preparing to redirect to admin dashboard");
-        
-        // Force a longer delay to ensure state is properly updated before redirect
-        setTimeout(() => {
-          console.log("Executing redirect to /admin now with replace:true from AdminLogin");
-          // Use replace to prevent going back to login page
-          navigate("/admin", { replace: true });
-        }, 2000); // Increased delay to ensure state is properly updated
+        navigate("/admin", { replace: true });
       } else {
         setError(result.error || "اسم المستخدم أو كلمة المرور غير صحيحة");
         toast({
@@ -200,6 +182,13 @@ const AdminLoginContent = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+// Wrap the login content with the AdminAuthProvider
+const AdminLogin = () => {
+  return (
+    <AdminLoginContent />
   );
 };
 
