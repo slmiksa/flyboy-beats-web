@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
@@ -7,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarFooter, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger, SidebarSeparator } from "@/components/ui/sidebar";
 import { Toggle } from "@/components/ui/toggle";
+
 const AdminLayout = () => {
   const {
     adminUser,
@@ -19,6 +21,7 @@ const AdminLayout = () => {
   } = useToast();
   const [mounted, setMounted] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
   useEffect(() => {
     setMounted(true);
     // Check if there's a stored sidebar state in localStorage
@@ -27,11 +30,13 @@ const AdminLayout = () => {
       setSidebarCollapsed(storedState === "collapsed");
     }
   }, []);
+
   useEffect(() => {
     if (mounted && !adminUser) {
       navigate("/admin/login");
     }
   }, [adminUser, mounted, navigate]);
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -49,6 +54,7 @@ const AdminLayout = () => {
       });
     }
   };
+
   const toggleSidebar = () => {
     const newState = !sidebarCollapsed;
     setSidebarCollapsed(newState);
@@ -60,12 +66,14 @@ const AdminLayout = () => {
   const isRouteActive = (path: string) => {
     return location.pathname === path;
   };
+
   if (!mounted || !adminUser) {
     return null;
   }
+
   return <SidebarProvider>
       <div className="flex min-h-screen w-full flex-row-reverse bg-background">
-        <Sidebar side="right" variant="sidebar" className={cn("transition-all duration-300 ease-in-out", sidebarCollapsed ? "md:w-[60px]" : "")}>
+        <Sidebar side="right" variant="sidebar" className={cn("transition-all duration-300 ease-in-out border-l border-flyboy-gold/20", sidebarCollapsed ? "md:w-[60px]" : "md:w-[250px]")}>
           <SidebarHeader className="flex items-center gap-2 px-4 py-3 border-b border-flyboy-gold/20 bg-flyboy-purple">
             <div className="flex items-center justify-between w-full text-flyboy-gold">
               <Button variant="ghost" size="icon" onClick={toggleSidebar} className="md:flex hidden text-flyboy-gold hover:bg-flyboy-purple/60">
@@ -142,7 +150,7 @@ const AdminLayout = () => {
           </SidebarFooter>
         </Sidebar>
 
-        <div className="flex-1 overflow-auto">
+        <div className={cn("flex-1 overflow-auto transition-all duration-300 ease-in-out", sidebarCollapsed ? "md:pr-[60px]" : "md:pr-[250px]")}>
           <div className="flex items-center justify-between p-4 md:p-6 bg-flyboy-purple border-b border-flyboy-gold/20">
             <SidebarTrigger className="md:hidden text-flyboy-gold" />
             <div className="text-flyboy-gold text-sm">

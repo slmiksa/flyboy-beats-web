@@ -286,7 +286,7 @@ const AdminSlides = () => {
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-flyboy-gold">إدارة السلايدات</h1>
-          <p className="text-muted-foreground">قم بإضافة وتعديل وحذف السلايدات في الصفحة الرئيسية</p>
+          <p className="text-muted-foreground">إضافة وتعديل وحذف السلايدات في الصفحة الرئيسية</p>
         </div>
         <Button 
           onClick={() => handleCancel()} 
@@ -296,14 +296,14 @@ const AdminSlides = () => {
         </Button>
       </div>
       
-      <Card className="border-flyboy-gold/30 bg-flyboy-purple/30">
-        <CardHeader>
+      <Card className="border-none bg-flyboy-purple/30 shadow-none">
+        <CardHeader className="pb-3">
           <CardTitle className="text-xl text-flyboy-gold">
             {editingSlide ? "تعديل السلايد" : "إضافة سلايد جديد"}
           </CardTitle>
           <CardDescription>أدخل بيانات السلايد</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pb-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -441,8 +441,8 @@ const AdminSlides = () => {
         </CardContent>
       </Card>
       
-      <Card className="border-flyboy-gold/30 bg-flyboy-purple/30">
-        <CardHeader>
+      <Card className="border-none bg-flyboy-purple/30 shadow-none">
+        <CardHeader className="pb-3">
           <CardTitle className="text-xl text-flyboy-gold">السلايدات الحالية</CardTitle>
           <CardDescription>جميع السلايدات المعروضة في الصفحة الرئيسية</CardDescription>
         </CardHeader>
