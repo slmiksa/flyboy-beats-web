@@ -22,11 +22,14 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
       const { data: sessionData } = await supabase.auth.getSession();
       
       if (sessionData?.session) {
-        // Fetch admin user from the admin_users table
+        // Fetch admin user from the admin_users table using the email prefix
+        const email = sessionData.session.user.email;
+        const username = email ? email.split('@')[0] : '';
+        
         const { data: adminData, error: adminError } = await supabase
           .from('admin_users')
           .select('*')
-          .eq('username', sessionData.session.user.email?.split('@')[0] || '')
+          .eq('username', username)
           .single();
         
         if (adminError || !adminData) {
@@ -53,6 +56,17 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
     };
     
     initAuth();
+
+    // Set up auth state change listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async () => {
+        await checkAuth();
+      }
+    );
+    
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = async (username: string, password: string) => {
@@ -65,29 +79,42 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
         .single();
       
       if (adminError || !adminData) {
+        console.error("Admin user not found:", adminError);
         return { success: false, error: "اسم المستخدم غير موجود" };
       }
 
       // Special case for the superadmin "flyboy" with fixed password
       if (username === "flyboy" && password === "Ksa@123456") {
-        // For flyboy, we'll use a standardized email format for Supabase Auth
+        // For flyboy, we use the standardized email format for Supabase Auth
         const email = `${username}@flyboy-admin.com`;
         
-        // Try to sign in, if it fails (first time) then sign up
+        // Try to sign in with the flyboy credentials
         const { data, error } = await supabase.auth.signInWithPassword({
           email: email,
           password: password,
         });
         
         if (error) {
-          // First time login, create account
+          // If sign-in fails, try creating the account
           const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
             email: email,
             password: password,
           });
           
           if (signUpError) {
-            return { success: false, error: "حدث خطأ أثناء إنشاء الحساب" };
+            console.error("Error creating flyboy account:", signUpError);
+            return { success: false, error: "حدث خطأ أثناء محاولة تسجيل الدخول" };
+          }
+          
+          // Now try sign in again after creating the account
+          const { error: retryError } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+          });
+          
+          if (retryError) {
+            console.error("Error signing in after account creation:", retryError);
+            return { success: false, error: "حدث خطأ أثناء محاولة تسجيل الدخول" };
           }
         }
         
@@ -95,7 +122,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
         return { success: true };
       } 
       else {
-        // For other admin users, we use normal authentication
+        // For other admin users, use the standard authentication flow
         const email = `${username}@flyboy-admin.com`;
         
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -104,6 +131,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
         });
         
         if (error) {
+          console.error("Login error for regular admin:", error);
           return { success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" };
         }
         

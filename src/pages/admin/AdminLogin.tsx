@@ -8,21 +8,41 @@ import { Label } from "@/components/ui/label";
 import { useAdminAuth, AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// Define schema for form validation
+const loginSchema = z.object({
+  username: z.string().min(1, { message: "اسم المستخدم مطلوب" }),
+  password: z.string().min(1, { message: "كلمة المرور مطلوبة" }),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 const AdminLoginContent = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { login } = useAdminAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Initialize form with validation
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  const handleLogin = async (values: LoginFormValues) => {
     setIsLoading(true);
+    setError(null);
 
     try {
-      const result = await login(username, password);
+      const result = await login(values.username, values.password);
       if (result.success) {
         toast({
           title: "تم تسجيل الدخول بنجاح",
@@ -30,73 +50,103 @@ const AdminLoginContent = () => {
         });
         navigate("/admin");
       } else {
+        setError(result.error || "اسم المستخدم أو كلمة المرور غير صحيحة");
         toast({
           title: "فشل تسجيل الدخول",
           description: result.error || "اسم المستخدم أو كلمة المرور غير صحيحة",
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      setError("حدث خطأ أثناء محاولة تسجيل الدخول");
       toast({
         title: "خطأ",
         description: "حدث خطأ أثناء محاولة تسجيل الدخول",
         variant: "destructive",
       });
+      console.error("Login error:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30">
+    <div className="min-h-screen flex items-center justify-center bg-[#1e0b39]">
       <div className="w-full max-w-md p-4">
-        <Card className="w-full">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">لوحة تحكم FLY BOY</CardTitle>
-            <CardDescription>قم بتسجيل الدخول للوصول إلى لوحة التحكم</CardDescription>
+        <Card className="w-full border-purple-300 bg-[#1e0b39] text-white">
+          <CardHeader className="text-center pb-2">
+            <CardTitle className="text-2xl font-bold text-white">لوحة تحكم FLY BOY</CardTitle>
+            <CardDescription className="text-gray-300">قم بتسجيل الدخول للوصول إلى لوحة التحكم</CardDescription>
           </CardHeader>
-          <form onSubmit={handleLogin}>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="username">اسم المستخدم</Label>
-                <Input
-                  id="username"
-                  placeholder="أدخل اسم المستخدم"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  autoComplete="username"
-                  required
-                  className="text-right"
-                  dir="rtl"
+
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleLogin)}>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-right block text-white">اسم المستخدم</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="أدخل اسم المستخدم"
+                          autoComplete="username"
+                          className="text-right bg-[#2a1547] border-purple-400 text-white placeholder:text-gray-400"
+                          dir="rtl"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-right text-red-400" />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">كلمة المرور</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="أدخل كلمة المرور"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  required
-                  className="text-right"
-                  dir="rtl"
+                
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-right block text-white">كلمة المرور</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="password"
+                          placeholder="أدخل كلمة المرور"
+                          autoComplete="current-password"
+                          className="text-right bg-[#2a1547] border-purple-400 text-white placeholder:text-gray-400"
+                          dir="rtl"
+                        />
+                      </FormControl>
+                      <FormMessage className="text-right text-red-400" />
+                    </FormItem>
+                  )}
                 />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> جاري تسجيل الدخول...
-                  </>
-                ) : (
-                  "تسجيل الدخول"
+
+                {error && (
+                  <div className="rounded-md bg-red-500/20 p-3 text-red-400 text-right">
+                    {error}
+                  </div>
                 )}
-              </Button>
-            </CardFooter>
-          </form>
+              </CardContent>
+
+              <CardFooter>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-purple-600 hover:bg-purple-700" 
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" /> جاري تسجيل الدخول...
+                    </>
+                  ) : (
+                    "تسجيل الدخول"
+                  )}
+                </Button>
+              </CardFooter>
+            </form>
+          </Form>
         </Card>
       </div>
     </div>
