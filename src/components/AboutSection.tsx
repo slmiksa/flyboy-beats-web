@@ -37,7 +37,7 @@ const AboutSection = () => {
   }, []);
 
   if (isLoading) {
-    return <section className="bg-gradient-hero px-0 py-[50px] my-[34px]">
+    return <section className="w-full bg-gradient-hero py-[50px]">
       <div className="container">
         <h2 className="section-title text-flyboy-gold">نبذة عني</h2>
         <div className="max-w-3xl mx-auto text-center">
@@ -48,7 +48,7 @@ const AboutSection = () => {
   }
 
   return (
-    <section className="bg-gradient-hero px-0 py-[50px] my-[34px]">
+    <section className="w-full bg-gradient-hero py-[50px]">
       <div className="container">
         <h2 className="section-title text-flyboy-gold">نبذة عني</h2>
         

@@ -38,7 +38,7 @@ const About = () => {
     fetchAboutData();
   }, []);
   
-  return <div className="min-h-screen py-24 bg-gradient-hero relative overflow-hidden">
+  return <div className="min-h-screen w-full bg-gradient-hero relative overflow-hidden">
       {/* Animated music elements */}
       {Array(20).fill(0).map((_, i) => (
         <div 
@@ -64,7 +64,7 @@ const About = () => {
         </div>
       ))}
 
-      <div className="container relative z-10">
+      <div className="container py-24 relative z-10">
         <div className="flex items-center justify-between mb-6">
           <Link to="/" className="bg-flyboy-gold text-flyboy-dark hover:bg-flyboy-gold/90 px-4 py-2 rounded-md flex items-center gap-2 transition-all">
             <ArrowRight size={20} />
