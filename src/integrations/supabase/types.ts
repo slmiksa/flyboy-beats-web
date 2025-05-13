@@ -9,7 +9,141 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      about_section: {
+        Row: {
+          content: string
+          id: string
+          image_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          id?: string
+          image_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          id?: string
+          image_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      admin_users: {
+        Row: {
+          created_at: string
+          id: string
+          is_super_admin: boolean | null
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_super_admin?: boolean | null
+          username: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_super_admin?: boolean | null
+          username?: string
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          created_at: string
+          date: string | null
+          description: string | null
+          id: string
+          image_url: string
+          location: string | null
+          title: string
+          updated_at: string
+          whatsapp_number: string | null
+        }
+        Insert: {
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          id?: string
+          image_url: string
+          location?: string | null
+          title: string
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Update: {
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string
+          location?: string | null
+          title?: string
+          updated_at?: string
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      partners: {
+        Row: {
+          created_at: string
+          id: string
+          is_distinguished: boolean
+          logo_url: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_distinguished?: boolean
+          logo_url: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_distinguished?: boolean
+          logo_url?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      slides: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          order_position: number
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          order_position: number
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          order_position?: number
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
