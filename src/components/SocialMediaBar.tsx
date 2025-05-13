@@ -82,23 +82,15 @@ const SocialMediaBar = () => {
     fetchSocialLinks();
   }, []);
 
-  // Default links if none are configured yet
-  const defaultSocialLinks: SocialMedia[] = [
-    { id: '1', platform: 'snapchat', url: '#', icon: 'snapchat', order_position: 1, created_at: '', updated_at: '' },
-    { id: '2', platform: 'instagram', url: '#', icon: 'instagram', order_position: 2, created_at: '', updated_at: '' },
-    { id: '3', platform: 'twitter', url: '#', icon: 'twitter', order_position: 3, created_at: '', updated_at: '' },
-    { id: '4', platform: 'chat', url: '#', icon: 'chat', order_position: 4, created_at: '', updated_at: '' },
-    { id: '5', platform: 'tiktok', url: '#', icon: 'tiktok', order_position: 5, created_at: '', updated_at: '' },
-    { id: '6', platform: 'youtube', url: '#', icon: 'youtube', order_position: 6, created_at: '', updated_at: '' },
-    { id: '7', platform: 'jaco', url: '#', icon: 'jaco', order_position: 7, created_at: '', updated_at: '' }
-  ];
-
-  const linksToShow = socialLinks.length > 0 ? socialLinks : defaultSocialLinks;
+  // If no links in the database, don't display anything
+  if (socialLinks.length === 0 && !isLoading) {
+    return null;
+  }
 
   return (
     <div className="bg-flyboy-dark py-4">
       <div className={`flex justify-center items-center ${spacingClass}`}>
-        {linksToShow.map((link) => (
+        {socialLinks.map((link) => (
           <a 
             key={link.id} 
             href={link.url} 
