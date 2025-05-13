@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import { Construction, WrenchIcon } from "lucide-react";
 import { useSiteSettings } from "@/contexts/SiteSettingsContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import MaintenancePage from "@/components/MaintenancePage";
-import FileUploader from "@/components/FileUploader";
+import { FileUploader } from "@/components/FileUploader";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
@@ -33,6 +32,33 @@ const AdminMaintenance = () => {
 
   const handleImageUpload = async (url: string) => {
     await updateMaintenanceImage(url);
+  };
+
+  const handleFileSelect = (file: File | null) => {
+    if (file) {
+      // Generate a unique filename
+      const fileName = `maintenance-${Date.now()}-${file.name}`;
+      
+      // Create a FormData object to upload the file
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // Upload the file to your server
+      fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Update the maintenance image with the URL returned from the server
+        if (data.url) {
+          updateMaintenanceImage(data.url);
+        }
+      })
+      .catch(error => {
+        console.error('Error uploading file:', error);
+      });
+    }
   };
 
   if (isLoading || !settings) {
@@ -124,12 +150,10 @@ const AdminMaintenance = () => {
                     </AspectRatio>
                   </div>
                 )}
-                <FileUploader 
-                  onFileUploaded={handleImageUpload} 
-                  folder="maintenance"
-                  acceptedFileTypes="image/*"
-                  maxFileSize={5}
-                  buttonText="تحميل صورة جديدة"
+                <FileUploader
+                  onFileSelect={handleFileSelect}
+                  accept="image/*"
+                  maxSize={5}
                 />
               </div>
             </CardContent>
