@@ -105,8 +105,10 @@ const SocialMediaBar = () => {
             target="_blank" 
             rel="noreferrer noopener" 
             className={`${iconContainerSize} rounded-full bg-flyboy-dark border-2 border-flyboy-gold border-opacity-40 flex items-center justify-center hover:border-opacity-60 transition-all duration-300`}
+            title={link.platform}
+            aria-label={`Visit our ${link.platform} page`}
           >
-            {iconMap[link.platform] || iconMap['instagram']}
+            {iconMap[link.icon] || iconMap[link.platform] || iconMap['instagram']}
           </a>
         ))}
       </div>
