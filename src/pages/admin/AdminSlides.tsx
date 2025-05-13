@@ -125,22 +125,10 @@ const AdminSlides = () => {
     try {
       setUploading(true);
       
-      // Check if slides bucket exists, if not create it
-      const { data: buckets } = await supabase.storage.listBuckets();
-      const slidesBucket = buckets?.find(bucket => bucket.name === 'slides');
-      
-      if (!slidesBucket) {
-        // Create the slides bucket if it doesn't exist
-        await supabase.storage.createBucket('slides', {
-          public: true,
-          fileSizeLimit: 5242880, // 5MB
-        });
-      }
-
       // Generate a unique file name to avoid collisions
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
-      const filePath = `slides/${fileName}`;
+      const filePath = `${fileName}`;
       
       // Upload file to Supabase Storage
       const { data, error } = await supabase.storage
