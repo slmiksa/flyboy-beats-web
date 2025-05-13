@@ -1,4 +1,3 @@
-
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminUser } from "@/types/database.types";
@@ -79,44 +78,29 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
     try {
       console.log("Starting login process for:", username);
       
-      // Check predefined credentials for flyboy account
-      if (username === "flyboy" && password === "Ksa@123456") {
-        console.log("Using special login flow for flyboy account");
-        
-        const adminData = await fetchAdminUser('flyboy');
-        if (adminData) {
-          console.log("Login successful for flyboy!");
-          setAdminUser(adminData);
-          localStorage.setItem('admin_username', 'flyboy'); 
-          return { success: true };
-        } else {
-          return { success: false, error: "حساب غير موجود" };
-        }
+      // Check if the user exists first
+      const { data, error } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('username', username)
+        .single();
+      
+      if (error || !data) {
+        console.error("Admin user not found");
+        return { success: false, error: "اسم المستخدم غير موجود" };
+      }
+      
+      // Check if the password matches
+      const adminData = data as AdminUser;
+      
+      // Use safe property access with optional chaining
+      if (adminData?.password === password) {
+        console.log("Login successful for user with custom password:", username);
+        setAdminUser(adminData);
+        localStorage.setItem('admin_username', username);
+        return { success: true };
       } else {
-        // For other users, check if the user exists first
-        const { data, error } = await supabase
-          .from('admin_users')
-          .select('*')
-          .eq('username', username)
-          .single();
-        
-        if (error || !data) {
-          console.error("Admin user not found");
-          return { success: false, error: "اسم المستخدم غير موجود" };
-        }
-        
-        // Check if the password matches
-        const adminData = data as AdminUser;
-        
-        // Use safe property access with optional chaining
-        if (adminData?.password === password) {
-          console.log("Login successful for user with custom password:", username);
-          setAdminUser(adminData);
-          localStorage.setItem('admin_username', username);
-          return { success: true };
-        } else {
-          return { success: false, error: "كلمة المرور غير صحيحة" };
-        }
+        return { success: false, error: "كلمة المرور غير صحيحة" };
       }
     } catch (error: any) {
       console.error("Login error:", error);

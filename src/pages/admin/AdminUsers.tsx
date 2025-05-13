@@ -129,19 +129,20 @@ const AdminUsers = () => {
         return;
       }
       
-      // First, add the user to admin_users table
+      // Add the user to admin_users table
       const { data: adminData, error: adminError } = await supabase
         .from("admin_users")
         .insert([
           { 
             username: newUser.username, 
             is_super_admin: newUser.isSuperAdmin,
-            password: newUser.password // Store the password in the database
+            password: newUser.password // Now we have the password column in the database
           }
         ])
         .select();
       
       if (adminError) {
+        console.error("Error adding user:", adminError);
         throw adminError;
       }
       

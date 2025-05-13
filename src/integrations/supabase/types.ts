@@ -35,18 +35,21 @@ export type Database = {
           created_at: string
           id: string
           is_super_admin: boolean | null
+          password: string | null
           username: string
         }
         Insert: {
           created_at?: string
           id?: string
           is_super_admin?: boolean | null
+          password?: string | null
           username: string
         }
         Update: {
           created_at?: string
           id?: string
           is_super_admin?: boolean | null
+          password?: string | null
           username?: string
         }
         Relationships: []
