@@ -88,7 +88,9 @@ const AdminLayout = () => {
           <SidebarContent className="py-2 bg-flyboy-purple/90">
             <SidebarMenu className="space-y-2 px-3">
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => navigate("/admin")} isActive={isRouteActive("/admin")} tooltip="الرئيسية" className={cn("hover:bg-flyboy-purple/60", isRouteActive("/admin") ? "bg-flyboy-purple text-white" : "")}>
+                <SidebarMenuButton onClick={() => navigate("/admin")} isActive={isRouteActive("/admin")} tooltip="الرئيسية" className={cn("hover:bg-flyboy-purple/60",
+                  isRouteActive("/admin") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
+                )}>
                   <Home className="ml-2" size={18} />
                   <span className="md:block block">{!sidebarCollapsed && "الرئيسية"}</span>
                 </SidebarMenuButton>
@@ -97,35 +99,45 @@ const AdminLayout = () => {
               <SidebarSeparator className="my-3" />
               
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => navigate("/admin/slides")} isActive={isRouteActive("/admin/slides")} tooltip="السلايدات" className={cn("hover:bg-flyboy-purple/60", isRouteActive("/admin/slides") ? "bg-flyboy-purple text-white" : "")}>
+                <SidebarMenuButton onClick={() => navigate("/admin/slides")} isActive={isRouteActive("/admin/slides")} tooltip="السلايدات" className={cn("hover:bg-flyboy-purple/60",
+                  isRouteActive("/admin/slides") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
+                )}>
                   <Image className="ml-2" size={18} />
                   <span className="md:block block">{!sidebarCollapsed && "السلايدات"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => navigate("/admin/events")} isActive={isRouteActive("/admin/events")} tooltip="الحفلات" className={cn("hover:bg-flyboy-purple/60", isRouteActive("/admin/events") ? "bg-flyboy-purple text-white" : "")}>
+                <SidebarMenuButton onClick={() => navigate("/admin/events")} isActive={isRouteActive("/admin/events")} tooltip="الحفلات" className={cn("hover:bg-flyboy-purple/60", 
+                  isRouteActive("/admin/events") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
+                )}>
                   <Calendar className="ml-2" size={18} />
                   <span className="md:block block">{!sidebarCollapsed && "الحفلات"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => navigate("/admin/partners")} isActive={isRouteActive("/admin/partners")} tooltip="شركاء النجاح" className={cn("hover:bg-flyboy-purple/60", isRouteActive("/admin/partners") ? "bg-flyboy-purple text-white" : "")}>
+                <SidebarMenuButton onClick={() => navigate("/admin/partners")} isActive={isRouteActive("/admin/partners")} tooltip="شركاء النجاح" className={cn("hover:bg-flyboy-purple/60",
+                  isRouteActive("/admin/partners") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
+                )}>
                   <Users2 className="ml-2" size={18} />
                   <span className="md:block block">{!sidebarCollapsed && "شركاء النجاح"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => navigate("/admin/about")} isActive={isRouteActive("/admin/about")} tooltip="نبذة عنا" className={cn("hover:bg-flyboy-purple/60", isRouteActive("/admin/about") ? "bg-flyboy-purple text-white" : "")}>
+                <SidebarMenuButton onClick={() => navigate("/admin/about")} isActive={isRouteActive("/admin/about")} tooltip="نبذة عنا" className={cn("hover:bg-flyboy-purple/60",
+                  isRouteActive("/admin/about") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
+                )}>
                   <Info className="ml-2" size={18} />
                   <span className="md:block block">{!sidebarCollapsed && "نبذة عنا"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => navigate("/admin/social-media")} isActive={isRouteActive("/admin/social-media")} tooltip="منصات التواصل" className={cn("hover:bg-flyboy-purple/60", isRouteActive("/admin/social-media") ? "bg-flyboy-purple text-white" : "")}>
+                <SidebarMenuButton onClick={() => navigate("/admin/social-media")} isActive={isRouteActive("/admin/social-media")} tooltip="منصات التواصل" className={cn("hover:bg-flyboy-purple/60",
+                  isRouteActive("/admin/social-media") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
+                )}>
                   <ArrowRight className="ml-2" size={18} />
                   <span className="md:block block">{!sidebarCollapsed && "منصات التواصل"}</span>
                 </SidebarMenuButton>
@@ -134,7 +146,9 @@ const AdminLayout = () => {
               <SidebarSeparator className="my-3" />
               
               {adminUser?.is_super_admin && <SidebarMenuItem>
-                  <SidebarMenuButton onClick={() => navigate("/admin/users")} isActive={isRouteActive("/admin/users")} tooltip="المستخدمين" className={cn("hover:bg-flyboy-purple/60", isRouteActive("/admin/users") ? "bg-flyboy-purple text-white" : "")}>
+                  <SidebarMenuButton onClick={() => navigate("/admin/users")} isActive={isRouteActive("/admin/users")} tooltip="المستخدمين" className={cn("hover:bg-flyboy-purple/60",
+                    isRouteActive("/admin/users") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
+                  )}>
                     <Users className="ml-2" size={18} />
                     <span className="md:block block">{!sidebarCollapsed && "المستخدمين"}</span>
                   </SidebarMenuButton>
