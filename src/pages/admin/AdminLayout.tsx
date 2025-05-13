@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { 
   LayoutDashboard, 
@@ -12,12 +12,9 @@ import {
   Info, 
   ArrowRight,
   LogOut,
-  Menu
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { 
   SidebarProvider, 
   Sidebar, 
@@ -27,14 +24,15 @@ import {
   SidebarMenu, 
   SidebarMenuItem, 
   SidebarMenuButton, 
-  SidebarTrigger
+  SidebarTrigger,
+  SidebarSeparator
 } from "@/components/ui/sidebar";
 
 const AdminLayout = () => {
   const { adminUser, logout } = useAdminAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
-  const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -65,6 +63,11 @@ const AdminLayout = () => {
     }
   };
 
+  // Helper function to determine if a route is active
+  const isRouteActive = (path: string) => {
+    return location.pathname === path;
+  };
+
   if (!mounted || !adminUser) {
     return null;
   }
@@ -81,12 +84,12 @@ const AdminLayout = () => {
             </div>
           </SidebarHeader>
           
-          <SidebarContent>
-            <SidebarMenu>
+          <SidebarContent className="py-2">
+            <SidebarMenu className="space-y-1 px-2">
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => navigate("/admin")}
-                  isActive={location.pathname === "/admin"}
+                  isActive={isRouteActive("/admin")}
                   tooltip="الرئيسية"
                 >
                   <Home className="ml-2" size={18} />
@@ -94,10 +97,12 @@ const AdminLayout = () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
+              <SidebarSeparator className="my-2" />
+              
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => navigate("/admin/slides")}
-                  isActive={location.pathname === "/admin/slides"}
+                  isActive={isRouteActive("/admin/slides")}
                   tooltip="السلايدات"
                 >
                   <Image className="ml-2" size={18} />
@@ -108,7 +113,7 @@ const AdminLayout = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => navigate("/admin/events")}
-                  isActive={location.pathname === "/admin/events"}
+                  isActive={isRouteActive("/admin/events")}
                   tooltip="الحفلات"
                 >
                   <Calendar className="ml-2" size={18} />
@@ -119,7 +124,7 @@ const AdminLayout = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => navigate("/admin/partners")}
-                  isActive={location.pathname === "/admin/partners"}
+                  isActive={isRouteActive("/admin/partners")}
                   tooltip="شركاء النجاح"
                 >
                   <Users2 className="ml-2" size={18} />
@@ -130,7 +135,7 @@ const AdminLayout = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => navigate("/admin/about")}
-                  isActive={location.pathname === "/admin/about"}
+                  isActive={isRouteActive("/admin/about")}
                   tooltip="نبذة عنا"
                 >
                   <Info className="ml-2" size={18} />
@@ -141,7 +146,7 @@ const AdminLayout = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => navigate("/admin/social-media")}
-                  isActive={location.pathname === "/admin/social-media"}
+                  isActive={isRouteActive("/admin/social-media")}
                   tooltip="منصات التواصل"
                 >
                   <ArrowRight className="ml-2" size={18} />
@@ -149,16 +154,20 @@ const AdminLayout = () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={() => navigate("/admin/users")}
-                  isActive={location.pathname === "/admin/users"}
-                  tooltip="المستخدمين"
-                >
-                  <Users className="ml-2" size={18} />
-                  <span>المستخدمين</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <SidebarSeparator className="my-2" />
+              
+              {adminUser?.is_super_admin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    onClick={() => navigate("/admin/users")}
+                    isActive={isRouteActive("/admin/users")}
+                    tooltip="المستخدمين"
+                  >
+                    <Users className="ml-2" size={18} />
+                    <span>المستخدمين</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarContent>
           
