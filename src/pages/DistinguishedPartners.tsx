@@ -1,35 +1,46 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Loader2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
-
-// Distinguished partners list (same as in DistinguishedPartnersBanner)
-const distinguishedPartners = [{
-  id: 1,
-  name: 'Night Vision',
-  logo: 'https://images.unsplash.com/photo-1485359466996-ba9c9b4afb63?w=200&h=100&fit=crop&auto=format'
-}, {
-  id: 2,
-  name: 'Sound Masters',
-  logo: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&h=100&fit=crop&auto=format'
-}, {
-  id: 3,
-  name: 'Sancy Club',
-  logo: 'https://images.unsplash.com/photo-1516876437184-593fda40c542?w=200&h=100&fit=crop&auto=format'
-}, {
-  id: 4,
-  name: 'Beach Waves',
-  logo: 'https://images.unsplash.com/photo-1525268771113-32d9e9021a97?w=200&h=100&fit=crop&auto=format'
-}];
+import { supabase } from '@/integrations/supabase/client';
+import { Partner } from '@/types/database.types';
 
 const DistinguishedPartners = () => {
   const isMobile = useIsMobile();
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [loading, setLoading] = useState(true);
   
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  // Fetch the distinguished partners
+  useEffect(() => {
+    const fetchPartners = async () => {
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('partners')
+          .select('*')
+          .eq('is_distinguished', true);
+
+        if (error) {
+          console.error('Error fetching distinguished partners:', error);
+          return;
+        }
+
+        setPartners(data || []);
+      } catch (error) {
+        console.error('Error in partners fetch:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPartners();
   }, []);
   
   return (
@@ -51,24 +62,37 @@ const DistinguishedPartners = () => {
         <h1 className="text-3xl md:text-4xl font-bold text-flyboy-gold mb-12 text-center">
           شركاء النجاح المتميزين
         </h1>
-        
-        <div className={`grid grid-cols-1 ${isMobile ? 'gap-6' : 'md:grid-cols-2 lg:grid-cols-3 gap-8'} mx-auto justify-items-center`}>
-          {distinguishedPartners.map((partner) => (
-            <div 
-              key={partner.id} 
-              className="border-2 border-flyboy-gold rounded-xl overflow-hidden bg-flyboy-purple p-6 flex flex-col items-center w-full max-w-[280px]"
-            >
-              <div className="w-full aspect-[4/3] bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
-                <img
-                  src={partner.logo}
-                  alt={partner.name}
-                  className="max-w-full max-h-full object-contain"
-                />
+
+        {loading ? (
+          <div className="flex justify-center items-center my-16">
+            <Loader2 className="h-10 w-10 animate-spin text-flyboy-gold" />
+          </div>
+        ) : partners.length === 0 ? (
+          <div className="text-center text-white p-8 border border-flyboy-gold/30 rounded-xl">
+            <p>لا يوجد شركاء متميزين حالياً</p>
+          </div>
+        ) : (
+          <div className={`grid grid-cols-1 ${isMobile ? 'gap-6' : 'md:grid-cols-2 lg:grid-cols-3 gap-8'} mx-auto justify-items-center`}>
+            {partners.map((partner) => (
+              <div 
+                key={partner.id} 
+                className="border-2 border-flyboy-gold rounded-xl overflow-hidden bg-flyboy-purple p-6 flex flex-col items-center w-full max-w-[280px]"
+              >
+                <div className="w-full aspect-[4/3] bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
+                  <img
+                    src={partner.logo_url}
+                    alt={partner.name}
+                    className="max-w-full max-h-full object-contain"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://placehold.co/280x210?text=صورة+غير+متوفرة";
+                    }}
+                  />
+                </div>
+                <h3 className="text-white text-xl font-medium text-center">{partner.name}</h3>
               </div>
-              <h3 className="text-white text-xl font-medium text-center">{partner.name}</h3>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
