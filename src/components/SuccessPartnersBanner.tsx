@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -5,10 +6,12 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Partner } from '@/types/database.types';
 import { Loader2 } from 'lucide-react';
+
 const SuccessPartnersBanner = () => {
   const isMobile = useIsMobile();
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchPartners = async () => {
       try {
@@ -46,6 +49,7 @@ const SuccessPartnersBanner = () => {
   if (partners.length === 0) {
     return null;
   }
+  
   return <section className="bg-flyboy-dark py-10 text-center">
       <div className="container max-w-5xl px-4 mx-auto">
         <div className="flex items-center justify-center mb-4">
@@ -73,4 +77,5 @@ const SuccessPartnersBanner = () => {
       </div>
     </section>;
 };
+
 export default SuccessPartnersBanner;

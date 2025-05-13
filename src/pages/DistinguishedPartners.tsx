@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronRight, Loader2, Star } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
@@ -59,9 +59,16 @@ const DistinguishedPartners = () => {
           </Button>
         </div>
         
-        <h1 className="text-3xl md:text-4xl font-bold text-flyboy-gold mb-12 text-center">
-          شركاء النجاح المتميزين
-        </h1>
+        <div className="flex flex-col items-center justify-center mb-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-flyboy-gold mb-2">شركاء النجاح</h1>
+          <div className="w-24 h-[3px] bg-flyboy-gold mb-6"></div>
+        </div>
+        
+        <div className="flex items-center justify-center mb-8">
+          <Star size={16} className="text-flyboy-gold mr-2 animate-pulse-glow" />
+          <h2 className="text-2xl font-bold text-flyboy-gold">المتميزين</h2>
+          <Star size={16} className="text-flyboy-gold ml-2 animate-pulse-glow" />
+        </div>
 
         {loading ? (
           <div className="flex justify-center items-center my-16">

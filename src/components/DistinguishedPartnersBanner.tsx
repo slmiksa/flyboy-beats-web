@@ -5,7 +5,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Partner } from '@/types/database.types';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Star } from 'lucide-react';
 
 const DistinguishedPartnersBanner = () => {
   const isMobile = useIsMobile();
@@ -59,12 +59,15 @@ const DistinguishedPartnersBanner = () => {
   return (
     <section className="bg-flyboy-dark py-10 text-center">
       <div className="container max-w-5xl px-4 mx-auto">
-        <div className="flex items-center justify-center mb-4">
+        <div className="flex flex-col items-center justify-center mb-2">
           <h2 className="text-2xl font-bold text-flyboy-gold mb-2">شركاء النجاح</h2>
+          <div className="w-24 h-[3px] bg-flyboy-gold mb-6"></div>
         </div>
         
-        <div className="flex items-center justify-center mb-4">
+        <div className="flex items-center justify-center mb-6">
+          <Star size={16} className="text-flyboy-gold mr-2 animate-pulse-glow" />
           <h3 className="text-xl font-bold text-flyboy-gold">المتميزين</h3>
+          <Star size={16} className="text-flyboy-gold ml-2 animate-pulse-glow" />
         </div>
         
         <div className="border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-purple p-6 mb-4 mx-auto max-w-sm md:max-w-full md:mx-[31px] md:px-[88px] my-[10px] py-[28px]">
