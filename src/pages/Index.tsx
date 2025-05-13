@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import HeroSlider from '@/components/HeroSlider';
 import EventsSection from '@/components/EventsSection';
@@ -79,8 +80,8 @@ const Index = () => {
       <SocialMediaBar />
       <HeroSlider />
       <EventsSection />
-      <SuccessPartnersBanner />
       <DistinguishedPartnersBanner />
+      <SuccessPartnersBanner />
       <AboutSection />
     </div>
   );

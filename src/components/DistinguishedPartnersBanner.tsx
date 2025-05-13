@@ -60,6 +60,10 @@ const DistinguishedPartnersBanner = () => {
     <section className="bg-flyboy-dark py-10 text-center">
       <div className="container max-w-5xl px-4 mx-auto">
         <div className="flex items-center justify-center mb-4">
+          <h2 className="text-2xl font-bold text-flyboy-gold mb-2">شركاء النجاح</h2>
+        </div>
+        
+        <div className="flex items-center justify-center mb-4">
           <h3 className="text-xl font-bold text-flyboy-gold">المتميزين</h3>
         </div>
         
