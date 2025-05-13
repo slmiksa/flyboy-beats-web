@@ -1,9 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { Headphones, X } from 'lucide-react';
+import { Headphones, X, Maximize } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { Event } from "@/types/database.types";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { cn } from "@/lib/utils";
 
 const EventsSection = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -136,17 +138,25 @@ const EventsSection = () => {
             {events.map((event, index) => (
               <div 
                 key={event.id || index} 
-                className="bg-flyboy-purple rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105"
+                className="bg-flyboy-purple rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105 group relative"
               >
-                <div 
-                  className="relative pb-[90%] cursor-pointer" 
-                  onClick={() => handleEventClick(event)}
-                >
+                <div className="relative pb-[90%]">
                   <img 
                     src={event.image_url} 
                     alt={event.title} 
                     className="absolute inset-0 w-full h-full object-cover"
                   />
+                  {/* Enlarge Button - Shows on hover */}
+                  <button
+                    className="absolute top-2 right-2 bg-black/50 text-white rounded-md px-3 py-1 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 hover:bg-black/70"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEventClick(event);
+                    }}
+                  >
+                    <Maximize size={16} />
+                    <span>تكبير</span>
+                  </button>
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl text-flyboy-gold font-bold mb-4">{event.title}</h3>
@@ -171,19 +181,50 @@ const EventsSection = () => {
         )}
       </div>
 
-      {/* Full Image Dialog */}
+      {/* Enhanced Full Image Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="p-0 border-none max-w-3xl w-full bg-transparent shadow-none">
-          <div className="relative rounded-lg overflow-hidden">
-            {selectedEvent && (
-              <img 
-                src={selectedEvent.image_url} 
-                alt={selectedEvent.title} 
-                className="w-full h-auto object-contain max-h-[80vh]"
-              />
-            )}
+        <DialogContent className="p-0 border-none max-w-4xl w-full bg-transparent shadow-none">
+          <div className="relative rounded-lg overflow-hidden bg-black/90 p-4">
+            <div className="flex flex-col">
+              {selectedEvent && (
+                <>
+                  <div className="mb-4">
+                    <h2 className="text-2xl font-bold text-flyboy-gold mb-2">{selectedEvent.title}</h2>
+                    {selectedEvent.location && (
+                      <p className="text-white/80">{selectedEvent.location}</p>
+                    )}
+                  </div>
+                  <div className="relative rounded-lg overflow-hidden">
+                    <AspectRatio ratio={16/9} className="bg-black">
+                      <img 
+                        src={selectedEvent.image_url} 
+                        alt={selectedEvent.title} 
+                        className="w-full h-full object-contain"
+                      />
+                    </AspectRatio>
+                  </div>
+                  <div className="mt-4 flex justify-end">
+                    <a 
+                      href={selectedEvent && formatWhatsAppLink(selectedEvent)} 
+                      target="_blank"
+                      rel="noopener noreferrer" 
+                      className={cn(
+                        "btn-whatsapp px-6 py-2 rounded-lg", 
+                        "flex items-center justify-center gap-2",
+                        "bg-green-600 text-white hover:bg-green-700 transition-colors"
+                      )}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0a12 12 0 0 0-12 12c0 2.38.7 4.6 1.9 6.47L0 24l5.53-1.9A11.98 11.98 0 0 0 12 24a12 12 0 0 0 0-24zm6.03 16.92c-.22.64-1.12 1.17-1.84 1.33-.49.1-1.12.17-3.26-.7-2.73-1.1-4.5-3.76-4.64-3.93-.15-.17-1.2-1.6-1.2-3.05 0-1.45.74-2.17 1-2.46.22-.25.57-.37.91-.37l.33.01c.3 0 .44.03.64.49.24.57.82 2 .89 2.15.07.15.12.32.04.52a1.6 1.6 0 0 1-.3.42c-.15.15-.3.34-.43.45-.15.15-.3.3-.13.59.17.3.77 1.27 1.66 2.06 1.14 1.02 2.1 1.33 2.4 1.48.3.15.47.12.65-.07.17-.2.74-.87.94-1.16.2-.3.4-.25.67-.15.27.1 1.7.8 2 .95.29.15.49.22.56.35z"/>
+                      </svg>
+                      تواصل عبر واتساب
+                    </a>
+                  </div>
+                </>
+              )}
+            </div>
             <button 
-              className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-full hover:bg-black/70 transition-colors"
+              className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-full hover:bg-black/70 transition-colors z-10"
               onClick={() => setDialogOpen(false)}
             >
               <X className="h-6 w-6" />
