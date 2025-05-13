@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Headphones, X, Maximize } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
@@ -5,12 +6,14 @@ import { Event } from "@/types/database.types";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const EventsSection = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const isMobile = useIsMobile();
   
   // Default events that should be used when no events are in the database
   const defaultEvents = [
@@ -182,23 +185,21 @@ const EventsSection = () => {
         )}
       </div>
 
-      {/* Full Image Dialog (Simplified) */}
+      {/* Full Screen Image Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="p-0 border-none max-w-4xl w-full bg-transparent shadow-none">
-          <div className="relative rounded-lg overflow-hidden bg-black/90">
+        <DialogContent className="p-0 border-none w-full max-w-none sm:max-w-none md:max-w-none lg:max-w-none bg-transparent shadow-none">
+          <div className="relative bg-black/95 w-full h-[90vh] md:h-[90vh] flex items-center justify-center">
             {selectedEvent && (
-              <div className="relative">
-                <AspectRatio ratio={16/9} className="bg-black">
-                  <img 
-                    src={selectedEvent.image_url} 
-                    alt={selectedEvent.title} 
-                    className="w-full h-full object-contain"
-                  />
-                </AspectRatio>
+              <div className="relative w-full h-full">
+                <img 
+                  src={selectedEvent.image_url} 
+                  alt={selectedEvent.title} 
+                  className="w-full h-full object-contain"
+                />
               </div>
             )}
             <button 
-              className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-full hover:bg-black/70 transition-colors z-10"
+              className="absolute top-4 right-4 bg-black/70 text-white p-2 rounded-full hover:bg-black/90 transition-colors z-10"
               onClick={() => setDialogOpen(false)}
             >
               <X className="h-6 w-6" />
