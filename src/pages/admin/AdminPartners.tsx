@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -129,28 +130,36 @@ const AdminPartners = () => {
   const uploadLogo = async (file: File) => {
     try {
       setIsUploading(true);
+      console.log("Starting logo upload process");
       
       // Generate a unique filename
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
       
+      console.log(`Uploading file: ${filePath} to logos bucket`);
+      
       // Upload to Supabase storage
       const { data, error } = await supabase.storage
         .from('logos')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
         
       if (error) {
         console.error("Storage upload error:", error);
         throw error;
       }
       
+      console.log("Upload successful, data:", data);
+      
       // Get public URL
       const { data: publicURLData } = supabase.storage
         .from('logos')
         .getPublicUrl(filePath);
         
-      console.log("Uploaded successfully, public URL:", publicURLData.publicUrl);
+      console.log("Public URL:", publicURLData.publicUrl);
       return publicURLData.publicUrl;
     } catch (error: any) {
       console.error('Error uploading logo:', error);
@@ -225,6 +234,11 @@ const AdminPartners = () => {
       toast({
         title: "تم بنجاح",
         description: "تمت إضافة الشريك بنجاح"
+      });
+      
+      // Show a more visible notification as well
+      sonnerToast.success("تم إضافة الشريك بنجاح", {
+        description: `تمت إضافة ${newPartnerName} إلى قائمة الشركاء`
       });
     } catch (error: any) {
       console.error("Error adding partner:", error);
@@ -307,9 +321,15 @@ const AdminPartners = () => {
       setIsEditDialogOpen(false);
       setLogoFile(null);
       setPreviewImage(null);
+      
       toast({
         title: "تم بنجاح",
         description: "تم تحديث بيانات الشريك بنجاح"
+      });
+      
+      // Show a more visible notification as well
+      sonnerToast.success("تم تحديث الشريك بنجاح", {
+        description: `تم تحديث بيانات ${newPartnerName}`
       });
     } catch (error: any) {
       console.error("Error updating partner:", error);
@@ -338,10 +358,14 @@ const AdminPartners = () => {
       setPartners(partners.filter((p) => p.id !== partnerToDelete.id));
       setPartnerToDelete(null);
       setIsDeleteDialogOpen(false);
+      
       toast({
         title: "تم بنجاح",
         description: "تم حذف الشريك بنجاح"
       });
+      
+      // Show a more visible notification as well
+      sonnerToast.success("تم حذف الشريك بنجاح");
     } catch (error: any) {
       console.error("Error deleting partner:", error);
       toast({

@@ -1,2 +1,5 @@
 
 project_id = "firfwpammvhmgfyjzeii"
+
+[storage.logos]
+public = true
