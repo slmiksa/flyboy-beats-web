@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
@@ -7,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarFooter, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarTrigger, SidebarSeparator } from "@/components/ui/sidebar";
-import { Toggle } from "@/components/ui/toggle";
 
 const AdminLayout = () => {
   const {
@@ -97,8 +95,8 @@ const AdminLayout = () => {
                     isRouteActive("/admin") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
                   )}
                 >
-                  <Home className="ml-2" size={18} />
-                  <span>{!sidebarCollapsed && "الرئيسية"}</span>
+                  <Home className={cn("ml-2", isRouteActive("/admin") ? "text-flyboy-gold" : "")} size={18} />
+                  <span className={isRouteActive("/admin") ? "text-flyboy-gold" : ""}>{!sidebarCollapsed && "الرئيسية"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -114,8 +112,8 @@ const AdminLayout = () => {
                     isRouteActive("/admin/slides") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
                   )}
                 >
-                  <Image className="ml-2" size={18} />
-                  <span className="md:block block">{!sidebarCollapsed && "السلايدات"}</span>
+                  <Image className={cn("ml-2", isRouteActive("/admin/slides") ? "text-flyboy-gold" : "")} size={18} />
+                  <span className={cn("md:block block", isRouteActive("/admin/slides") ? "text-flyboy-gold" : "")}>{!sidebarCollapsed && "السلايدات"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -129,8 +127,8 @@ const AdminLayout = () => {
                     isRouteActive("/admin/events") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
                   )}
                 >
-                  <Calendar className="ml-2" size={18} />
-                  <span className="md:block block">{!sidebarCollapsed && "الحفلات"}</span>
+                  <Calendar className={cn("ml-2", isRouteActive("/admin/events") ? "text-flyboy-gold" : "")} size={18} />
+                  <span className={cn("md:block block", isRouteActive("/admin/events") ? "text-flyboy-gold" : "")}>{!sidebarCollapsed && "الحفلات"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -144,8 +142,8 @@ const AdminLayout = () => {
                     isRouteActive("/admin/partners") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
                   )}
                 >
-                  <Users2 className="ml-2" size={18} />
-                  <span className="md:block block">{!sidebarCollapsed && "شركاء النجاح"}</span>
+                  <Users2 className={cn("ml-2", isRouteActive("/admin/partners") ? "text-flyboy-gold" : "")} size={18} />
+                  <span className={cn("md:block block", isRouteActive("/admin/partners") ? "text-flyboy-gold" : "")}>{!sidebarCollapsed && "شركاء النجاح"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -159,8 +157,8 @@ const AdminLayout = () => {
                     isRouteActive("/admin/about") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
                   )}
                 >
-                  <Info className="ml-2" size={18} />
-                  <span className="md:block block">{!sidebarCollapsed && "نبذة عنا"}</span>
+                  <Info className={cn("ml-2", isRouteActive("/admin/about") ? "text-flyboy-gold" : "")} size={18} />
+                  <span className={cn("md:block block", isRouteActive("/admin/about") ? "text-flyboy-gold" : "")}>{!sidebarCollapsed && "نبذة عنا"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -174,8 +172,8 @@ const AdminLayout = () => {
                     isRouteActive("/admin/social-media") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
                   )}
                 >
-                  <ArrowRight className="ml-2" size={18} />
-                  <span className="md:block block">{!sidebarCollapsed && "منصات التواصل"}</span>
+                  <ArrowRight className={cn("ml-2", isRouteActive("/admin/social-media") ? "text-flyboy-gold" : "")} size={18} />
+                  <span className={cn("md:block block", isRouteActive("/admin/social-media") ? "text-flyboy-gold" : "")}>{!sidebarCollapsed && "منصات التواصل"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -191,8 +189,8 @@ const AdminLayout = () => {
                       isRouteActive("/admin/users") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
                     )}
                   >
-                    <Users className="ml-2" size={18} />
-                    <span className="md:block block">{!sidebarCollapsed && "المستخدمين"}</span>
+                    <Users className={cn("ml-2", isRouteActive("/admin/users") ? "text-flyboy-gold" : "")} size={18} />
+                    <span className={cn("md:block block", isRouteActive("/admin/users") ? "text-flyboy-gold" : "")}>{!sidebarCollapsed && "المستخدمين"}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>}
             </SidebarMenu>
