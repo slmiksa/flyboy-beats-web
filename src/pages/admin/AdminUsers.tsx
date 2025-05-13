@@ -49,10 +49,16 @@ const AdminUsers = () => {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [newUser, setNewUser] = useState({ username: "", isSuperAdmin: false });
+  const [newUser, setNewUser] = useState({ 
+    username: "", 
+    password: "", 
+    confirmPassword: "", 
+    isSuperAdmin: false 
+  });
   const [userToDelete, setUserToDelete] = useState<AdminUser | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
   
   // Redirect if not a super admin
   if (!adminUser?.is_super_admin) {
@@ -90,8 +96,10 @@ const AdminUsers = () => {
   
   const handleAddUser = async () => {
     setIsProcessing(true);
+    setPasswordError("");
     
     try {
+      // Validate input fields
       if (!newUser.username) {
         toast({
           title: "حقول مطلوبة",
@@ -102,13 +110,33 @@ const AdminUsers = () => {
         return;
       }
       
-      // First, add the user to admin_users table without creating auth user
+      // Validate password fields
+      if (!newUser.password) {
+        setPasswordError("يرجى إدخال كلمة المرور");
+        setIsProcessing(false);
+        return;
+      }
+      
+      if (newUser.password.length < 6) {
+        setPasswordError("يجب أن تكون كلمة المرور 6 أحرف على الأقل");
+        setIsProcessing(false);
+        return;
+      }
+      
+      if (newUser.password !== newUser.confirmPassword) {
+        setPasswordError("كلمة المرور وتأكيدها غير متطابقين");
+        setIsProcessing(false);
+        return;
+      }
+      
+      // First, add the user to admin_users table
       const { data: adminData, error: adminError } = await supabase
         .from("admin_users")
         .insert([
           { 
             username: newUser.username, 
-            is_super_admin: newUser.isSuperAdmin 
+            is_super_admin: newUser.isSuperAdmin,
+            password: newUser.password // Store the password in the database
           }
         ])
         .select();
@@ -119,11 +147,11 @@ const AdminUsers = () => {
       
       toast({
         title: "تم إضافة المستخدم",
-        description: `تم إضافة المستخدم ${newUser.username} بنجاح. كلمة المرور الافتراضية هي: password123`,
+        description: `تم إضافة المستخدم ${newUser.username} بنجاح.`,
       });
       
       setIsAddDialogOpen(false);
-      setNewUser({ username: "", isSuperAdmin: false });
+      setNewUser({ username: "", password: "", confirmPassword: "", isSuperAdmin: false });
       fetchUsers();
     } catch (error: any) {
       console.error("Error adding user:", error);
@@ -261,7 +289,7 @@ const AdminUsers = () => {
           <DialogHeader>
             <DialogTitle>إضافة مستخدم جديد</DialogTitle>
             <DialogDescription>
-              أدخل معلومات المستخدم الجديد للوحة التحكم. كلمة المرور الافتراضية للمستخدمين الجدد هي: password123
+              أدخل معلومات المستخدم الجديد للوحة التحكم.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -274,6 +302,31 @@ const AdminUsers = () => {
                 onChange={(e) => setNewUser({...newUser, username: e.target.value})}
                 className="text-right"
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">كلمة المرور</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="أدخل كلمة المرور"
+                value={newUser.password}
+                onChange={(e) => setNewUser({...newUser, password: e.target.value})}
+                className="text-right"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">تأكيد كلمة المرور</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="أدخل تأكيد كلمة المرور"
+                value={newUser.confirmPassword}
+                onChange={(e) => setNewUser({...newUser, confirmPassword: e.target.value})}
+                className="text-right"
+              />
+              {passwordError && (
+                <p className="text-sm text-destructive">{passwordError}</p>
+              )}
             </div>
             <div className="flex items-center space-x-2">
               <input

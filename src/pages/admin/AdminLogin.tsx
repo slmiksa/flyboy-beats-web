@@ -182,12 +182,6 @@ const AdminLoginContent = () => {
               اسم المستخدم: <strong>flyboy</strong> | كلمة المرور: <strong>Ksa@123456</strong>
             </p>
           </div>
-          <div>
-            <p className="text-sm font-semibold">المستخدمين الجدد:</p>
-            <p className="text-sm">
-              كلمة المرور الافتراضية: <strong>password123</strong>
-            </p>
-          </div>
         </div>
       </div>
     </div>

@@ -94,17 +94,23 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
         }
       } else {
         // For other users, check if the user exists first
-        const adminData = await fetchAdminUser(username);
+        const { data, error } = await supabase
+          .from('admin_users')
+          .select('*')
+          .eq('username', username)
+          .single();
         
-        if (!adminData) {
+        if (error || !data) {
           console.error("Admin user not found");
           return { success: false, error: "اسم المستخدم غير موجود" };
         }
         
-        // All users created in admin panel can log in with the default password "password123"
-        // This is for simplicity and testing purposes
-        if (password === "password123") {
-          console.log("Login successful for user:", username);
+        // Check if the password matches
+        const adminData = data as AdminUser;
+        
+        // If password column exists, verify against it
+        if (adminData.password === password) {
+          console.log("Login successful for user with custom password:", username);
           setAdminUser(adminData);
           localStorage.setItem('admin_username', username);
           return { success: true };
