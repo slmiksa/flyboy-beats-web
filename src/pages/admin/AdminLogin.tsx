@@ -132,7 +132,7 @@ const AdminLoginContent = () => {
               <CardFooter>
                 <Button 
                   type="submit" 
-                  className="w-full bg-purple-600 hover:bg-purple-700" 
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-lg py-6" 
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -148,7 +148,7 @@ const AdminLoginContent = () => {
           </Form>
         </Card>
         
-        <div className="mt-4 text-center text-white">
+        <div className="mt-6 text-center text-white">
           <p className="text-sm">
             اسم المستخدم: <strong>flyboy</strong> | كلمة المرور: <strong>Ksa@123456</strong>
           </p>

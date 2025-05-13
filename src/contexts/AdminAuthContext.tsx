@@ -83,37 +83,37 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
         return { success: false, error: "اسم المستخدم غير موجود" };
       }
 
-      // Use a valid email domain (example.com) instead of flyboy-admin.com
-      const email = `${username}@example.com`;
-        
+      // Use a gmail.com domain which is widely accepted
+      const email = `${username}@gmail.com`;
+      
       // Try to sign in with the credentials
-      const { data, error } = await supabase.auth.signInWithPassword({
+      let signInResult = await supabase.auth.signInWithPassword({
         email: email,
         password: password,
       });
       
-      if (error) {
+      if (signInResult.error) {
         // Special case for the superadmin "flyboy" with fixed password
         if (username === "flyboy" && password === "Ksa@123456") {
           // Try to create the account first
-          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          const signUpResult = await supabase.auth.signUp({
             email: email,
             password: password,
           });
           
-          if (signUpError) {
-            console.error("Error creating flyboy account:", signUpError);
+          if (signUpResult.error) {
+            console.error("Error creating flyboy account:", signUpResult.error);
             
             // Check if error is because the user already exists
-            if (signUpError.message.includes("already registered")) {
-              // Try sign in again
-              const { error: retryError } = await supabase.auth.signInWithPassword({
+            if (signUpResult.error.message.includes("already registered")) {
+              // Try sign in again with the same credentials
+              signInResult = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
               });
               
-              if (retryError) {
-                console.error("Error signing in after account exists:", retryError);
+              if (signInResult.error) {
+                console.error("Error signing in after account exists:", signInResult.error);
                 return { success: false, error: "حدث خطأ أثناء محاولة تسجيل الدخول" };
               } else {
                 setAdminUser(adminData as AdminUser);
@@ -125,20 +125,20 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
           }
           
           // Now try sign in again after creating the account
-          const { error: retryError } = await supabase.auth.signInWithPassword({
+          signInResult = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
           });
           
-          if (retryError) {
-            console.error("Error signing in after account creation:", retryError);
+          if (signInResult.error) {
+            console.error("Error signing in after account creation:", signInResult.error);
             return { success: false, error: "حدث خطأ أثناء محاولة تسجيل الدخول" };
           }
           
           setAdminUser(adminData as AdminUser);
           return { success: true };
         } else {
-          console.error("Login error for admin:", error);
+          console.error("Login error for admin:", signInResult.error);
           return { success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" };
         }
       }
