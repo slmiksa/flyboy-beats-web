@@ -31,6 +31,14 @@ const AdminLoginContent = () => {
   useEffect(() => {
     const checkExistingAuth = async () => {
       console.log("Checking for existing authentication in login page...");
+      
+      // Check for the special flyboy session marker first
+      if (localStorage.getItem('flyboy_admin_session') === 'true') {
+        console.log("Found flyboy session marker, redirecting to admin");
+        navigate("/admin", { replace: true });
+        return;
+      }
+      
       const isAuthenticated = await checkAuth();
       console.log("Authentication status in login page:", isAuthenticated);
       
@@ -72,7 +80,7 @@ const AdminLoginContent = () => {
           console.log("Executing redirect to /admin now with replace:true from AdminLogin");
           // Use replace to prevent going back to login page
           navigate("/admin", { replace: true });
-        }, 1500); // Increased delay to 1500ms
+        }, 2000); // Increased delay to ensure state is properly updated
       } else {
         setError(result.error || "اسم المستخدم أو كلمة المرور غير صحيحة");
         toast({

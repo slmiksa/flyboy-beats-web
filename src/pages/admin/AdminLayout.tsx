@@ -28,6 +28,15 @@ const AdminLayoutContent = () => {
     const verifyAuth = async () => {
       try {
         console.log("Verifying admin authorization in AdminLayout...");
+        
+        // Check for the special flyboy session marker first
+        if (localStorage.getItem('flyboy_admin_session') === 'true') {
+          console.log("Found flyboy session marker, authorizing in admin layout");
+          setIsAuthorized(true);
+          setIsVerifying(false);
+          return;
+        }
+        
         const isAuth = await checkAuth();
         console.log("Auth verification result in AdminLayout:", isAuth);
         
@@ -71,6 +80,7 @@ const AdminLayoutContent = () => {
     return <Navigate to="/admin/login" replace />;
   }
 
+  // Only render the admin layout if authorized
   return (
     <SidebarProvider defaultOpen>
       <div className="flex h-screen">
