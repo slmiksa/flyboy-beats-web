@@ -101,7 +101,18 @@ const AdminUsers = () => {
         return;
       }
       
-      // Add the user directly to admin_users table
+      // First, create the auth account
+      const email = `${newUser.username}@flyboy-admin.com`;
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: email,
+        password: newUser.password,
+      });
+      
+      if (authError) {
+        throw authError;
+      }
+      
+      // Then add the user to admin_users table
       const { data: adminData, error: adminError } = await supabase
         .from("admin_users")
         .insert([
@@ -113,6 +124,10 @@ const AdminUsers = () => {
         .select();
       
       if (adminError) {
+        // Try to delete the auth user if admin insert fails
+        if (authData?.user?.id) {
+          await supabase.auth.admin.deleteUser(authData.user.id);
+        }
         throw adminError;
       }
       
@@ -161,6 +176,23 @@ const AdminUsers = () => {
       
       if (deleteError) {
         throw deleteError;
+      }
+      
+      // Delete the auth user if possible
+      try {
+        const email = `${userToDelete.username}@flyboy-admin.com`;
+        const { data: userData, error: userError } = await supabase
+          .from("auth.users")
+          .select("id")
+          .eq("email", email)
+          .single();
+          
+        if (!userError && userData?.id) {
+          await supabase.auth.admin.deleteUser(userData.id);
+        }
+      } catch (error) {
+        console.error("Could not delete auth user, but admin user was deleted:", error);
+        // Continue anyway since the admin user was deleted
       }
       
       toast({

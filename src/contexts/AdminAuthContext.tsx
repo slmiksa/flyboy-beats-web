@@ -72,7 +72,12 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
       const email = sessionData.session.user.email;
       if (!email) return false;
       
-      const username = email.split('@')[0];
+      // Get username part from the email (before @)
+      let username = email;
+      if (email.includes('@')) {
+        username = email.split('@')[0];
+      }
+      
       const adminData = await fetchAdminUser(username);
       
       if (adminData) {
@@ -183,7 +188,7 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
       } else {
         // Standard login attempt for other admin users
         console.log("Using standard login flow");
-        const email = `${username}@gmail.com`;
+        const email = `${username}@flyboy-admin.com`;
         const { data, error } = await supabase.auth.signInWithPassword({
           email: email,
           password: password,
