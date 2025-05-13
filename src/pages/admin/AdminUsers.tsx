@@ -101,7 +101,7 @@ const AdminUsers = () => {
         return;
       }
       
-      // First, add the user to admin_users table
+      // Add the user directly to admin_users table
       const { data: adminData, error: adminError } = await supabase
         .from("admin_users")
         .insert([
@@ -114,23 +114,6 @@ const AdminUsers = () => {
       
       if (adminError) {
         throw adminError;
-      }
-      
-      // Then create the auth account
-      const email = `${newUser.username}@flyboy-admin.com`;
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: email,
-        password: newUser.password,
-      });
-      
-      if (authError) {
-        // Rollback the admin user creation
-        await supabase
-          .from("admin_users")
-          .delete()
-          .eq("username", newUser.username);
-          
-        throw authError;
       }
       
       toast({
@@ -179,9 +162,6 @@ const AdminUsers = () => {
       if (deleteError) {
         throw deleteError;
       }
-      
-      // Auth user will be deleted through RLS cascading if set up,
-      // or can be manually deleted if needed
       
       toast({
         title: "تم حذف المستخدم",
