@@ -19,6 +19,7 @@ import AdminPartners from "./pages/admin/AdminPartners";
 import AdminAbout from "./pages/admin/AdminAbout";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSocialMedia from "./pages/admin/AdminSocialMedia";
+import { AdminAuthProvider } from "./contexts/AdminAuthContext";
 
 const queryClient = new QueryClient();
 
@@ -36,7 +37,11 @@ const App = () => (
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/admin" element={
+            <AdminAuthProvider>
+              <AdminLayout />
+            </AdminAuthProvider>
+          }>
             <Route index element={<AdminDashboard />} />
             <Route path="slides" element={<AdminSlides />} />
             <Route path="events" element={<AdminEvents />} />
@@ -54,3 +59,4 @@ const App = () => (
 );
 
 export default App;
+

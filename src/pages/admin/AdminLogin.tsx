@@ -20,6 +20,18 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
+const AdminLogin = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  
+  return (
+    <AdminAuthProvider>
+      <AdminLoginContent />
+    </AdminAuthProvider>
+  );
+};
+
 const AdminLoginContent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -188,14 +200,6 @@ const AdminLoginContent = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-const AdminLogin = () => {
-  return (
-    <AdminAuthProvider>
-      <AdminLoginContent />
-    </AdminAuthProvider>
   );
 };
 
