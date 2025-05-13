@@ -19,39 +19,44 @@ import AdminPartners from "./pages/admin/AdminPartners";
 import AdminAbout from "./pages/admin/AdminAbout";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSocialMedia from "./pages/admin/AdminSocialMedia";
+import AdminMaintenance from "./pages/admin/AdminMaintenance";
 import { AdminAuthProvider } from "./contexts/AdminAuthContext";
+import { SiteSettingsProvider } from "./contexts/SiteSettingsContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout><Index /></Layout>} />
-          <Route path="/about" element={<Layout><About /></Layout>} />
-          <Route path="/distinguished-partners" element={<Layout><DistinguishedPartners /></Layout>} />
-          <Route path="/all-partners" element={<Layout><AllPartners /></Layout>} />
-          
-          {/* Admin Routes - All wrapped within a single AdminAuthProvider */}
-          <Route element={<AdminAuthProvider />}>
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="slides" element={<AdminSlides />} />
-              <Route path="events" element={<AdminEvents />} />
-              <Route path="partners" element={<AdminPartners />} />
-              <Route path="about" element={<AdminAbout />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="social-media" element={<AdminSocialMedia />} />
+      <SiteSettingsProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout><Index /></Layout>} />
+            <Route path="/about" element={<Layout><About /></Layout>} />
+            <Route path="/distinguished-partners" element={<Layout><DistinguishedPartners /></Layout>} />
+            <Route path="/all-partners" element={<Layout><AllPartners /></Layout>} />
+            
+            {/* Admin Routes - All wrapped within a single AdminAuthProvider */}
+            <Route element={<AdminAuthProvider />}>
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="maintenance" element={<AdminMaintenance />} />
+                <Route path="slides" element={<AdminSlides />} />
+                <Route path="events" element={<AdminEvents />} />
+                <Route path="partners" element={<AdminPartners />} />
+                <Route path="about" element={<AdminAbout />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="social-media" element={<AdminSocialMedia />} />
+              </Route>
             </Route>
-          </Route>
-          
-          <Route path="*" element={<Layout><NotFound /></Layout>} />
-        </Routes>
-      </BrowserRouter>
+            
+            <Route path="*" element={<Layout><NotFound /></Layout>} />
+          </Routes>
+        </BrowserRouter>
+      </SiteSettingsProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

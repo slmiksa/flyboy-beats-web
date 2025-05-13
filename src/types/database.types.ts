@@ -59,5 +59,13 @@ export type SocialMedia = {
   updated_at: string;
 };
 
+export type SiteSettings = {
+  id: string;
+  maintenance_mode: boolean;
+  maintenance_message: string;
+  maintenance_image: string | null;
+  updated_at: string;
+};
+
 // Export the full database type
 export type { Database };

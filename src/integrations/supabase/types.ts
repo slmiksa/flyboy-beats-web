@@ -120,6 +120,30 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          id: string
+          maintenance_image: string | null
+          maintenance_message: string
+          maintenance_mode: boolean
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          maintenance_image?: string | null
+          maintenance_message?: string
+          maintenance_mode?: boolean
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          maintenance_image?: string | null
+          maintenance_message?: string
+          maintenance_mode?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       slides: {
         Row: {
           created_at: string

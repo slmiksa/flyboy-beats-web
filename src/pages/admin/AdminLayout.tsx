@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
-import { LayoutDashboard, Home, Users, Image, Calendar, Users2, Info, ArrowRight, LogOut, ChevronRight, ChevronLeft } from "lucide-react";
+import { LayoutDashboard, Home, Users, Image, Calendar, Users2, Info, ArrowRight, LogOut, ChevronRight, ChevronLeft, Construction } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -101,6 +102,21 @@ const AdminLayout = () => {
               </SidebarMenuItem>
               
               <SidebarSeparator className="my-3" />
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  onClick={() => navigate("/admin/maintenance")} 
+                  isActive={isRouteActive("/admin/maintenance")} 
+                  tooltip="وضع الصيانة" 
+                  className={cn(
+                    "hover:bg-flyboy-purple/60",
+                    isRouteActive("/admin/maintenance") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
+                  )}
+                >
+                  <Construction className={cn("ml-2", isRouteActive("/admin/maintenance") ? "text-flyboy-gold" : "")} size={18} />
+                  <span className={cn("md:block block", isRouteActive("/admin/maintenance") ? "text-flyboy-gold" : "")}>{!sidebarCollapsed && "وضع الصيانة"}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               
               <SidebarMenuItem>
                 <SidebarMenuButton 
