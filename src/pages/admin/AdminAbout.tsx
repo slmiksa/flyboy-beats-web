@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { 
   Card, 
@@ -34,6 +35,30 @@ const AdminAbout = () => {
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  // Default about content
+  const defaultAboutContent = `<h3 class="text-flyboy-gold text-xl font-bold mb-4">نبذة عني</h3>
+<p class="mb-4">أنا FLY BOY، دي جي محترف ومنسق موسيقي مع خبرة تزيد عن ١٠ سنوات في مجال تنسيق الأغاني وإحياء الحفلات الموسيقية.</p>
+
+<p class="mb-4">أتميز بأسلوبي الفريد في دمج الموسيقى العربية والعالمية، وأمتلك القدرة على إضفاء أجواء مميزة تناسب مختلف أنواع المناسبات والحفلات.</p>
+
+<h3 class="text-flyboy-gold text-xl font-bold mb-4">خبراتي</h3>
+<div class="flex items-center mb-3">
+  <span class="text-flyboy-gold mr-2">•</span>
+  <span>حفلات الشاطئ</span>
+</div>
+<div class="flex items-center mb-3">
+  <span class="text-flyboy-gold mr-2">•</span>
+  <span>النوادي الليلية</span>
+</div>
+<div class="flex items-center mb-3">
+  <span class="text-flyboy-gold mr-2">•</span>
+  <span>المهرجانات الموسيقية</span>
+</div>
+<div class="flex items-center mb-3">
+  <span class="text-flyboy-gold mr-2">•</span>
+  <span>المناسبات الخاصة</span>
+</div>`;
 
   // Fetch the current about section data
   useEffect(() => {
@@ -81,6 +106,12 @@ const AdminAbout = () => {
       setImage(null);
       setImagePreview(null);
     }
+  };
+
+  // Restore default about content
+  const handleRestoreDefault = () => {
+    setContent(defaultAboutContent);
+    toast.success("تم استرجاع النبذة الافتراضية بنجاح");
   };
 
   // Save the about section data
@@ -221,7 +252,16 @@ const AdminAbout = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium">النبذة التعريفية</label>
+                    <div className="flex justify-between items-center">
+                      <label className="block text-sm font-medium">النبذة التعريفية</label>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={handleRestoreDefault}
+                      >
+                        استرجاع النبذة الافتراضية
+                      </Button>
+                    </div>
                     <TextEditor 
                       value={content}
                       onChange={setContent}
