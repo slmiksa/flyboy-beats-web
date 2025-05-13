@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Image, CalendarDays, Users, FileText, UserCog } from "lucide-react";
+import { Image, CalendarDays, Users, FileText, UserCog, Share2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 
@@ -73,6 +73,21 @@ const AdminDashboard = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-white">تحديث قسم النبذة التعريفية</p>
+          </CardContent>
+        </Card>
+
+        <Card 
+          className="cursor-pointer hover:shadow-md transition-shadow border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
+          onClick={() => navigate("/admin/social-media")}
+        >
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xl flex items-center gap-3 text-flyboy-gold">
+              <Share2 className="h-6 w-6" />
+              <span>التواصل الاجتماعي</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-white">إدارة روابط منصات التواصل الاجتماعي</p>
           </CardContent>
         </Card>
 

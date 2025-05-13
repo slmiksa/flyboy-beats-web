@@ -18,6 +18,7 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminPartners from "./pages/admin/AdminPartners";
 import AdminAbout from "./pages/admin/AdminAbout";
 import AdminUsers from "./pages/admin/AdminUsers";
+import AdminSocialMedia from "./pages/admin/AdminSocialMedia";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="partners" element={<AdminPartners />} />
             <Route path="about" element={<AdminAbout />} />
             <Route path="users" element={<AdminUsers />} />
+            <Route path="social-media" element={<AdminSocialMedia />} />
           </Route>
           
           <Route path="*" element={<Layout><NotFound /></Layout>} />

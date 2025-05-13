@@ -48,5 +48,15 @@ export type AboutSection = {
   updated_at: string;
 };
 
+export type SocialMedia = {
+  id: string;
+  platform: string;
+  url: string;
+  icon: string;
+  order_position: number;
+  created_at: string;
+  updated_at: string;
+};
+
 // Export the full database type
 export type { Database };
