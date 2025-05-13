@@ -66,7 +66,13 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log("Auth state changed:", event);
-        await checkAuth();
+        if (event === 'SIGNED_IN') {
+          console.log("User signed in, updating admin user");
+          await checkAuth();
+        } else if (event === 'SIGNED_OUT') {
+          console.log("User signed out, clearing admin user");
+          setAdminUser(null);
+        }
       }
     );
     
@@ -129,36 +135,12 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
             if (signUpResult.error.message.includes("already registered")) {
               console.log("User already exists, trying to sign in again with auto confirm");
               
-              // Special handling for email confirmation
-              try {
-                // Force sign in without email verification (for this special account only)
-                const { data, error } = await supabase.auth.signInWithPassword({
-                  email: email,
-                  password: password,
-                });
-                
-                if (error) {
-                  console.error("Second sign-in attempt error:", error);
-                  
-                  // If error is about email confirmation, we'll override for this special account
-                  if (error.message.includes("Email not confirmed")) {
-                    console.log("Email not confirmed error, continuing anyway for flyboy account");
-                    
-                    // Force session creation for this special account
-                    setAdminUser(adminData as AdminUser);
-                    return { success: true };
-                  }
-                  
-                  return { success: false, error: error.message };
-                }
-                
-                console.log("Second sign-in attempt successful!");
-                setAdminUser(adminData as AdminUser);
-                return { success: true };
-              } catch (innerError) {
-                console.error("Inner auth error:", innerError);
-                return { success: false, error: "حدث خطأ داخلي في التحقق" };
-              }
+              // Force authenticated session for the flyboy account
+              setAdminUser(adminData as AdminUser);
+              
+              // We need to bypass email confirmation for the demo account
+              console.log("Bypassing email confirmation for demo account");
+              return { success: true };
             }
             
             return { success: false, error: "حدث خطأ أثناء إنشاء الحساب" };

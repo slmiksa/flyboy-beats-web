@@ -30,12 +30,12 @@ const AdminLoginContent = () => {
   // Check for existing auth on component mount
   useEffect(() => {
     const checkExistingAuth = async () => {
-      console.log("Checking for existing authentication...");
+      console.log("Checking for existing authentication in login page...");
       const isAuthenticated = await checkAuth();
-      console.log("Authentication status:", isAuthenticated);
+      console.log("Authentication status in login page:", isAuthenticated);
       
       if (isAuthenticated) {
-        console.log("User is already authenticated, redirecting to admin dashboard");
+        console.log("User is already authenticated in login page, redirecting to admin dashboard");
         navigate("/admin", { replace: true });
       }
     };
@@ -65,14 +65,14 @@ const AdminLoginContent = () => {
           title: "تم تسجيل الدخول بنجاح",
           description: "أهلاً بك في لوحة التحكم",
         });
-        console.log("Login successful, preparing to redirect to admin dashboard");
+        console.log("Login successful in AdminLogin, preparing to redirect to admin dashboard");
         
         // Force a longer delay to ensure state is properly updated before redirect
         setTimeout(() => {
-          console.log("Executing redirect to /admin now with replace:true");
+          console.log("Executing redirect to /admin now with replace:true from AdminLogin");
           // Use replace to prevent going back to login page
           navigate("/admin", { replace: true });
-        }, 1000); // Increased delay to 1000ms
+        }, 1500); // Increased delay to 1500ms
       } else {
         setError(result.error || "اسم المستخدم أو كلمة المرور غير صحيحة");
         toast({

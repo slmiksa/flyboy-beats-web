@@ -35,10 +35,10 @@ const AdminLayoutContent = () => {
         setIsVerifying(false);
         
         if (!isAuth) {
-          console.log("User not authorized, redirecting to login from AdminLayout");
+          console.log("User not authorized in AdminLayout, redirecting to login");
           navigate("/admin/login", { replace: true });
         } else {
-          console.log("User is authorized, showing admin layout");
+          console.log("User is authorized in AdminLayout, showing admin layout");
         }
       } catch (error) {
         console.error("Error during auth verification in AdminLayout:", error);
