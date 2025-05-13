@@ -1,12 +1,41 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Music, Disc, Volume2, Headphones, Mic, Radio, Music4, FileMusic } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 const About = () => {
+  const [content, setContent] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   useEffect(() => {
     // Scroll to top on page load
     window.scrollTo(0, 0);
+    
+    const fetchAboutData = async () => {
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from('about_section')
+          .select('content, image_url')
+          .limit(1)
+          .single();
+
+        if (error && error.code !== 'PGRST116') {
+          console.error('Error fetching about section:', error);
+        } else if (data) {
+          setContent(data.content);
+          setImageUrl(data.image_url);
+        }
+      } catch (error) {
+        console.error('Error in fetchAboutData:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAboutData();
   }, []);
   
   return <div className="min-h-screen py-24 bg-gradient-hero relative overflow-hidden">
@@ -51,46 +80,35 @@ const About = () => {
           نبذة عن FLY BOY
         </h1>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-flyboy-gold blur-md opacity-20 group-hover:opacity-30 transition-opacity rounded-lg"></div>
-            <img alt="FLY BOY DJ" className="w-full h-auto rounded-lg shadow-xl relative z-10" src="/lovable-uploads/516e9f78-1fb5-4933-bffb-e8b3bd51edf0.png" />
-            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-flyboy-purple border-2 border-flyboy-gold rounded-full flex items-center justify-center animate-pulse">
-              <Disc size={32} className="text-flyboy-gold" />
-            </div>
+        {isLoading ? (
+          <div className="text-center py-8">
+            <div className="text-white text-xl">جاري التحميل...</div>
           </div>
-          
-          <div className="space-y-6 text-white">
-            <p className="text-xl leading-relaxed animate-fade-in">
-              بدأت مسيرتي الموسيقية منذ أكثر من عشر سنوات، حيث وجدت شغفي في عالم تنسيق الموسيقى وفن الـ DJ. تخصصت في البداية في موسيقى الهاوس والإلكترونيك، ثم توسعت لأشمل أنماطًا متنوعة من الموسيقى العربية والعالمية.
-            </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            {imageUrl && (
+              <div className="relative group">
+                <div className="absolute inset-0 bg-flyboy-gold blur-md opacity-20 group-hover:opacity-30 transition-opacity rounded-lg"></div>
+                <img 
+                  alt="FLY BOY DJ" 
+                  className="w-full h-auto rounded-lg shadow-xl relative z-10" 
+                  src={imageUrl}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "/lovable-uploads/516e9f78-1fb5-4933-bffb-e8b3bd51edf0.png";
+                  }}
+                />
+                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-flyboy-purple border-2 border-flyboy-gold rounded-full flex items-center justify-center animate-pulse">
+                  <Disc size={32} className="text-flyboy-gold" />
+                </div>
+              </div>
+            )}
             
-            <p className="text-xl leading-relaxed animate-fade-in" style={{
-            animationDelay: "0.2s"
-          }}>
-              حصلت على تدريب احترافي في أفضل مدارس الـ DJ العالمية، وعملت مع نخبة من المنتجين الموسيقيين الذين أثروا أسلوبي وطوروا مهاراتي.
-            </p>
-            
-            <p className="text-xl leading-relaxed animate-fade-in" style={{
-            animationDelay: "0.4s"
-          }}>
-              أقدم حاليًا عروضي في أرقى النوادي والمناسبات في منطقة الخليج والشرق الأوسط، وأتميز بقدرتي على قراءة الجمهور وتلبية أذواقهم الموسيقية المختلفة.
-            </p>
-            
-            <div className="pt-6 animate-fade-in" style={{
-            animationDelay: "0.6s"
-          }}>
-              <h3 className="text-2xl font-bold text-flyboy-gold mb-4 glow-text">خبراتي تشمل:</h3>
-              <ul className="list-disc list-inside space-y-2 text-lg">
-                <li className="hover:text-flyboy-gold transition-colors cursor-default">حفلات الشاطئ وأمسيات البحر</li>
-                <li className="hover:text-flyboy-gold transition-colors cursor-default">المهرجانات الموسيقية الكبرى</li>
-                <li className="hover:text-flyboy-gold transition-colors cursor-default">النوادي الليلية والحفلات الخاصة</li>
-                <li className="hover:text-flyboy-gold transition-colors cursor-default">المناسبات الشخصية والشركات</li>
-                <li className="hover:text-flyboy-gold transition-colors cursor-default">تنسيق وإنتاج المقاطع الموسيقية</li>
-              </ul>
-            </div>
+            <div 
+              className="space-y-6 text-white"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
           </div>
-        </div>
+        )}
       </div>
     </div>;
 };
