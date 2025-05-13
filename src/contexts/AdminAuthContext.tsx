@@ -67,21 +67,49 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
       if (adminError || !adminData) {
         return { success: false, error: "اسم المستخدم غير موجود" };
       }
-      
-      // For authentication with Supabase Auth, we'll use a standardized email format
-      const email = `${username}@flyboy-admin.com`;
-      
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
-      
-      if (error) {
-        return { success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" };
+
+      // Special case for the superadmin "flyboy" with fixed password
+      if (username === "flyboy" && password === "Ksa@123456") {
+        // For flyboy, we'll use a standardized email format for Supabase Auth
+        const email = `${username}@flyboy-admin.com`;
+        
+        // Try to sign in, if it fails (first time) then sign up
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+        
+        if (error) {
+          // First time login, create account
+          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+          });
+          
+          if (signUpError) {
+            return { success: false, error: "حدث خطأ أثناء إنشاء الحساب" };
+          }
+        }
+        
+        setAdminUser(adminData as AdminUser);
+        return { success: true };
+      } 
+      else {
+        // For other admin users, we use normal authentication
+        const email = `${username}@flyboy-admin.com`;
+        
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password,
+        });
+        
+        if (error) {
+          return { success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" };
+        }
+        
+        setAdminUser(adminData as AdminUser);
+        return { success: true };
       }
-      
-      setAdminUser(adminData as AdminUser);
-      return { success: true };
     } catch (error) {
       console.error("Login error:", error);
       return { success: false, error: "حدث خطأ أثناء تسجيل الدخول" };
