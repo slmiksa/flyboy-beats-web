@@ -147,6 +147,36 @@ export type Database = {
         }
         Relationships: []
       }
+      social_media: {
+        Row: {
+          created_at: string
+          icon: string
+          id: string
+          order_position: number
+          platform: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          icon: string
+          id?: string
+          order_position: number
+          platform: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string
+          id?: string
+          order_position?: number
+          platform?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

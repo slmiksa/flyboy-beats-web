@@ -44,7 +44,7 @@ const AdminSocialMedia = () => {
         });
         console.error('Error fetching social media links:', error);
       } else {
-        setSocialLinks(data || []);
+        setSocialLinks(data as SocialMedia[] || []);
       }
     } catch (error) {
       console.error('Error fetching social media links:', error);
@@ -89,7 +89,7 @@ const AdminSocialMedia = () => {
             url: values.url,
             icon: values.icon || values.platform,
             order_position: highestOrder + 1,
-          });
+          } as SocialMedia);
       }
       
       if (result.error) {

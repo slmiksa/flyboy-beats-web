@@ -70,7 +70,7 @@ const SocialMediaBar = () => {
         if (error) {
           console.error('Error fetching social media links:', error);
         } else {
-          setSocialLinks(data || []);
+          setSocialLinks(data as SocialMedia[] || []);
         }
       } catch (error) {
         console.error('Error fetching social media links:', error);
@@ -83,7 +83,7 @@ const SocialMediaBar = () => {
   }, []);
 
   // قائمة افتراضية إذا لم يتم تكوين الروابط بعد
-  const defaultSocialLinks = [
+  const defaultSocialLinks: SocialMedia[] = [
     { id: '1', platform: 'jaco', url: '#', icon: 'jaco', order_position: 1, created_at: '', updated_at: '' },
     { id: '2', platform: 'youtube', url: '#', icon: 'youtube', order_position: 2, created_at: '', updated_at: '' },
     { id: '3', platform: 'tiktok', url: '#', icon: 'tiktok', order_position: 3, created_at: '', updated_at: '' },
