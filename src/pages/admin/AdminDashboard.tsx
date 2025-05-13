@@ -9,15 +9,15 @@ const AdminDashboard = () => {
   const { adminUser } = useAdminAuth();
   
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-flyboy-gold">مرحباً بك في لوحة التحكم</h1>
         <p className="text-muted-foreground">يمكنك إدارة محتوى موقعك من هنا</p>
       </div>
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+      <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
         <Card 
-          className="cursor-pointer hover:shadow-md transition-shadow border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
+          className="cursor-pointer hover:shadow-md transition-shadow border border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
           onClick={() => navigate("/admin/slides")}
         >
           <CardHeader className="pb-2">
@@ -32,7 +32,7 @@ const AdminDashboard = () => {
         </Card>
         
         <Card 
-          className="cursor-pointer hover:shadow-md transition-shadow border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
+          className="cursor-pointer hover:shadow-md transition-shadow border border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
           onClick={() => navigate("/admin/events")}
         >
           <CardHeader className="pb-2">
@@ -47,7 +47,7 @@ const AdminDashboard = () => {
         </Card>
         
         <Card 
-          className="cursor-pointer hover:shadow-md transition-shadow border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
+          className="cursor-pointer hover:shadow-md transition-shadow border border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
           onClick={() => navigate("/admin/partners")}
         >
           <CardHeader className="pb-2">
@@ -62,7 +62,7 @@ const AdminDashboard = () => {
         </Card>
         
         <Card 
-          className="cursor-pointer hover:shadow-md transition-shadow border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
+          className="cursor-pointer hover:shadow-md transition-shadow border border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
           onClick={() => navigate("/admin/about")}
         >
           <CardHeader className="pb-2">
@@ -77,7 +77,7 @@ const AdminDashboard = () => {
         </Card>
 
         <Card 
-          className="cursor-pointer hover:shadow-md transition-shadow border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
+          className="cursor-pointer hover:shadow-md transition-shadow border border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
           onClick={() => navigate("/admin/social-media")}
         >
           <CardHeader className="pb-2">
@@ -93,7 +93,7 @@ const AdminDashboard = () => {
 
         {adminUser?.is_super_admin && (
           <Card 
-            className="cursor-pointer hover:shadow-md transition-shadow border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
+            className="cursor-pointer hover:shadow-md transition-shadow border border-flyboy-gold/30 bg-flyboy-purple/30 hover:bg-flyboy-purple/50" 
             onClick={() => navigate("/admin/users")}
           >
             <CardHeader className="pb-2">
