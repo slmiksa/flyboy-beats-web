@@ -41,7 +41,9 @@ const AdminLoginContent = () => {
     setError(null);
 
     try {
+      console.log("Attempting login with:", values.username);
       const result = await login(values.username, values.password);
+      
       if (result.success) {
         toast({
           title: "تم تسجيل الدخول بنجاح",
