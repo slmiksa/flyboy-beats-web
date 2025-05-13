@@ -1,35 +1,46 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, Music, Disc, Volume2 } from 'lucide-react';
-
-const slides = [
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&h=500&fit=crop',
-    title: 'FLY BOY',
-    subtitle: 'أفضل الحفلات والأجواء الموسيقية'
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1493676010878-4c37716e448e?w=800&h=500&fit=crop',
-    title: 'أجواء مميزة',
-    subtitle: 'تجربة موسيقية فريدة من نوعها'
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=800&h=500&fit=crop',
-    title: 'حفلات حصرية',
-    subtitle: 'أحدث التقنيات الصوتية والإضاءة'
-  },
-];
+import { supabase } from "@/integrations/supabase/client";
+import { Slide } from "@/types/database.types";
 
 const HeroSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [slides, setSlides] = useState<Slide[]>([]);
+  const [loading, setLoading] = useState(true);
   const intervalRef = useRef<number | null>(null);
 
+  // Fetch slides from database
+  useEffect(() => {
+    const fetchSlides = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('slides')
+          .select('*')
+          .order('order_position', { ascending: true });
+
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          setSlides(data as Slide[]);
+        } else {
+          // If no slides are found, set default empty state
+          setSlides([]);
+        }
+      } catch (error) {
+        console.error('Error fetching slides:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSlides();
+  }, []);
+
   const startSlideshow = () => {
-    if (intervalRef.current !== null) return;
+    if (intervalRef.current !== null || slides.length === 0) return;
     
     intervalRef.current = window.setInterval(() => {
       if (!isPaused) {
@@ -48,7 +59,7 @@ const HeroSlider = () => {
   useEffect(() => {
     startSlideshow();
     return () => stopSlideshow();
-  }, [isPaused]);
+  }, [isPaused, slides.length]);
 
   const togglePause = () => {
     setIsPaused(!isPaused);
@@ -57,6 +68,30 @@ const HeroSlider = () => {
   const goToSlide = (index: number) => {
     setCurrentSlide(index);
   };
+
+  if (loading) {
+    return (
+      <div className="py-6 overflow-hidden bg-flyboy-dark">
+        <div className="container">
+          <div className="relative w-full h-[60vh] md:h-[70vh] mx-auto rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center">
+            <div className="text-flyboy-gold text-xl">جاري تحميل السلايدات...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (slides.length === 0) {
+    return (
+      <div className="py-6 overflow-hidden bg-flyboy-dark">
+        <div className="container">
+          <div className="relative w-full h-[60vh] md:h-[70vh] mx-auto rounded-2xl overflow-hidden shadow-2xl flex items-center justify-center">
+            <div className="text-flyboy-gold text-xl">لا توجد سلايدات متاحة</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-6 overflow-hidden bg-flyboy-dark">
@@ -71,7 +106,7 @@ const HeroSlider = () => {
             >
               <div 
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${slide.image})` }}
+                style={{ backgroundImage: `url(${slide.image_url})` }}
               >
                 <div className="absolute inset-0 bg-black bg-opacity-50" />
               </div>
@@ -105,9 +140,11 @@ const HeroSlider = () => {
                 <h1 className="text-5xl md:text-7xl font-bold mb-4 text-flyboy-gold animate-fade-in glow-text">
                   {slide.title}
                 </h1>
-                <p className="text-xl md:text-2xl max-w-2xl px-4 animate-fade-in mb-8">
-                  {slide.subtitle}
-                </p>
+                {slide.subtitle && (
+                  <p className="text-xl md:text-2xl max-w-2xl px-4 animate-fade-in mb-8">
+                    {slide.subtitle}
+                  </p>
+                )}
                 
                 <div className="flex items-center justify-center space-x-4">
                   <button 
