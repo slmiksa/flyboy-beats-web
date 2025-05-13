@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { toast } from "sonner";
+import { toast as sonnerToast } from "sonner";
 import { Partner } from "@/types/database.types";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -59,7 +58,7 @@ const AdminPartners = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const { toast: uiToast } = useToast();
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchPartners();
@@ -80,7 +79,11 @@ const AdminPartners = () => {
       setPartners(data || []);
     } catch (error) {
       console.error("Error fetching partners:", error);
-      toast.error("حدث خطأ أثناء جلب بيانات الشركاء");
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "حدث خطأ أثناء جلب بيانات الشركاء",
+      });
     } finally {
       setLoading(false);
     }
@@ -92,13 +95,21 @@ const AdminPartners = () => {
 
     // Check file type
     if (!file.type.match('image.*')) {
-      toast.error('الرجاء اختيار ملف صورة صالح');
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "الرجاء اختيار ملف صورة صالح"
+      });
       return;
     }
 
     // Check file size (limit to 2MB)
     if (file.size > 2 * 1024 * 1024) {
-      toast.error('حجم الصورة كبير جدًا. الحد الأقصى هو 2 ميجابايت');
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: "حجم الصورة كبير جدًا. الحد الأقصى هو 2 ميجابايت"
+      });
       return;
     }
 
@@ -141,10 +152,9 @@ const AdminPartners = () => {
         
       console.log("Uploaded successfully, public URL:", publicURLData.publicUrl);
       return publicURLData.publicUrl;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading logo:', error);
-      toast.error('حدث خطأ أثناء رفع الشعار');
-      throw error;
+      throw new Error(error?.message || 'حدث خطأ أثناء رفع الشعار');
     } finally {
       setIsUploading(false);
     }
@@ -153,12 +163,20 @@ const AdminPartners = () => {
   const handleAddPartner = async () => {
     try {
       if (!newPartnerName.trim()) {
-        toast.error("يرجى إدخال اسم الشريك");
+        toast({
+          variant: "destructive",
+          title: "خطأ",
+          description: "يرجى إدخال اسم الشريك"
+        });
         return;
       }
 
       if (!logoFile && !newPartnerLogo.trim()) {
-        toast.error("يرجى إدخال رابط الشعار أو رفع ملف");
+        toast({
+          variant: "destructive",
+          title: "خطأ",
+          description: "يرجى إدخال رابط الشعار أو رفع ملف"
+        });
         return;
       }
 
@@ -168,8 +186,12 @@ const AdminPartners = () => {
       if (logoFile) {
         try {
           logoUrl = await uploadLogo(logoFile);
-        } catch (error) {
-          console.error("Error during logo upload:", error);
+        } catch (error: any) {
+          toast({
+            variant: "destructive",
+            title: "خطأ",
+            description: error.message || "حدث خطأ أثناء رفع الشعار"
+          });
           return; // Exit early if upload fails
         }
       }
@@ -200,10 +222,17 @@ const AdminPartners = () => {
       setLogoFile(null);
       setPreviewImage(null);
       
-      toast.success("تمت إضافة الشريك بنجاح");
-    } catch (error) {
+      toast({
+        title: "تم بنجاح",
+        description: "تمت إضافة الشريك بنجاح"
+      });
+    } catch (error: any) {
       console.error("Error adding partner:", error);
-      toast.error("حدث خطأ أثناء إضافة الشريك");
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: error.message || "حدث خطأ أثناء إضافة الشريك"
+      });
     }
   };
 
@@ -212,12 +241,20 @@ const AdminPartners = () => {
 
     try {
       if (!newPartnerName.trim()) {
-        toast.error("يرجى إدخال اسم الشريك");
+        toast({
+          variant: "destructive",
+          title: "خطأ",
+          description: "يرجى إدخال اسم الشريك"
+        });
         return;
       }
 
       if (!logoFile && !newPartnerLogo.trim()) {
-        toast.error("يرجى إدخال رابط الشعار أو رفع ملف");
+        toast({
+          variant: "destructive",
+          title: "خطأ",
+          description: "يرجى إدخال رابط الشعار أو رفع ملف"
+        });
         return;
       }
 
@@ -227,8 +264,12 @@ const AdminPartners = () => {
       if (logoFile) {
         try {
           logoUrl = await uploadLogo(logoFile);
-        } catch (error) {
-          console.error("Error during logo upload:", error);
+        } catch (error: any) {
+          toast({
+            variant: "destructive",
+            title: "خطأ",
+            description: error.message || "حدث خطأ أثناء رفع الشعار"
+          });
           return; // Exit early if upload fails
         }
       }
@@ -266,10 +307,17 @@ const AdminPartners = () => {
       setIsEditDialogOpen(false);
       setLogoFile(null);
       setPreviewImage(null);
-      toast.success("تم تحديث بيانات الشريك بنجاح");
-    } catch (error) {
+      toast({
+        title: "تم بنجاح",
+        description: "تم تحديث بيانات الشريك بنجاح"
+      });
+    } catch (error: any) {
       console.error("Error updating partner:", error);
-      toast.error("حدث خطأ أثناء تحديث بيانات الشريك");
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: error.message || "حدث خطأ أثناء تحديث بيانات الشريك"
+      });
     }
   };
 
@@ -290,10 +338,17 @@ const AdminPartners = () => {
       setPartners(partners.filter((p) => p.id !== partnerToDelete.id));
       setPartnerToDelete(null);
       setIsDeleteDialogOpen(false);
-      toast.success("تم حذف الشريك بنجاح");
-    } catch (error) {
+      toast({
+        title: "تم بنجاح",
+        description: "تم حذف الشريك بنجاح"
+      });
+    } catch (error: any) {
       console.error("Error deleting partner:", error);
-      toast.error("حدث خطأ أثناء حذف الشريك");
+      toast({
+        variant: "destructive",
+        title: "خطأ",
+        description: error.message || "حدث خطأ أثناء حذف الشريك"
+      });
     }
   };
 
