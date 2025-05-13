@@ -60,10 +60,11 @@ const EventsSection = () => {
         if (data && data.length > 0) {
           setEvents(data);
         } else {
-          setEvents([]);
+          setEvents(defaultEvents as Event[]);
         }
       } catch (error) {
         console.error("Error fetching events:", error);
+        setEvents(defaultEvents as Event[]);
       } finally {
         setLoading(false);
       }
@@ -72,7 +73,7 @@ const EventsSection = () => {
     fetchEvents();
   }, []);
 
-  const formatWhatsAppLink = (event: Event) => {
+  const formatWhatsAppLink = (event: Event | any) => {
     const number = event.whatsapp_number || '966500000000';
     return `https://wa.me/${number}?text=استفسار%20عن%20فعالية%20${encodeURIComponent(event.title)}`;
   };
@@ -96,11 +97,11 @@ const EventsSection = () => {
           <div className="flex justify-center py-12">
             <div className="text-flyboy-gold">جاري تحميل الحفلات...</div>
           </div>
-        ) : events.length > 0 ? (
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {events.map((event) => (
+            {events.map((event, index) => (
               <div 
-                key={event.id} 
+                key={event.id || index} 
                 className="bg-flyboy-purple rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105"
               >
                 <div className="relative pb-[90%]">
@@ -117,40 +118,6 @@ const EventsSection = () => {
                   )}
                   <a 
                     href={formatWhatsAppLink(event)}
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="btn-whatsapp w-full"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 0a12 12 0 0 0-12 12c0 2.38.7 4.6 1.9 6.47L0 24l5.53-1.9A11.98 11.98 0 0 0 12 24a12 12 0 0 0 0-24zm6.03 16.92c-.22.64-1.12 1.17-1.84 1.33-.49.1-1.12.17-3.26-.7-2.73-1.1-4.5-3.76-4.64-3.93-.15-.17-1.2-1.6-1.2-3.05 0-1.45.74-2.17 1-2.46.22-.25.57-.37.91-.37l.33.01c.3 0 .44.03.64.49.24.57.82 2 .89 2.15.07.15.12.32.04.52a1.6 1.6 0 0 1-.3.42c-.15.15-.3.34-.43.45-.15.15-.3.3-.13.59.17.3.77 1.27 1.66 2.06 1.14 1.02 2.1 1.33 2.4 1.48.3.15.47.12.65-.07.17-.2.74-.87.94-1.16.2-.3.4-.25.67-.15.27.1 1.7.8 2 .95.29.15.49.22.56.35z"/>
-                    </svg>
-                    واتساب
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {defaultEvents.map((event, index) => (
-              <div 
-                key={index} 
-                className="bg-flyboy-purple rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105"
-              >
-                <div className="relative pb-[90%]">
-                  <img 
-                    src={event.image_url} 
-                    alt={event.title} 
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl text-flyboy-gold font-bold mb-4">{event.title}</h3>
-                  {event.location && (
-                    <p className="text-white/80 text-sm mb-3">{event.location}</p>
-                  )}
-                  <a 
-                    href={`https://wa.me/966500000000?text=استفسار%20عن%20فعالية%20${encodeURIComponent(event.title)}`}
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="btn-whatsapp w-full"
