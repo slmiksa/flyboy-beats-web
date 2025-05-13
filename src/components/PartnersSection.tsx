@@ -64,30 +64,32 @@ const PartnersSection = () => {
         
         <h2 className="section-title text-flyboy-gold mb-12">شركاء النجاح</h2>
         
-        <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-8">
-          <div className="partners-container overflow-hidden">
-            <div className="partners-scroll flex flex-wrap justify-center gap-8">
-              {partners.map((partner) => (
-                <div 
-                  key={partner.id} 
-                  className="partner-item flex-shrink-0 flex flex-col items-center justify-center px-8"
-                >
-                  <div className="w-48 h-36 bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
-                    <img
-                      src={partner.logo_url}
-                      alt={partner.name}
-                      className="max-w-full max-h-full object-contain"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = "https://placehold.co/300x200?text=صورة+غير+متوفرة";
-                      }}
-                    />
+        {partners.length > 0 && (
+          <div className="relative mx-auto max-w-4xl border-2 border-flyboy-gold rounded-2xl overflow-hidden bg-flyboy-dark p-8">
+            <div className="partners-container overflow-hidden">
+              <div className="partners-scroll flex flex-wrap justify-center gap-8">
+                {partners.map((partner) => (
+                  <div 
+                    key={partner.id} 
+                    className="partner-item flex-shrink-0 flex flex-col items-center justify-center px-8"
+                  >
+                    <div className="w-48 h-36 bg-white p-4 rounded-lg flex items-center justify-center mb-4 transform transition-transform hover:scale-105">
+                      <img
+                        src={partner.logo_url}
+                        alt={partner.name}
+                        className="max-w-full max-h-full object-contain"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = "https://placehold.co/300x200?text=صورة+غير+متوفرة";
+                        }}
+                      />
+                    </div>
+                    <h3 className="text-white text-lg font-bold text-center mt-2">{partner.name}</h3>
                   </div>
-                  <h3 className="text-white text-lg font-bold text-center mt-2">{partner.name}</h3>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
