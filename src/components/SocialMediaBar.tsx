@@ -16,7 +16,7 @@ const SocialMediaBar = () => {
   // Use consistent spacing for all screen sizes
   const spacingClass = "gap-3 md:gap-4";
 
-  // خريطة الأيقونات حسب نوع المنصة
+  // Map of platforms to their icons
   const iconMap: Record<string, React.ReactNode> = {
     youtube: <Youtube size={iconSize} className="text-flyboy-gold" />,
     tiktok: (
@@ -57,7 +57,7 @@ const SocialMediaBar = () => {
     jaco: <span className="text-flyboy-gold text-xs md:text-sm font-bold">JACO</span>
   };
 
-  // جلب روابط السوشال ميديا من قاعدة البيانات
+  // Fetch social media links from database
   useEffect(() => {
     const fetchSocialLinks = async () => {
       try {
@@ -82,15 +82,15 @@ const SocialMediaBar = () => {
     fetchSocialLinks();
   }, []);
 
-  // قائمة افتراضية إذا لم يتم تكوين الروابط بعد
+  // Default links if none are configured yet
   const defaultSocialLinks: SocialMedia[] = [
-    { id: '1', platform: 'jaco', url: '#', icon: 'jaco', order_position: 1, created_at: '', updated_at: '' },
-    { id: '2', platform: 'youtube', url: '#', icon: 'youtube', order_position: 2, created_at: '', updated_at: '' },
-    { id: '3', platform: 'tiktok', url: '#', icon: 'tiktok', order_position: 3, created_at: '', updated_at: '' },
+    { id: '1', platform: 'snapchat', url: '#', icon: 'snapchat', order_position: 1, created_at: '', updated_at: '' },
+    { id: '2', platform: 'instagram', url: '#', icon: 'instagram', order_position: 2, created_at: '', updated_at: '' },
+    { id: '3', platform: 'twitter', url: '#', icon: 'twitter', order_position: 3, created_at: '', updated_at: '' },
     { id: '4', platform: 'chat', url: '#', icon: 'chat', order_position: 4, created_at: '', updated_at: '' },
-    { id: '5', platform: 'twitter', url: '#', icon: 'twitter', order_position: 5, created_at: '', updated_at: '' },
-    { id: '6', platform: 'instagram', url: '#', icon: 'instagram', order_position: 6, created_at: '', updated_at: '' },
-    { id: '7', platform: 'snapchat', url: '#', icon: 'snapchat', order_position: 7, created_at: '', updated_at: '' }
+    { id: '5', platform: 'tiktok', url: '#', icon: 'tiktok', order_position: 5, created_at: '', updated_at: '' },
+    { id: '6', platform: 'youtube', url: '#', icon: 'youtube', order_position: 6, created_at: '', updated_at: '' },
+    { id: '7', platform: 'jaco', url: '#', icon: 'jaco', order_position: 7, created_at: '', updated_at: '' }
   ];
 
   const linksToShow = socialLinks.length > 0 ? socialLinks : defaultSocialLinks;
