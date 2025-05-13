@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -282,16 +283,18 @@ const AdminSlides = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-flyboy-gold">إدارة السلايدات</h1>
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-flyboy-gold">إدارة السلايدات</h1>
+          <p className="text-muted-foreground">قم بإضافة وتعديل وحذف السلايدات في الصفحة الرئيسية</p>
+        </div>
         <Button 
           onClick={() => handleCancel()} 
-          className="bg-flyboy-gold hover:bg-flyboy-gold/80 text-black"
+          className="bg-flyboy-gold hover:bg-flyboy-gold/80 text-black w-full md:w-auto"
         >
           <Plus className="ml-2" /> إضافة سلايد جديد
         </Button>
       </div>
-      <p className="text-muted-foreground">قم بإضافة وتعديل وحذف السلايدات في الصفحة الرئيسية</p>
       
       <Card className="border-flyboy-gold/30 bg-flyboy-purple/30">
         <CardHeader>
@@ -344,7 +347,7 @@ const AdminSlides = () => {
                   control={form.control}
                   name="image_url"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="col-span-1 md:col-span-2">
                       <FormLabel className="text-white">صورة السلايد</FormLabel>
                       <FormControl>
                         <div className="space-y-2">
@@ -455,7 +458,7 @@ const AdminSlides = () => {
                   <TableRow className="border-flyboy-gold/30">
                     <TableHead className="text-flyboy-gold">الترتيب</TableHead>
                     <TableHead className="text-flyboy-gold">العنوان</TableHead>
-                    <TableHead className="text-flyboy-gold">العنوان الفرعي</TableHead>
+                    <TableHead className="hidden sm:table-cell text-flyboy-gold">العنوان الفرعي</TableHead>
                     <TableHead className="text-flyboy-gold">الصورة</TableHead>
                     <TableHead className="text-flyboy-gold">الإجراءات</TableHead>
                   </TableRow>
@@ -465,7 +468,7 @@ const AdminSlides = () => {
                     <TableRow key={slide.id} className="border-flyboy-gold/30 text-white">
                       <TableCell>{slide.order_position}</TableCell>
                       <TableCell>{slide.title}</TableCell>
-                      <TableCell>{slide.subtitle || '-'}</TableCell>
+                      <TableCell className="hidden sm:table-cell">{slide.subtitle || '-'}</TableCell>
                       <TableCell>
                         <div className="relative h-12 w-20 overflow-hidden rounded">
                           <img 
