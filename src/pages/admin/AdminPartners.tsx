@@ -122,7 +122,7 @@ const AdminPartners = () => {
       // Generate a unique filename
       const fileExt = file.name.split('.').pop();
       const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `partners/${fileName}`;
+      const filePath = `${fileName}`;
       
       // Upload to Supabase storage
       const { data, error } = await supabase.storage
@@ -130,6 +130,7 @@ const AdminPartners = () => {
         .upload(filePath, file);
         
       if (error) {
+        console.error("Storage upload error:", error);
         throw error;
       }
       
@@ -138,6 +139,7 @@ const AdminPartners = () => {
         .from('logos')
         .getPublicUrl(filePath);
         
+      console.log("Uploaded successfully, public URL:", publicURLData.publicUrl);
       return publicURLData.publicUrl;
     } catch (error) {
       console.error('Error uploading logo:', error);
@@ -164,7 +166,12 @@ const AdminPartners = () => {
 
       // Upload logo file if provided
       if (logoFile) {
-        logoUrl = await uploadLogo(logoFile);
+        try {
+          logoUrl = await uploadLogo(logoFile);
+        } catch (error) {
+          console.error("Error during logo upload:", error);
+          return; // Exit early if upload fails
+        }
       }
 
       const { data, error } = await supabase
@@ -177,6 +184,7 @@ const AdminPartners = () => {
         .select();
 
       if (error) {
+        console.error("Insert error:", error);
         throw error;
       }
 
@@ -217,7 +225,12 @@ const AdminPartners = () => {
 
       // Upload logo file if provided
       if (logoFile) {
-        logoUrl = await uploadLogo(logoFile);
+        try {
+          logoUrl = await uploadLogo(logoFile);
+        } catch (error) {
+          console.error("Error during logo upload:", error);
+          return; // Exit early if upload fails
+        }
       }
 
       const { error } = await supabase
@@ -231,6 +244,7 @@ const AdminPartners = () => {
         .eq("id", editingPartner.id);
 
       if (error) {
+        console.error("Update error:", error);
         throw error;
       }
 
