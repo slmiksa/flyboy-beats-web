@@ -69,8 +69,11 @@ const AdminLayoutContent = () => {
 
   if (loading || isVerifying) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-flyboy-dark">
+        <div className="text-center">
+          <Loader2 className="h-10 w-10 animate-spin mx-auto text-flyboy-gold" />
+          <p className="mt-4 text-flyboy-gold">جاري التحميل...</p>
+        </div>
       </div>
     );
   }
@@ -83,22 +86,23 @@ const AdminLayoutContent = () => {
   // Only render the admin layout if authorized
   return (
     <SidebarProvider defaultOpen>
-      <div className="flex h-screen">
+      <div className="flex h-screen bg-flyboy-dark">
         <Sidebar>
-          <SidebarHeader className="border-b">
-            <div className="flex items-center justify-between py-2">
-              <h1 className="text-lg font-semibold">لوحة تحكم FLY BOY</h1>
-              <SidebarTrigger />
+          <SidebarHeader className="border-b border-flyboy-gold/30">
+            <div className="flex items-center justify-between py-4 px-4">
+              <h1 className="text-xl font-bold text-flyboy-gold">لوحة تحكم FLY BOY</h1>
+              <SidebarTrigger className="text-flyboy-gold hover:text-white hover:bg-flyboy-purple" />
             </div>
           </SidebarHeader>
-          <SidebarContent className="p-0">
+          <SidebarContent className="p-0 bg-flyboy-dark">
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   tooltip="لوحة التحكم"
                   onClick={() => navigate("/admin")}
+                  className="hover:bg-flyboy-purple/50 text-white"
                 >
-                  <LayoutDashboard className="ml-2" />
+                  <LayoutDashboard className="ml-3 text-flyboy-gold" />
                   <span>الرئيسية</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -106,8 +110,9 @@ const AdminLayoutContent = () => {
                 <SidebarMenuButton
                   tooltip="السلايدات"
                   onClick={() => navigate("/admin/slides")}
+                  className="hover:bg-flyboy-purple/50 text-white"
                 >
-                  <Image className="ml-2" />
+                  <Image className="ml-3 text-flyboy-gold" />
                   <span>السلايدات</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -115,8 +120,9 @@ const AdminLayoutContent = () => {
                 <SidebarMenuButton
                   tooltip="الحفلات"
                   onClick={() => navigate("/admin/events")}
+                  className="hover:bg-flyboy-purple/50 text-white"
                 >
-                  <CalendarDays className="ml-2" />
+                  <CalendarDays className="ml-3 text-flyboy-gold" />
                   <span>الحفلات</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -124,8 +130,9 @@ const AdminLayoutContent = () => {
                 <SidebarMenuButton
                   tooltip="الشركاء"
                   onClick={() => navigate("/admin/partners")}
+                  className="hover:bg-flyboy-purple/50 text-white"
                 >
-                  <Users className="ml-2" />
+                  <Users className="ml-3 text-flyboy-gold" />
                   <span>شركاء النجاح</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -133,8 +140,9 @@ const AdminLayoutContent = () => {
                 <SidebarMenuButton
                   tooltip="نبذة عني"
                   onClick={() => navigate("/admin/about")}
+                  className="hover:bg-flyboy-purple/50 text-white"
                 >
-                  <FileText className="ml-2" />
+                  <FileText className="ml-3 text-flyboy-gold" />
                   <span>نبذة عني</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -143,19 +151,20 @@ const AdminLayoutContent = () => {
                   <SidebarMenuButton
                     tooltip="المستخدمين"
                     onClick={() => navigate("/admin/users")}
+                    className="hover:bg-flyboy-purple/50 text-white"
                   >
-                    <UserCog className="ml-2" />
+                    <UserCog className="ml-3 text-flyboy-gold" />
                     <span>إدارة المستخدمين</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}
             </SidebarMenu>
           </SidebarContent>
-          <SidebarFooter className="border-t p-4">
+          <SidebarFooter className="border-t border-flyboy-gold/30 p-4 bg-flyboy-dark">
             <div className="flex w-full items-center justify-between">
               <div>
-                <p className="text-sm font-medium">{adminUser?.username || "مستخدم"}</p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-sm font-medium text-white">{adminUser?.username || "مستخدم"}</p>
+                <p className="text-xs text-flyboy-gold">
                   {adminUser?.is_super_admin ? "مدير النظام" : "مدير"}
                 </p>
               </div>
@@ -163,16 +172,16 @@ const AdminLayoutContent = () => {
                 variant="outline"
                 size="sm"
                 onClick={handleLogout}
-                className="h-8 gap-1"
+                className="h-9 gap-2 border-flyboy-gold text-flyboy-gold hover:bg-flyboy-purple hover:text-white"
               >
-                <LogOut className="h-3.5 w-3.5" />
+                <LogOut className="h-4 w-4" />
                 <span>خروج</span>
               </Button>
             </div>
           </SidebarFooter>
         </Sidebar>
-        <SidebarInset className="overflow-auto">
-          <div className="container mx-auto p-4" dir="rtl">
+        <SidebarInset className="overflow-auto bg-flyboy-dark">
+          <div className="container mx-auto p-6" dir="rtl">
             <Outlet />
           </div>
         </SidebarInset>
