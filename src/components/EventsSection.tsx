@@ -148,8 +148,8 @@ const EventsSection = () => {
                     alt={event.title} 
                     className="absolute inset-0 w-full h-full object-cover"
                   />
-                  {/* Centered Enlarge Button */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
+                  {/* Permanently Visible Enlarge Button (Not on hover) */}
+                  <div className="absolute inset-0 flex items-center justify-center">
                     <button
                       className="bg-black/70 text-white rounded-md px-4 py-2 hover:bg-black/90 transition-colors flex items-center gap-2"
                       onClick={(e) => {
