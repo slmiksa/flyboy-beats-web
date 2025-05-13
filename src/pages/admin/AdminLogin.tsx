@@ -33,7 +33,7 @@ const AdminLoginContent = () => {
       const isAuthenticated = await checkAuth();
       if (isAuthenticated) {
         console.log("User is already authenticated, redirecting to admin dashboard");
-        navigate("/admin");
+        navigate("/admin", { replace: true });
       }
     };
     
@@ -63,10 +63,13 @@ const AdminLoginContent = () => {
           description: "أهلاً بك في لوحة التحكم",
         });
         console.log("Login successful, redirecting to admin dashboard");
-        // Force a small delay to ensure state is updated
+        
+        // Force a longer delay to ensure state is properly updated before redirect
         setTimeout(() => {
-          navigate("/admin");
-        }, 300);
+          console.log("Executing redirect to /admin now");
+          // Use replace to prevent going back to login page
+          navigate("/admin", { replace: true });
+        }, 500);
       } else {
         setError(result.error || "اسم المستخدم أو كلمة المرور غير صحيحة");
         toast({

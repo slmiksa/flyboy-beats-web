@@ -26,12 +26,25 @@ const AdminLayoutContent = () => {
 
   useEffect(() => {
     const verifyAuth = async () => {
-      const isAuth = await checkAuth();
-      setIsAuthorized(isAuth);
-      setIsVerifying(false);
-      
-      if (!isAuth) {
-        navigate("/admin/login");
+      try {
+        console.log("Verifying admin authorization...");
+        const isAuth = await checkAuth();
+        console.log("Auth verification result:", isAuth);
+        
+        setIsAuthorized(isAuth);
+        setIsVerifying(false);
+        
+        if (!isAuth) {
+          console.log("User not authorized, redirecting to login");
+          navigate("/admin/login", { replace: true });
+        } else {
+          console.log("User is authorized, showing admin layout");
+        }
+      } catch (error) {
+        console.error("Error during auth verification:", error);
+        setIsAuthorized(false);
+        setIsVerifying(false);
+        navigate("/admin/login", { replace: true });
       }
     };
 
@@ -54,6 +67,7 @@ const AdminLayoutContent = () => {
   }
 
   if (!isAuthorized) {
+    console.log("Not authorized, rendering Navigate component to login");
     return <Navigate to="/admin/login" replace />;
   }
 
