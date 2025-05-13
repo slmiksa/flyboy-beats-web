@@ -1,21 +1,358 @@
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Event } from "@/types/database.types";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/components/ui/sonner";
 
 const AdminEvents = () => {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    location: "",
+    description: "",
+    whatsapp_number: "",
+    image_url: ""
+  });
+  const [uploading, setUploading] = useState(false);
+
+  // Fetch events data
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setEvents(data || []);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      toast.error("فشل في تحميل الحفلات");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    
+    try {
+      setUploading(true);
+      const file = e.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+      const filePath = `${fileName}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('slides')
+        .upload(filePath, file);
+      
+      if (uploadError) throw uploadError;
+      
+      const { data } = supabase.storage.from('slides').getPublicUrl(filePath);
+      
+      setFormData(prev => ({
+        ...prev,
+        image_url: data.publicUrl
+      }));
+      
+      toast.success("تم رفع الصورة بنجاح");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("فشل في رفع الصورة");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      if (isEditing && currentEvent) {
+        // Update existing event
+        const { error } = await supabase
+          .from("events")
+          .update({
+            title: formData.title,
+            location: formData.location,
+            description: formData.description,
+            whatsapp_number: formData.whatsapp_number,
+            image_url: formData.image_url,
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", currentEvent.id);
+        
+        if (error) throw error;
+        toast.success("تم تحديث الحفلة بنجاح");
+      } else {
+        // Create new event
+        const { error } = await supabase
+          .from("events")
+          .insert({
+            title: formData.title,
+            location: formData.location || null,
+            description: formData.description || null,
+            whatsapp_number: formData.whatsapp_number || null,
+            image_url: formData.image_url
+          });
+        
+        if (error) throw error;
+        toast.success("تم إضافة الحفلة بنجاح");
+      }
+      
+      // Reset and close
+      setIsSheetOpen(false);
+      resetForm();
+      fetchEvents();
+    } catch (error) {
+      console.error("Error saving event:", error);
+      toast.error("فشل في حفظ الحفلة");
+    }
+  };
+
+  const handleEdit = (event: Event) => {
+    setCurrentEvent(event);
+    setFormData({
+      title: event.title,
+      location: event.location || "",
+      description: event.description || "",
+      whatsapp_number: event.whatsapp_number || "",
+      image_url: event.image_url
+    });
+    setIsEditing(true);
+    setIsSheetOpen(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("هل أنت متأكد من حذف هذه الحفلة؟")) return;
+    
+    try {
+      const { error } = await supabase
+        .from("events")
+        .delete()
+        .eq("id", id);
+      
+      if (error) throw error;
+      
+      toast.success("تم حذف الحفلة بنجاح");
+      fetchEvents();
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      toast.error("فشل في حذف الحفلة");
+    }
+  };
+
+  const handleAddNew = () => {
+    resetForm();
+    setIsEditing(false);
+    setCurrentEvent(null);
+    setIsSheetOpen(true);
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: "",
+      location: "",
+      description: "",
+      whatsapp_number: "",
+      image_url: ""
+    });
+  };
+
   return (
     <div className="space-y-4">
-      <h1 className="text-3xl font-bold">إدارة الحفلات</h1>
-      <p className="text-muted-foreground">قم بإضافة وتعديل وحذف الحفلات والفعاليات</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold">إدارة الحفلات</h1>
+          <p className="text-muted-foreground">قم بإضافة وتعديل وحذف الحفلات والفعاليات</p>
+        </div>
+        <Button onClick={handleAddNew}>
+          <Plus className="ml-2" size={16} />
+          إضافة حفلة
+        </Button>
+      </div>
       
       <Card>
         <CardHeader>
           <CardTitle>الحفلات</CardTitle>
-          <CardDescription>ستتمكن من إدارة الحفلات هنا قريباً</CardDescription>
+          <CardDescription>جميع الحفلات والفعاليات المتاحة</CardDescription>
         </CardHeader>
         <CardContent>
-          <p>جاري تطوير هذه الصفحة...</p>
+          {loading ? (
+            <div className="flex justify-center items-center py-8">
+              <Loader2 className="animate-spin text-flyboy-gold" size={32} />
+            </div>
+          ) : events.length === 0 ? (
+            <div className="text-center py-8">
+              <p>لا توجد حفلات متاحة</p>
+              <Button onClick={handleAddNew} variant="outline" className="mt-4">
+                <Plus className="ml-2" size={16} />
+                إضافة حفلة جديدة
+              </Button>
+            </div>
+          ) : (
+            <div className="rounded-md border overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>الصورة</TableHead>
+                    <TableHead>العنوان</TableHead>
+                    <TableHead>الموقع</TableHead>
+                    <TableHead>واتساب</TableHead>
+                    <TableHead className="text-left">الإجراءات</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {events.map((event) => (
+                    <TableRow key={event.id}>
+                      <TableCell>
+                        <img 
+                          src={event.image_url} 
+                          alt={event.title} 
+                          className="w-16 h-16 object-cover rounded-md"
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium">{event.title}</TableCell>
+                      <TableCell>{event.location || "-"}</TableCell>
+                      <TableCell>{event.whatsapp_number || "-"}</TableCell>
+                      <TableCell className="flex space-x-2 rtl:space-x-reverse">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          onClick={() => handleEdit(event)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => handleDelete(event.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
+
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <SheetContent className="overflow-auto" side="right">
+          <SheetHeader>
+            <SheetTitle>{isEditing ? 'تعديل حفلة' : 'إضافة حفلة جديدة'}</SheetTitle>
+            <SheetDescription>
+              أدخل تفاصيل الحفلة أدناه
+            </SheetDescription>
+          </SheetHeader>
+
+          <form onSubmit={handleSubmit} className="space-y-6 py-6">
+            <div className="space-y-2">
+              <Label htmlFor="title">عنوان الحفلة *</Label>
+              <Input 
+                id="title"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="image">صورة الحفلة *</Label>
+              <div className="flex flex-col space-y-2">
+                {formData.image_url && (
+                  <img 
+                    src={formData.image_url} 
+                    alt="Preview" 
+                    className="w-full h-40 object-cover rounded-md"
+                  />
+                )}
+                <Input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  disabled={uploading}
+                />
+                {uploading && <p className="text-sm text-muted-foreground">جاري رفع الصورة...</p>}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="location">موقع الحفلة</Label>
+              <Input 
+                id="location"
+                name="location"
+                value={formData.location}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">وصف الحفلة</Label>
+              <Input 
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="whatsapp_number">رقم الواتساب</Label>
+              <Input 
+                id="whatsapp_number"
+                name="whatsapp_number"
+                value={formData.whatsapp_number}
+                onChange={handleInputChange}
+                placeholder="966500000000"
+              />
+            </div>
+
+            <div className="flex justify-end space-x-2 rtl:space-x-reverse pt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setIsSheetOpen(false)}
+              >
+                إلغاء
+              </Button>
+              <Button 
+                type="submit" 
+                disabled={!formData.title || !formData.image_url || uploading}
+              >
+                {isEditing ? 'تحديث' : 'إضافة'}
+              </Button>
+            </div>
+          </form>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };
