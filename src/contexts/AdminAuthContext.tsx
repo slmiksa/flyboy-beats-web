@@ -83,19 +83,19 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
         return { success: false, error: "اسم المستخدم غير موجود" };
       }
 
-      // Special case for the superadmin "flyboy" with fixed password
-      if (username === "flyboy" && password === "Ksa@123456") {
-        // For flyboy, we use the standardized email format for Supabase Auth
-        const email = `${username}@flyboy-admin.com`;
+      // Use a valid email domain (example.com) instead of flyboy-admin.com
+      const email = `${username}@example.com`;
         
-        // Try to sign in with the flyboy credentials
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password,
-        });
-        
-        if (error) {
-          // If sign-in fails, try creating the account
+      // Try to sign in with the credentials
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+      
+      if (error) {
+        // Special case for the superadmin "flyboy" with fixed password
+        if (username === "flyboy" && password === "Ksa@123456") {
+          // Try to create the account first
           const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
             email: email,
             password: password,
@@ -103,6 +103,24 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
           
           if (signUpError) {
             console.error("Error creating flyboy account:", signUpError);
+            
+            // Check if error is because the user already exists
+            if (signUpError.message.includes("already registered")) {
+              // Try sign in again
+              const { error: retryError } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+              });
+              
+              if (retryError) {
+                console.error("Error signing in after account exists:", retryError);
+                return { success: false, error: "حدث خطأ أثناء محاولة تسجيل الدخول" };
+              } else {
+                setAdminUser(adminData as AdminUser);
+                return { success: true };
+              }
+            }
+            
             return { success: false, error: "حدث خطأ أثناء محاولة تسجيل الدخول" };
           }
           
@@ -116,28 +134,17 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
             console.error("Error signing in after account creation:", retryError);
             return { success: false, error: "حدث خطأ أثناء محاولة تسجيل الدخول" };
           }
-        }
-        
-        setAdminUser(adminData as AdminUser);
-        return { success: true };
-      } 
-      else {
-        // For other admin users, use the standard authentication flow
-        const email = `${username}@flyboy-admin.com`;
-        
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password,
-        });
-        
-        if (error) {
-          console.error("Login error for regular admin:", error);
+          
+          setAdminUser(adminData as AdminUser);
+          return { success: true };
+        } else {
+          console.error("Login error for admin:", error);
           return { success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" };
         }
-        
-        setAdminUser(adminData as AdminUser);
-        return { success: true };
       }
+      
+      setAdminUser(adminData as AdminUser);
+      return { success: true };
     } catch (error) {
       console.error("Login error:", error);
       return { success: false, error: "حدث خطأ أثناء تسجيل الدخول" };

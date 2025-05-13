@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { useAdminAuth, AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
@@ -148,6 +147,12 @@ const AdminLoginContent = () => {
             </form>
           </Form>
         </Card>
+        
+        <div className="mt-4 text-center text-white">
+          <p className="text-sm">
+            اسم المستخدم: <strong>flyboy</strong> | كلمة المرور: <strong>Ksa@123456</strong>
+          </p>
+        </div>
       </div>
     </div>
   );
