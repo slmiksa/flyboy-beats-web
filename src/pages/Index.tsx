@@ -9,7 +9,6 @@ import DistinguishedPartnersBanner from '@/components/DistinguishedPartnersBanne
 import SocialMediaBar from '@/components/SocialMediaBar';
 import { Music, Disc, Volume2, Headphones, Mic, Radio, Music4, FileMusic } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { Event } from '@/types/database.types';
 
 const Index = () => {
   const [keywords, setKeywords] = useState<string>('');

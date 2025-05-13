@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Pencil, Trash2, Loader2, Download, Info } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Info } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Event } from "@/types/database.types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -11,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const AdminEvents = () => {
@@ -29,47 +29,6 @@ const AdminEvents = () => {
     keywords: ""
   });
   const [uploading, setUploading] = useState(false);
-  const [importingDefaults, setImportingDefaults] = useState(false);
-
-  // Default events that can be imported
-  const defaultEvents = [
-    {
-      title: 'Festival',
-      image_url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3',
-      whatsapp_number: '966500000000',
-      description: null,
-      location: null,
-      date: null,
-      keywords: 'DJ Flyboy, دي جي Flyboy, Flyboy DJ سعودي, DJ حفلات خاصة, مهرجان, festival, حفلة موسيقية'
-    },
-    {
-      title: 'Beach Party',
-      image_url: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec',
-      whatsapp_number: '966500000000',
-      description: null,
-      location: null,
-      date: null,
-      keywords: 'DJ Flyboy, دي جي Flyboy, Beach Party, حفلة شاطئية, DJ شاطئ, DJ للحفلات الشاطئية'
-    },
-    {
-      title: 'Night Sound',
-      image_url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
-      whatsapp_number: '966500000000',
-      description: null,
-      location: null,
-      date: null,
-      keywords: 'DJ Flyboy, دي جي Flyboy, Night Sound, صوت الليل, DJ ليلي, DJ حفلات ليلية, DJ سهرات'
-    },
-    {
-      title: 'Club Mix',
-      image_url: 'https://images.unsplash.com/photo-1576525865260-9f0e7cfb02b3',
-      whatsapp_number: '966500000000',
-      description: null,
-      location: null,
-      date: null,
-      keywords: 'DJ Flyboy, دي جي Flyboy, Club Mix, نادي, ميكس, DJ للنوادي, DJ ميكس, DJ Club, ميكس حفلات'
-    }
-  ];
 
   // Fetch events data
   const fetchEvents = async () => {
@@ -225,27 +184,6 @@ const AdminEvents = () => {
     }));
   };
 
-  const importDefaultEvents = async () => {
-    try {
-      setImportingDefaults(true);
-      
-      // Insert default events to database
-      const { error } = await supabase
-        .from("events")
-        .insert(defaultEvents);
-      
-      if (error) throw error;
-      
-      toast.success("تم استيراد الحفلات الافتراضية بنجاح");
-      fetchEvents(); // Refresh the events list
-    } catch (error) {
-      console.error("Error importing default events:", error);
-      toast.error("فشل في استيراد الحفلات الافتراضية");
-    } finally {
-      setImportingDefaults(false);
-    }
-  };
-
   const resetForm = () => {
     setFormData({
       title: "",
@@ -275,18 +213,6 @@ const AdminEvents = () => {
             <Plus className="ml-2 rtl:ml-0 rtl:mr-2" size={16} />
             إضافة حفلة
           </Button>
-          <Button 
-            variant="outline" 
-            onClick={importDefaultEvents}
-            disabled={importingDefaults}
-          >
-            {importingDefaults ? (
-              <Loader2 className="ml-2 rtl:ml-0 rtl:mr-2 animate-spin" size={16} />
-            ) : (
-              <Download className="ml-2 rtl:ml-0 rtl:mr-2" size={16} />
-            )}
-            استيراد الحفلات الافتراضية
-          </Button>
         </div>
       </div>
       
@@ -303,22 +229,10 @@ const AdminEvents = () => {
           ) : events.length === 0 ? (
             <div className="text-center py-8">
               <p>لا توجد حفلات متاحة</p>
-              <div className="flex justify-center mt-4 space-x-2 rtl:space-x-reverse">
+              <div className="flex justify-center mt-4">
                 <Button onClick={handleAddNew} variant="default">
                   <Plus className="ml-2 rtl:ml-0 rtl:mr-2" size={16} />
                   إضافة حفلة جديدة
-                </Button>
-                <Button 
-                  onClick={importDefaultEvents} 
-                  variant="outline"
-                  disabled={importingDefaults}
-                >
-                  {importingDefaults ? (
-                    <Loader2 className="ml-2 rtl:ml-0 rtl:mr-2 animate-spin" size={16} />
-                  ) : (
-                    <Download className="ml-2 rtl:ml-0 rtl:mr-2" size={16} />
-                  )}
-                  استيراد الحفلات الافتراضية
                 </Button>
               </div>
             </div>
