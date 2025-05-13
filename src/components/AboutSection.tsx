@@ -56,6 +56,11 @@ const AboutSection = () => {
         
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <div 
+              className="text-white text-right space-y-4"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+            
             {imageUrl && (
               <div className="relative group mx-auto md:mx-0">
                 <div className="absolute inset-0 bg-flyboy-gold blur-md opacity-20 group-hover:opacity-30 transition-opacity rounded-lg"></div>
@@ -69,11 +74,6 @@ const AboutSection = () => {
                 />
               </div>
             )}
-            
-            <div 
-              className="text-white text-lg leading-relaxed space-y-4 text-center md:text-right"
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
           </div>
           
           <div className="text-center mt-8">

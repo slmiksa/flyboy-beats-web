@@ -86,6 +86,11 @@ const About = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div 
+              className="space-y-4 text-white text-right"
+              dangerouslySetInnerHTML={{ __html: content }}
+            />
+            
             {imageUrl && (
               <div className="relative group">
                 <div className="absolute inset-0 bg-flyboy-gold blur-md opacity-20 group-hover:opacity-30 transition-opacity rounded-lg"></div>
@@ -102,11 +107,6 @@ const About = () => {
                 </div>
               </div>
             )}
-            
-            <div 
-              className="space-y-6 text-white"
-              dangerouslySetInnerHTML={{ __html: content }}
-            />
           </div>
         )}
       </div>

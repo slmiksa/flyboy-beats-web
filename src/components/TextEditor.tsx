@@ -84,6 +84,21 @@ const TextEditor: React.FC<TextEditorProps> = ({
         }
         newCursorPos = end + 12; // approximate
         break;
+      case 'goldText':
+        newText = value.substring(0, start) + `<span class="text-flyboy-gold">${selectedText}</span>` + value.substring(end);
+        newCursorPos = end + 39; // length of wrapping
+        break;
+      case 'heading':
+        newText = value.substring(0, start) + `<h3 class="text-flyboy-gold text-xl font-bold mb-4">${selectedText}</h3>` + value.substring(end);
+        newCursorPos = end + 54; // length of wrapping
+        break;
+      case 'bulletPoint':
+        newText = value.substring(0, start) + `<div class="flex items-center mb-2">
+  <span class="text-flyboy-gold mr-2">•</span>
+  <span>${selectedText}</span>
+</div>` + value.substring(end);
+        newCursorPos = end + 92; // approximate
+        break;
       default:
         return;
     }
@@ -187,6 +202,35 @@ const TextEditor: React.FC<TextEditorProps> = ({
         >
           <List className="h-4 w-4" />
           <span className="sr-only">قائمة نقطية</span>
+        </Button>
+        <div className="h-4 w-px bg-border mx-1" />
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => handleCommand('goldText')}
+          className="h-8 px-2"
+        >
+          <span className="text-xs text-flyboy-gold">نص ذهبي</span>
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => handleCommand('heading')}
+          className="h-8 px-2"
+        >
+          <span className="text-xs">عنوان</span>
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => handleCommand('bulletPoint')}
+          className="h-8 px-2 flex items-center"
+        >
+          <span className="text-flyboy-gold mr-1">•</span>
+          <span className="text-xs">نقطة</span>
         </Button>
       </div>
       <Textarea
