@@ -8,15 +8,16 @@ import {
   AlignCenter, 
   AlignRight,
   ListOrdered,
-  ListUnordered
+  List
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
-interface TextEditorProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface TextEditorProps {
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 }
 
 const TextEditor: React.FC<TextEditorProps> = ({
@@ -96,6 +97,10 @@ const TextEditor: React.FC<TextEditorProps> = ({
         textAreaRef.current.setSelectionRange(newCursorPos, newCursorPos);
       }
     }, 0);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onChange(e.target.value);
   };
 
   return (
@@ -180,14 +185,14 @@ const TextEditor: React.FC<TextEditorProps> = ({
           onClick={() => handleCommand('unorderedList')}
           className="h-8 w-8 p-0"
         >
-          <ListUnordered className="h-4 w-4" />
+          <List className="h-4 w-4" />
           <span className="sr-only">قائمة نقطية</span>
         </Button>
       </div>
       <Textarea
         ref={textAreaRef}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleChange}
         className={cn("border-0 focus-visible:ring-0 rounded-t-none min-h-[200px]", className)}
         dir="rtl"
         {...props}

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { 
   Card, 
@@ -20,7 +19,7 @@ import {
   AlignCenter, 
   AlignRight,
   ListOrdered,
-  ListUnordered
+  List
 } from "lucide-react";
 import { AboutSection as AboutSectionType } from "@/types/database.types";
 import TextEditor from "@/components/TextEditor";
