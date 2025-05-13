@@ -1,12 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
-import { Headphones } from 'lucide-react';
+import { Headphones, X } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
 import { Event } from "@/types/database.types";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const EventsSection = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   
   // Default events that should be used when no events are in the database
   const defaultEvents = [
@@ -78,6 +81,11 @@ const EventsSection = () => {
     return `https://wa.me/${number}?text=استفسار%20عن%20فعالية%20${encodeURIComponent(event.title)}`;
   };
 
+  const handleEventClick = (event: Event) => {
+    setSelectedEvent(event);
+    setDialogOpen(true);
+  };
+
   return (
     <section className="py-16 bg-flyboy-dark">
       <div className="container">
@@ -104,7 +112,10 @@ const EventsSection = () => {
                 key={event.id || index} 
                 className="bg-flyboy-purple rounded-lg overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105"
               >
-                <div className="relative pb-[90%]">
+                <div 
+                  className="relative pb-[90%] cursor-pointer" 
+                  onClick={() => handleEventClick(event)}
+                >
                   <img 
                     src={event.image_url} 
                     alt={event.title} 
@@ -133,6 +144,27 @@ const EventsSection = () => {
           </div>
         )}
       </div>
+
+      {/* Full Image Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="p-0 border-none max-w-3xl w-full bg-transparent shadow-none">
+          <div className="relative rounded-lg overflow-hidden">
+            {selectedEvent && (
+              <img 
+                src={selectedEvent.image_url} 
+                alt={selectedEvent.title} 
+                className="w-full h-auto object-contain max-h-[80vh]"
+              />
+            )}
+            <button 
+              className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-full hover:bg-black/70 transition-colors"
+              onClick={() => setDialogOpen(false)}
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
