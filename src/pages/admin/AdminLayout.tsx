@@ -12,9 +12,12 @@ import {
   Info, 
   ArrowRight,
   LogOut,
+  ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import { 
   SidebarProvider, 
   Sidebar, 
@@ -27,6 +30,7 @@ import {
   SidebarTrigger,
   SidebarSeparator
 } from "@/components/ui/sidebar";
+import { Toggle } from "@/components/ui/toggle";
 
 const AdminLayout = () => {
   const { adminUser, logout } = useAdminAuth();
@@ -34,9 +38,15 @@ const AdminLayout = () => {
   const location = useLocation();
   const { toast } = useToast();
   const [mounted, setMounted] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // Check if there's a stored sidebar state in localStorage
+    const storedState = localStorage.getItem("admin-sidebar-state");
+    if (storedState) {
+      setSidebarCollapsed(storedState === "collapsed");
+    }
   }, []);
 
   useEffect(() => {
@@ -63,6 +73,13 @@ const AdminLayout = () => {
     }
   };
 
+  const toggleSidebar = () => {
+    const newState = !sidebarCollapsed;
+    setSidebarCollapsed(newState);
+    // Store sidebar state in localStorage
+    localStorage.setItem("admin-sidebar-state", newState ? "collapsed" : "expanded");
+  };
+
   // Helper function to determine if a route is active
   const isRouteActive = (path: string) => {
     return location.pathname === path;
@@ -75,38 +92,61 @@ const AdminLayout = () => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full flex-row-reverse bg-background">
-        <Sidebar side="right" variant="sidebar">
-          <SidebarHeader className="flex items-center gap-2 px-4 py-3 border-b border-flyboy-gold/20">
+        <Sidebar 
+          side="right" 
+          variant="sidebar"
+          className={cn(
+            "transition-all duration-300 ease-in-out",
+            sidebarCollapsed ? "md:w-[60px]" : ""
+          )}
+        >
+          <SidebarHeader className="flex items-center gap-2 px-4 py-3 border-b border-flyboy-gold/20 bg-flyboy-purple">
             <div className="flex items-center justify-between w-full text-flyboy-gold">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={toggleSidebar}
+                className="md:flex hidden text-flyboy-gold hover:bg-flyboy-purple/60"
+              >
+                {sidebarCollapsed ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+              </Button>
+              {!sidebarCollapsed && <h1 className="text-lg font-bold hidden md:block">لوحة تحكم FLY BOY</h1>}
               <SidebarTrigger className="md:hidden text-flyboy-gold" />
-              <h1 className="text-lg font-bold">لوحة تحكم FLY BOY</h1>
               <LayoutDashboard className="h-5 w-5" />
             </div>
           </SidebarHeader>
           
-          <SidebarContent className="py-2">
-            <SidebarMenu className="space-y-1 px-2">
+          <SidebarContent className="py-2 bg-flyboy-purple/90">
+            <SidebarMenu className="space-y-2 px-3">
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => navigate("/admin")}
                   isActive={isRouteActive("/admin")}
                   tooltip="الرئيسية"
+                  className={cn(
+                    "hover:bg-flyboy-purple/60",
+                    isRouteActive("/admin") ? "bg-flyboy-purple" : ""
+                  )}
                 >
                   <Home className="ml-2" size={18} />
-                  <span>الرئيسية</span>
+                  <span>{!sidebarCollapsed && "الرئيسية"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
-              <SidebarSeparator className="my-2" />
+              <SidebarSeparator className="my-3" />
               
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => navigate("/admin/slides")}
                   isActive={isRouteActive("/admin/slides")}
                   tooltip="السلايدات"
+                  className={cn(
+                    "hover:bg-flyboy-purple/60",
+                    isRouteActive("/admin/slides") ? "bg-flyboy-purple" : ""
+                  )}
                 >
                   <Image className="ml-2" size={18} />
-                  <span>السلايدات</span>
+                  <span>{!sidebarCollapsed && "السلايدات"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -115,9 +155,13 @@ const AdminLayout = () => {
                   onClick={() => navigate("/admin/events")}
                   isActive={isRouteActive("/admin/events")}
                   tooltip="الحفلات"
+                  className={cn(
+                    "hover:bg-flyboy-purple/60",
+                    isRouteActive("/admin/events") ? "bg-flyboy-purple" : ""
+                  )}
                 >
                   <Calendar className="ml-2" size={18} />
-                  <span>الحفلات</span>
+                  <span>{!sidebarCollapsed && "الحفلات"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -126,9 +170,13 @@ const AdminLayout = () => {
                   onClick={() => navigate("/admin/partners")}
                   isActive={isRouteActive("/admin/partners")}
                   tooltip="شركاء النجاح"
+                  className={cn(
+                    "hover:bg-flyboy-purple/60", 
+                    isRouteActive("/admin/partners") ? "bg-flyboy-purple" : ""
+                  )}
                 >
                   <Users2 className="ml-2" size={18} />
-                  <span>شركاء النجاح</span>
+                  <span>{!sidebarCollapsed && "شركاء النجاح"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -137,9 +185,13 @@ const AdminLayout = () => {
                   onClick={() => navigate("/admin/about")}
                   isActive={isRouteActive("/admin/about")}
                   tooltip="نبذة عنا"
+                  className={cn(
+                    "hover:bg-flyboy-purple/60",
+                    isRouteActive("/admin/about") ? "bg-flyboy-purple" : ""
+                  )}
                 >
                   <Info className="ml-2" size={18} />
-                  <span>نبذة عنا</span>
+                  <span>{!sidebarCollapsed && "نبذة عنا"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -148,13 +200,17 @@ const AdminLayout = () => {
                   onClick={() => navigate("/admin/social-media")}
                   isActive={isRouteActive("/admin/social-media")}
                   tooltip="منصات التواصل"
+                  className={cn(
+                    "hover:bg-flyboy-purple/60",
+                    isRouteActive("/admin/social-media") ? "bg-flyboy-purple" : ""
+                  )}
                 >
                   <ArrowRight className="ml-2" size={18} />
-                  <span>منصات التواصل</span>
+                  <span>{!sidebarCollapsed && "منصات التواصل"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
-              <SidebarSeparator className="my-2" />
+              <SidebarSeparator className="my-3" />
               
               {adminUser?.is_super_admin && (
                 <SidebarMenuItem>
@@ -162,22 +218,26 @@ const AdminLayout = () => {
                     onClick={() => navigate("/admin/users")}
                     isActive={isRouteActive("/admin/users")}
                     tooltip="المستخدمين"
+                    className={cn(
+                      "hover:bg-flyboy-purple/60",
+                      isRouteActive("/admin/users") ? "bg-flyboy-purple" : ""
+                    )}
                   >
                     <Users className="ml-2" size={18} />
-                    <span>المستخدمين</span>
+                    <span>{!sidebarCollapsed && "المستخدمين"}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}
             </SidebarMenu>
           </SidebarContent>
           
-          <SidebarFooter className="border-t border-flyboy-gold/20 p-4">
+          <SidebarFooter className="border-t border-flyboy-gold/20 p-4 bg-flyboy-purple">
             <Button
               onClick={handleLogout}
               className="w-full bg-flyboy-purple hover:bg-flyboy-purple/80 text-white border border-flyboy-gold/30"
             >
               <LogOut className="ml-2 h-4 w-4" />
-              تسجيل الخروج
+              {!sidebarCollapsed && "تسجيل الخروج"}
             </Button>
           </SidebarFooter>
         </Sidebar>
