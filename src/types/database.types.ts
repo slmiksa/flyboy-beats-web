@@ -5,6 +5,7 @@ import { Database } from "@/integrations/supabase/types";
 export type AdminUser = {
   id: string;
   username: string;
+  password?: string; // Make sure the password field is defined properly
   is_super_admin: boolean;
   created_at: string;
 };

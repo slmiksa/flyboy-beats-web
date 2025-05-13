@@ -108,8 +108,8 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
         // Check if the password matches
         const adminData = data as AdminUser;
         
-        // If password column exists, verify against it
-        if (adminData.password === password) {
+        // Use safe property access with optional chaining
+        if (adminData?.password === password) {
           console.log("Login successful for user with custom password:", username);
           setAdminUser(adminData);
           localStorage.setItem('admin_username', username);
