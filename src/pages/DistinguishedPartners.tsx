@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -27,11 +27,20 @@ const distinguishedPartners = [{
 const DistinguishedPartners = () => {
   const isMobile = useIsMobile();
   
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   return (
     <div className="bg-flyboy-dark py-16">
       <div className="container max-w-5xl px-4 mx-auto">
         <div className="mb-8 flex items-center">
-          <Button asChild variant="outline" className="text-flyboy-gold hover:text-flyboy-gold/80 flex items-center gap-2">
+          <Button 
+            asChild 
+            variant="outline" 
+            className="text-flyboy-gold hover:text-flyboy-gold/80 flex items-center gap-2 bg-flyboy-purple hover:bg-flyboy-purple/80 border-flyboy-gold"
+          >
             <Link to="/">
               <ChevronRight className="rotate-180 h-5 w-5" />
               <span>العودة للرئيسية</span>
