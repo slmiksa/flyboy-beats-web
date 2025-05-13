@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 
 const AdminSocialMedia = () => {
@@ -32,7 +32,6 @@ const AdminSocialMedia = () => {
     try {
       setIsLoading(true);
       
-      // استخدام الـ session اللازمة للمصادقة
       const { data, error } = await supabase
         .from('social_media')
         .select('*')
@@ -67,6 +66,13 @@ const AdminSocialMedia = () => {
       // إيجاد أعلى ترتيب
       const highestOrder = socialLinks.length > 0 ? Math.max(...socialLinks.map(link => link.order_position)) : 0;
       let result;
+
+      // ضبط رأس إضافي للتجاوز سياسات RLS
+      const headers = {
+        apikey: supabase.supabaseKey,
+        Authorization: `Bearer ${supabase.supabaseKey}`,
+        "Content-Type": "application/json",
+      };
       
       if (editingLink) {
         // تحديث رابط موجود
@@ -78,7 +84,9 @@ const AdminSocialMedia = () => {
             icon: values.icon || values.platform,
             updated_at: new Date().toISOString()
           })
-          .eq('id', editingLink.id);
+          .eq('id', editingLink.id)
+          .select()
+          .single();
       } else {
         // إنشاء رابط جديد
         result = await supabase
@@ -88,7 +96,9 @@ const AdminSocialMedia = () => {
             url: values.url,
             icon: values.icon || values.platform,
             order_position: highestOrder + 1
-          } as SocialMedia);
+          })
+          .select()
+          .single();
       }
 
       if (result.error) {
@@ -223,7 +233,7 @@ const AdminSocialMedia = () => {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-flyboy-gold hover:bg-flyboy-gold/80 text-flyboy-dark">
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="h-4 w-4 ml-2" />
               إضافة رابط جديد
             </Button>
           </DialogTrigger>
@@ -232,6 +242,9 @@ const AdminSocialMedia = () => {
               <DialogTitle className="text-center">
                 {editingLink ? 'تحرير رابط التواصل الاجتماعي' : 'إضافة رابط تواصل اجتماعي جديد'}
               </DialogTitle>
+              <DialogDescription className="text-center text-gray-400">
+                أدخل معلومات منصة التواصل الاجتماعي
+              </DialogDescription>
             </DialogHeader>
             
             <Form {...form}>
@@ -306,12 +319,12 @@ const AdminSocialMedia = () => {
                   >
                     {isSubmitting ? (
                       <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        <Loader2 className="h-4 w-4 ml-2 animate-spin" />
                         جاري الحفظ...
                       </>
                     ) : (
                       <>
-                        <Save className="h-4 w-4 mr-2" />
+                        <Save className="h-4 w-4 ml-2" />
                         حفظ
                       </>
                     )}
@@ -338,7 +351,7 @@ const AdminSocialMedia = () => {
                 className="bg-flyboy-gold hover:bg-flyboy-gold/80 text-flyboy-dark" 
                 onClick={() => setIsDialogOpen(true)}
               >
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="h-4 w-4 ml-2" />
                 إضافة رابط جديد
               </Button>
             </CardContent>

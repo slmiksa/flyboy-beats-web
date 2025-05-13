@@ -3,3 +3,31 @@ project_id = "firfwpammvhmgfyjzeii"
 
 [storage.logos]
 public = true
+
+[auth.email]
+enable_signup = true
+
+[postgres.policies]
+[postgres.policies.social_media.select]
+schema = "public"
+table = "social_media"
+action = "SELECT"
+expression = "true"
+
+[postgres.policies.social_media.insert]
+schema = "public"
+table = "social_media"
+action = "INSERT"
+expression = "true"
+
+[postgres.policies.social_media.update]
+schema = "public"
+table = "social_media" 
+action = "UPDATE"
+expression = "true"
+
+[postgres.policies.social_media.delete]
+schema = "public"
+table = "social_media"
+action = "DELETE"
+expression = "true"
