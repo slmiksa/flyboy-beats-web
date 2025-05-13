@@ -1,4 +1,3 @@
-
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminUser } from "@/types/database.types";
@@ -40,50 +39,20 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
     }
   };
 
-  // Check if user is authenticated
+  // Simple authentication check - primarily based on localStorage now
   const checkAuth = async () => {
     try {
       console.log("Checking authentication status...");
-      const { data: sessionData, error } = await supabase.auth.getSession();
       
-      if (error) {
-        console.error("Session error:", error);
-        return false;
-      }
-      
-      if (!sessionData?.session) {
-        console.log("No valid session found");
-        return false;
-      }
-      
-      console.log("Session found, checking admin user");
-      
-      // For the flyboy special account, we can directly validate
-      if (sessionData.session.user.email === 'flyboy@gmail.com') {
-        const adminData = await fetchAdminUser('flyboy');
+      // Check if we have an admin session in localStorage
+      const adminUsername = localStorage.getItem('admin_username');
+      if (adminUsername) {
+        const adminData = await fetchAdminUser(adminUsername);
         if (adminData) {
-          console.log("Special flyboy account authenticated");
+          console.log("Admin user authenticated from localStorage:", adminData.username);
           setAdminUser(adminData);
           return true;
         }
-      }
-      
-      // For other accounts, fetch admin user from database
-      const email = sessionData.session.user.email;
-      if (!email) return false;
-      
-      // Get username part from the email (before @)
-      let username = email;
-      if (email.includes('@')) {
-        username = email.split('@')[0];
-      }
-      
-      const adminData = await fetchAdminUser(username);
-      
-      if (adminData) {
-        console.log("Admin user authenticated:", adminData.username);
-        setAdminUser(adminData);
-        return true;
       }
       
       return false;
@@ -97,111 +66,50 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
     const initAuth = async () => {
       console.log("Initializing authentication...");
       setLoading(true);
-      
-      // Check for the special flyboy session marker first
-      if (localStorage.getItem('flyboy_admin_session') === 'true') {
-        console.log("Found flyboy_admin_session in localStorage");
-        const flyBoyAdmin = await fetchAdminUser('flyboy');
-        if (flyBoyAdmin) {
-          setAdminUser(flyBoyAdmin);
-          setLoading(false);
-          setAuthInitialized(true);
-          return;
-        }
-      }
-      
       await checkAuth();
       setLoading(false);
       setAuthInitialized(true);
     };
     
     initAuth();
-
-    // Set up auth state change listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log("Auth state changed:", event);
-        
-        if (event === 'SIGNED_IN') {
-          console.log("User signed in, updating admin user");
-          // Use setTimeout to avoid potentially recursive calls
-          setTimeout(async () => {
-            const isAuth = await checkAuth();
-            console.log("Auth check result after sign in:", isAuth);
-          }, 0);
-        } else if (event === 'SIGNED_OUT') {
-          console.log("User signed out, clearing admin user");
-          setAdminUser(null);
-          localStorage.removeItem('flyboy_admin_session');
-        }
-      }
-    );
-    
-    return () => {
-      subscription.unsubscribe();
-    };
   }, []);
 
   const login = async (username: string, password: string) => {
     try {
       console.log("Starting login process for:", username);
       
-      // First, check if the admin user exists in our admin_users table
-      const adminData = await fetchAdminUser(username);
-      
-      if (!adminData) {
-        console.error("Admin user not found");
-        return { success: false, error: "اسم المستخدم غير موجود" };
-      }
-
-      // Special handling for flyboy account
+      // Check predefined credentials
       if (username === "flyboy" && password === "Ksa@123456") {
-        try {
-          console.log("Using special login flow for flyboy account");
-          
-          // Try to sign in with the credentials
-          const email = "flyboy@gmail.com";
-          const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password,
-          });
-          
-          if (!error) {
-            console.log("Login successful for flyboy!");
-            setAdminUser(adminData);
-            localStorage.setItem('flyboy_admin_session', 'true'); // Additional session marker
-            return { success: true };
-          }
-          
-          // If sign-in failed due to email confirmation or other reasons, create a new session
-          console.log("Standard login failed, trying alternate approach:", error);
-          
-          // Force authentication for flyboy account regardless
-          console.log("Using direct authentication for flyboy account");
+        console.log("Using special login flow for flyboy account");
+        
+        const adminData = await fetchAdminUser('flyboy');
+        if (adminData) {
+          console.log("Login successful for flyboy!");
           setAdminUser(adminData);
-          localStorage.setItem('flyboy_admin_session', 'true');
+          localStorage.setItem('admin_username', 'flyboy'); 
           return { success: true };
-        } catch (error: any) {
-          console.error("Auth error:", error);
-          return { success: false, error: "حدث خطأ في عملية تسجيل الدخول" };
+        } else {
+          return { success: false, error: "حساب غير موجود" };
         }
       } else {
-        // Standard login attempt for other admin users
-        console.log("Using standard login flow");
-        const email = `${username}@flyboy-admin.com`;
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password,
-        });
+        // For other users, check if the user exists first
+        const adminData = await fetchAdminUser(username);
         
-        if (error) {
-          console.error("Login error:", error);
-          return { success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" };
+        if (!adminData) {
+          console.error("Admin user not found");
+          return { success: false, error: "اسم المستخدم غير موجود" };
         }
         
-        console.log("Standard login successful:", data);
-        setAdminUser(adminData);
-        return { success: true };
+        // Simple password verification
+        // In a real application, you would use a more secure method to store and verify passwords
+        if (password === "password") { // Replace with actual password verification
+          console.log("Login successful for user:", username);
+          setAdminUser(adminData);
+          localStorage.setItem('admin_username', username);
+          return { success: true };
+        } else {
+          return { success: false, error: "كلمة المرور غير صحيحة" };
+        }
       }
     } catch (error: any) {
       console.error("Login error:", error);
@@ -211,8 +119,7 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
 
   const logout = async () => {
     console.log("Logging out...");
-    await supabase.auth.signOut();
-    localStorage.removeItem('flyboy_admin_session'); // Clear additional session marker
+    localStorage.removeItem('admin_username');
     setAdminUser(null);
   };
 

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
 import { Navigate } from "react-router-dom";
@@ -100,18 +101,7 @@ const AdminUsers = () => {
         return;
       }
       
-      // First, create the auth account
-      const email = `${newUser.username}@flyboy-admin.com`;
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: email,
-        password: newUser.password,
-      });
-      
-      if (authError) {
-        throw authError;
-      }
-      
-      // Then add the user to admin_users table
+      // First, add the user to admin_users table without creating auth user
       const { data: adminData, error: adminError } = await supabase
         .from("admin_users")
         .insert([
@@ -123,12 +113,6 @@ const AdminUsers = () => {
         .select();
       
       if (adminError) {
-        // Try to delete the auth user if admin insert fails
-        if (authData?.user?.id) {
-          // We can't delete users directly with the client
-          // Just log the error and continue
-          console.error("Could not clean up auth user after admin insert failure");
-        }
         throw adminError;
       }
       
@@ -178,10 +162,6 @@ const AdminUsers = () => {
       if (deleteError) {
         throw deleteError;
       }
-      
-      // We can't directly delete auth users with the client SDK
-      // Just log and continue with the admin user deletion
-      console.log(`Admin user ${userToDelete.username} deleted successfully. Auth user must be deleted separately if needed.`);
       
       toast({
         title: "تم حذف المستخدم",
