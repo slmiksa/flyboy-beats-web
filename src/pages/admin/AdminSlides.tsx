@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
@@ -11,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Slide } from "@/types/database.types";
-import { Pen, Trash, ImagePlus, Plus } from "lucide-react";
+import { Pen, Trash, ImagePlus, Plus, Upload } from "lucide-react";
 
 const formSchema = z.object({
   title: z.string().min(1, { message: "يجب إدخال عنوان السلايد" }),
@@ -26,6 +25,8 @@ const AdminSlides = () => {
   const [slides, setSlides] = useState<Slide[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingSlide, setEditingSlide] = useState<Slide | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const form = useForm<FormValues>({
@@ -105,7 +106,7 @@ const AdminSlides = () => {
 
       toast({
         title: "تم إضافة السلايدات الافتراضية",
-        description: "تم إضافة السلايدات الافتراضية بنجاح"
+        description: "تم إضافة الس��ايدات الافتراضية بنجاح"
       });
     } catch (error) {
       console.error('Error inserting default slides:', error);
@@ -115,6 +116,64 @@ const AdminSlides = () => {
         variant: "destructive"
       });
     }
+  };
+
+  // Handle file upload
+  const handleFileUpload = async (file: File) => {
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      
+      // Check if slides bucket exists, if not create it
+      const { data: buckets } = await supabase.storage.listBuckets();
+      const slidesBucket = buckets?.find(bucket => bucket.name === 'slides');
+      
+      if (!slidesBucket) {
+        // Create the slides bucket if it doesn't exist
+        await supabase.storage.createBucket('slides', {
+          public: true,
+          fileSizeLimit: 5242880, // 5MB
+        });
+      }
+
+      // Generate a unique file name to avoid collisions
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+      const filePath = `slides/${fileName}`;
+      
+      // Upload file to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('slides')
+        .upload(filePath, file);
+        
+      if (error) throw error;
+      
+      // Get the public URL for the uploaded image
+      const { data: publicURL } = supabase.storage.from('slides').getPublicUrl(filePath);
+      
+      // Set the image URL in the form
+      form.setValue('image_url', publicURL.publicUrl);
+      
+      toast({
+        title: "تم رفع الصورة",
+        description: "تم رفع الصورة بنجاح"
+      });
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast({
+        title: "حدث خطأ",
+        description: "لم نتمكن من رفع الصورة",
+        variant: "destructive"
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+  
+  // Trigger file input click
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
   };
 
   // Handle form submission
@@ -298,17 +357,48 @@ const AdminSlides = () => {
                   name="image_url"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white">رابط الصورة</FormLabel>
+                      <FormLabel className="text-white">صورة السلايد</FormLabel>
                       <FormControl>
-                        <div className="flex gap-2">
-                          <Input 
-                            placeholder="أدخل رابط صورة السلايد" 
-                            className="flex-1 border-flyboy-gold/50 bg-flyboy-purple/50 text-white"
-                            {...field} 
+                        <div className="space-y-2">
+                          <div className="flex gap-2">
+                            <Input 
+                              placeholder="رابط صورة السلايد" 
+                              className="flex-1 border-flyboy-gold/50 bg-flyboy-purple/50 text-white"
+                              {...field} 
+                            />
+                            <Button 
+                              type="button" 
+                              variant="outline" 
+                              className="border-flyboy-gold/50 hover:bg-flyboy-gold/20 text-flyboy-gold"
+                              onClick={triggerFileInput}
+                              disabled={uploading}
+                            >
+                              {uploading ? "جاري الرفع..." : <Upload className="h-4 w-4" />}
+                            </Button>
+                          </div>
+                          {field.value && (
+                            <div className="relative h-20 w-32 overflow-hidden rounded">
+                              <img 
+                                src={field.value} 
+                                alt="معاينة" 
+                                className="h-full w-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "https://placehold.co/600x400/purple/gold?text=Preview";
+                                }}
+                              />
+                            </div>
+                          )}
+                          <input 
+                            type="file" 
+                            ref={fileInputRef}
+                            className="hidden" 
+                            accept="image/*"
+                            onChange={(e) => {
+                              if (e.target.files && e.target.files[0]) {
+                                handleFileUpload(e.target.files[0]);
+                              }
+                            }}
                           />
-                          <Button type="button" variant="outline" className="border-flyboy-gold/50">
-                            <ImagePlus className="h-4 w-4" />
-                          </Button>
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -394,6 +484,9 @@ const AdminSlides = () => {
                             src={slide.image_url} 
                             alt={slide.title} 
                             className="h-full w-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "https://placehold.co/600x400/purple/gold?text=Error";
+                            }}
                           />
                         </div>
                       </TableCell>
