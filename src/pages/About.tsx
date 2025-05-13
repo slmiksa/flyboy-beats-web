@@ -87,7 +87,7 @@ const About = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
             <div 
-              className="space-y-4 text-white text-right"
+              className="space-y-6 text-white text-right"
               dangerouslySetInnerHTML={{ __html: content }}
             />
             

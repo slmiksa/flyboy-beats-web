@@ -66,23 +66,23 @@ const TextEditor: React.FC<TextEditorProps> = ({
         break;
       case 'orderedList':
         if (selectedText.includes('\n')) {
-          const lines = selectedText.split('\n');
-          const liItems = lines.map(line => `<li>${line}</li>`).join('');
-          newText = value.substring(0, start) + `<ol>${liItems}</ol>` + value.substring(end);
+          const lines = selectedText.split('\n').filter(line => line.trim() !== '');
+          const liItems = lines.map(line => `<li>${line.trim()}</li>`).join('');
+          newText = value.substring(0, start) + `<ol class="mr-5 space-y-1 list-decimal">${liItems}</ol>` + value.substring(end);
         } else {
-          newText = value.substring(0, start) + `<ol><li>${selectedText}</li></ol>` + value.substring(end);
+          newText = value.substring(0, start) + `<ol class="mr-5 space-y-1 list-decimal"><li>${selectedText}</li></ol>` + value.substring(end);
         }
-        newCursorPos = end + 12; // approximate
+        newCursorPos = end + 50; // approximate
         break;
       case 'unorderedList':
         if (selectedText.includes('\n')) {
-          const lines = selectedText.split('\n');
-          const liItems = lines.map(line => `<li>${line}</li>`).join('');
-          newText = value.substring(0, start) + `<ul>${liItems}</ul>` + value.substring(end);
+          const lines = selectedText.split('\n').filter(line => line.trim() !== '');
+          const liItems = lines.map(line => `<li>${line.trim()}</li>`).join('');
+          newText = value.substring(0, start) + `<ul class="mr-5 space-y-1 list-disc">${liItems}</ul>` + value.substring(end);
         } else {
-          newText = value.substring(0, start) + `<ul><li>${selectedText}</li></ul>` + value.substring(end);
+          newText = value.substring(0, start) + `<ul class="mr-5 space-y-1 list-disc"><li>${selectedText}</li></ul>` + value.substring(end);
         }
-        newCursorPos = end + 12; // approximate
+        newCursorPos = end + 48; // approximate
         break;
       case 'goldText':
         newText = value.substring(0, start) + `<span class="text-flyboy-gold">${selectedText}</span>` + value.substring(end);
@@ -93,11 +93,19 @@ const TextEditor: React.FC<TextEditorProps> = ({
         newCursorPos = end + 54; // length of wrapping
         break;
       case 'bulletPoint':
-        newText = value.substring(0, start) + `<div class="flex items-center mb-2">
+        newText = value.substring(0, start) + `<div class="flex items-center mb-3">
   <span class="text-flyboy-gold mr-2">•</span>
   <span>${selectedText}</span>
 </div>` + value.substring(end);
         newCursorPos = end + 92; // approximate
+        break;
+      case 'paragraph':
+        newText = value.substring(0, start) + `<p class="mb-4">${selectedText}</p>` + value.substring(end);
+        newCursorPos = end + 20; // length of wrapping
+        break;
+      case 'newLine':
+        newText = value.substring(0, start) + `<br />` + value.substring(end);
+        newCursorPos = end + 6; // length of <br />
         break;
       default:
         return;
@@ -231,6 +239,24 @@ const TextEditor: React.FC<TextEditorProps> = ({
         >
           <span className="text-flyboy-gold mr-1">•</span>
           <span className="text-xs">نقطة</span>
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => handleCommand('paragraph')}
+          className="h-8 px-2"
+        >
+          <span className="text-xs">فقرة</span>
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => handleCommand('newLine')}
+          className="h-8 px-2"
+        >
+          <span className="text-xs">سطر جديد</span>
         </Button>
       </div>
       <Textarea

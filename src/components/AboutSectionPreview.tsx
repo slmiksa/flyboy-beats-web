@@ -19,7 +19,7 @@ const AboutSectionPreview: React.FC<AboutSectionPreviewProps> = ({
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div 
-          className="text-white text-right"
+          className="text-white text-right space-y-4" 
           dangerouslySetInnerHTML={{ __html: content }}
         />
         
