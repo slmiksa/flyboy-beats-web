@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Pencil, Trash2, Loader2, Download } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Download, Info } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Event } from "@/types/database.types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -11,6 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/sonner";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -255,6 +257,12 @@ const AdminEvents = () => {
     });
   };
 
+  // Helper function to truncate text
+  const truncateText = (text: string | null, maxLength: number = 40) => {
+    if (!text) return "-";
+    return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -323,6 +331,7 @@ const AdminEvents = () => {
                     <TableHead>العنوان</TableHead>
                     <TableHead>الموقع</TableHead>
                     <TableHead>واتساب</TableHead>
+                    <TableHead>الكلمات المفتاحية</TableHead>
                     <TableHead className="text-left">الإجراءات</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -339,6 +348,25 @@ const AdminEvents = () => {
                       <TableCell className="font-medium">{event.title}</TableCell>
                       <TableCell>{event.location || "-"}</TableCell>
                       <TableCell>{event.whatsapp_number || "-"}</TableCell>
+                      <TableCell className="max-w-[200px]">
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center cursor-help">
+                                <span className="truncate block">
+                                  {truncateText(event.keywords, 30)}
+                                </span>
+                                {event.keywords && event.keywords.length > 30 && (
+                                  <Info size={14} className="ml-1 text-muted-foreground" />
+                                )}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent className="w-80 p-2 text-wrap">
+                              {event.keywords || "لا توجد كلمات مفتاحية"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </TableCell>
                       <TableCell className="flex space-x-2 rtl:space-x-reverse">
                         <Button 
                           variant="outline" 
@@ -438,7 +466,28 @@ const AdminEvents = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="keywords">الكلمات المفتاحية (SEO)</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="keywords">الكلمات المفتاحية (SEO)</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-6 px-2 text-muted-foreground">
+                      <Info size={14} />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 p-4">
+                    <div className="space-y-2">
+                      <h4 className="font-medium">الكلمات المفتاحية الإفتراضية:</h4>
+                      <div className="text-sm text-muted-foreground space-y-2">
+                        <p>• <strong>عام:</strong> DJ Flyboy, دي جي Flyboy, Flyboy DJ سعودي, DJ حفلات خاصة, DJ للمناسبات الفاخرة</p>
+                        <p>• <strong>مهرجان:</strong> مهرجان, festival, حفلة موسيقية</p>
+                        <p>• <strong>حفلة شاطئية:</strong> Beach Party, حفلة شاطئية, DJ شاطئ, DJ للحفلات الشاطئية</p>
+                        <p>• <strong>حفلات ليلية:</strong> Night Sound, صوت الليل, DJ ليلي, DJ حفلات ليلية, DJ سهرات</p>
+                        <p>• <strong>نوادي:</strong> Club Mix, نادي, ميكس, DJ للنوادي, DJ ميكس, DJ Club, ميكس حفلات</p>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
               <Textarea 
                 id="keywords"
                 name="keywords"
