@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+
 const AdminSocialMedia = () => {
   const [socialLinks, setSocialLinks] = useState<SocialMedia[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -232,7 +233,10 @@ const AdminSocialMedia = () => {
               }) => <FormItem>
                       <FormLabel>المنصة</FormLabel>
                       <FormControl>
-                        <select className="w-full border border-gray-300 rounded-md px-3 py-2">
+                        <select 
+                          className="w-full border border-flyboy-gold/30 rounded-md px-3 py-2 bg-flyboy-purple/30 text-white"
+                          {...field}
+                        >
                           <option value="">اختر المنصة</option>
                           {availablePlatforms.map(platform => <option key={platform.value} value={platform.value}>
                               {platform.label}
@@ -247,7 +251,7 @@ const AdminSocialMedia = () => {
               }) => <FormItem>
                       <FormLabel>رابط URL</FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="https://..." {...field} />
+                        <Input type="text" placeholder="https://..." {...field} className="bg-flyboy-purple/30 border-flyboy-gold/30 text-white" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>} />
@@ -257,7 +261,7 @@ const AdminSocialMedia = () => {
               }) => <FormItem>
                       <FormLabel>رمز الأيقونة (اختياري)</FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="استخدم اسم المنصة افتراضيًا" {...field} />
+                        <Input type="text" placeholder="استخدم اسم المنصة افتراضيًا" {...field} className="bg-flyboy-purple/30 border-flyboy-gold/30 text-white" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>} />
