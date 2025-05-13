@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Headphones, X, Maximize } from 'lucide-react';
 import { supabase } from "@/integrations/supabase/client";
@@ -35,7 +34,7 @@ const EventsSection = () => {
     },
     {
       title: 'Night Sound',
-      image_url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7',
+      image_url: 'https://images.unsplash.com/photo-1516450360452-9f0e7cfb02b3',
       whatsapp_number: '966500000000',
       description: null,
       location: null,
@@ -183,48 +182,21 @@ const EventsSection = () => {
         )}
       </div>
 
-      {/* Enhanced Full Image Dialog */}
+      {/* Full Image Dialog (Simplified) */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="p-0 border-none max-w-4xl w-full bg-transparent shadow-none">
-          <div className="relative rounded-lg overflow-hidden bg-black/90 p-4">
-            <div className="flex flex-col">
-              {selectedEvent && (
-                <>
-                  <div className="mb-4">
-                    <h2 className="text-2xl font-bold text-flyboy-gold mb-2">{selectedEvent.title}</h2>
-                    {selectedEvent.location && (
-                      <p className="text-white/80">{selectedEvent.location}</p>
-                    )}
-                  </div>
-                  <div className="relative rounded-lg overflow-hidden">
-                    <AspectRatio ratio={16/9} className="bg-black">
-                      <img 
-                        src={selectedEvent.image_url} 
-                        alt={selectedEvent.title} 
-                        className="w-full h-full object-contain"
-                      />
-                    </AspectRatio>
-                  </div>
-                  <div className="mt-4 flex justify-end">
-                    <a 
-                      href={selectedEvent && formatWhatsAppLink(selectedEvent)} 
-                      target="_blank"
-                      rel="noopener noreferrer" 
-                      className={cn(
-                        "btn-whatsapp px-6 py-2 rounded-lg", 
-                        "flex items-center justify-center gap-2",
-                        "bg-green-600 text-white hover:bg-green-700 transition-colors"
-                      )}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0a12 12 0 0 0-12 12c0 2.38.7 4.6 1.9 6.47L0 24l5.53-1.9A11.98 11.98 0 0 0 12 24a12 12 0 0 0 0-24zm6.03 16.92c-.22.64-1.12 1.17-1.84 1.33-.49.1-1.12.17-3.26-.7-2.73-1.1-4.5-3.76-4.64-3.93-.15-.17-1.2-1.6-1.2-3.05 0-1.45.74-2.17 1-2.46.22-.25.57-.37.91-.37l.33.01c.3 0 .44.03.64.49.24.57.82 2 .89 2.15.07.15.12.32.04.52a1.6 1.6 0 0 1-.3.42c-.15.15-.3.34-.43.45-.15.15-.3.3-.13.59.17.3.77 1.27 1.66 2.06 1.14 1.02 2.1 1.33 2.4 1.48.3.15.47.12.65-.07.17-.2.74-.87.94-1.16.2-.3.4-.25.67-.15.27.1 1.7.8 2 .95.29.15.49.22.56.35z"/>
-                      </svg>
-                      تواصل عبر واتساب
-                    </a>
-                  </div>
-                </>
-              )}
-            </div>
+          <div className="relative rounded-lg overflow-hidden bg-black/90">
+            {selectedEvent && (
+              <div className="relative">
+                <AspectRatio ratio={16/9} className="bg-black">
+                  <img 
+                    src={selectedEvent.image_url} 
+                    alt={selectedEvent.title} 
+                    className="w-full h-full object-contain"
+                  />
+                </AspectRatio>
+              </div>
+            )}
             <button 
               className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-full hover:bg-black/70 transition-colors z-10"
               onClick={() => setDialogOpen(false)}
