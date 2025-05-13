@@ -89,6 +89,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
       // For the special flyboy admin account, we need to directly create a session
       if (username === "flyboy" && password === "Ksa@123456") {
         try {
+          console.log("Trying special login flow for flyboy account");
           // Try to sign in directly 
           const signInResult = await supabase.auth.signInWithPassword({
             email: email,
@@ -96,10 +97,12 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
           });
           
           if (!signInResult.error) {
+            console.log("Login successful for flyboy!");
             setAdminUser(adminData as AdminUser);
             return { success: true };
           }
           
+          console.log("Sign in failed, trying signup:", signInResult.error);
           // If sign-in failed, try to sign up first
           const signUpResult = await supabase.auth.signUp({
             email: email,
@@ -111,12 +114,29 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
           
           if (signUpResult.error) {
             console.error("Error signing up:", signUpResult.error);
+            
+            // If the error is due to the user already existing, try signing in again
+            if (signUpResult.error.message.includes("already registered")) {
+              console.log("User already exists, trying to sign in again");
+              const retrySignIn = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+              });
+              
+              if (!retrySignIn.error) {
+                console.log("Second sign-in attempt successful!");
+                setAdminUser(adminData as AdminUser);
+                return { success: true };
+              } else {
+                console.error("Second sign-in attempt failed:", retrySignIn.error);
+                return { success: false, error: "حدث خطأ في تسجيل الدخول" };
+              }
+            }
+            
             return { success: false, error: "حدث خطأ أثناء إنشاء الحساب" };
           }
           
-          // For the special admin account, we'll automatically verify the email
-          // by using admin API or by creating a session directly
-          // For now, we'll set the admin user directly and consider it a success
+          console.log("Sign up successful, setting admin user");
           setAdminUser(adminData as AdminUser);
           return { success: true };
         } catch (error) {
@@ -125,6 +145,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
         }
       } else {
         // Standard login attempt for other admin users
+        console.log("Using standard login flow");
         const { error } = await supabase.auth.signInWithPassword({
           email: email,
           password: password,
@@ -135,6 +156,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
           return { success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" };
         }
         
+        console.log("Standard login successful");
         setAdminUser(adminData as AdminUser);
         return { success: true };
       }

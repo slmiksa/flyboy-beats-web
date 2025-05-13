@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,9 +23,22 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 const AdminLoginContent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { login } = useAdminAuth();
+  const { login, adminUser, checkAuth } = useAdminAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Check for existing auth on component mount
+  useEffect(() => {
+    const checkExistingAuth = async () => {
+      const isAuthenticated = await checkAuth();
+      if (isAuthenticated) {
+        console.log("User is already authenticated, redirecting to admin dashboard");
+        navigate("/admin");
+      }
+    };
+    
+    checkExistingAuth();
+  }, [checkAuth, navigate]);
 
   // Initialize form with validation
   const form = useForm<LoginFormValues>({
@@ -49,7 +62,11 @@ const AdminLoginContent = () => {
           title: "تم تسجيل الدخول بنجاح",
           description: "أهلاً بك في لوحة التحكم",
         });
-        navigate("/admin");
+        console.log("Login successful, redirecting to admin dashboard");
+        // Force a small delay to ensure state is updated
+        setTimeout(() => {
+          navigate("/admin");
+        }, 300);
       } else {
         setError(result.error || "اسم المستخدم أو كلمة المرور غير صحيحة");
         toast({
