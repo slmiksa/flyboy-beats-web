@@ -49,7 +49,7 @@ const AdminUsers = () => {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [newUser, setNewUser] = useState({ username: "", password: "", isSuperAdmin: false });
+  const [newUser, setNewUser] = useState({ username: "", isSuperAdmin: false });
   const [userToDelete, setUserToDelete] = useState<AdminUser | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -92,12 +92,13 @@ const AdminUsers = () => {
     setIsProcessing(true);
     
     try {
-      if (!newUser.username || !newUser.password) {
+      if (!newUser.username) {
         toast({
           title: "حقول مطلوبة",
-          description: "يرجى ملء جميع الحقول المطلوبة",
+          description: "يرجى ملء اسم المستخدم",
           variant: "destructive",
         });
+        setIsProcessing(false);
         return;
       }
       
@@ -118,11 +119,11 @@ const AdminUsers = () => {
       
       toast({
         title: "تم إضافة المستخدم",
-        description: `تم إضافة المستخدم ${newUser.username} بنجاح`,
+        description: `تم إضافة المستخدم ${newUser.username} بنجاح. كلمة المرور الافتراضية هي: password123`,
       });
       
       setIsAddDialogOpen(false);
-      setNewUser({ username: "", password: "", isSuperAdmin: false });
+      setNewUser({ username: "", isSuperAdmin: false });
       fetchUsers();
     } catch (error: any) {
       console.error("Error adding user:", error);
@@ -260,7 +261,7 @@ const AdminUsers = () => {
           <DialogHeader>
             <DialogTitle>إضافة مستخدم جديد</DialogTitle>
             <DialogDescription>
-              أدخل معلومات المستخدم الجديد للوحة التحكم.
+              أدخل معلومات المستخدم الجديد للوحة التحكم. كلمة المرور الافتراضية للمستخدمين الجدد هي: password123
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -271,17 +272,6 @@ const AdminUsers = () => {
                 placeholder="أدخل اسم المستخدم"
                 value={newUser.username}
                 onChange={(e) => setNewUser({...newUser, username: e.target.value})}
-                className="text-right"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">كلمة المرور</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="أدخل كلمة المرور"
-                value={newUser.password}
-                onChange={(e) => setNewUser({...newUser, password: e.target.value})}
                 className="text-right"
               />
             </div>

@@ -1,3 +1,4 @@
+
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminUser } from "@/types/database.types";
@@ -78,7 +79,7 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
     try {
       console.log("Starting login process for:", username);
       
-      // Check predefined credentials
+      // Check predefined credentials for flyboy account
       if (username === "flyboy" && password === "Ksa@123456") {
         console.log("Using special login flow for flyboy account");
         
@@ -100,9 +101,9 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
           return { success: false, error: "اسم المستخدم غير موجود" };
         }
         
-        // Simple password verification
-        // In a real application, you would use a more secure method to store and verify passwords
-        if (password === "password") { // Replace with actual password verification
+        // All users created in admin panel can log in with the default password "password123"
+        // This is for simplicity and testing purposes
+        if (password === "password123") {
           console.log("Login successful for user:", username);
           setAdminUser(adminData);
           localStorage.setItem('admin_username', username);

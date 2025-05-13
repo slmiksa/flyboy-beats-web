@@ -175,10 +175,19 @@ const AdminLoginContent = () => {
           </Form>
         </Card>
         
-        <div className="mt-6 text-center text-white">
-          <p className="text-sm">
-            اسم المستخدم: <strong>flyboy</strong> | كلمة المرور: <strong>Ksa@123456</strong>
-          </p>
+        <div className="mt-6 text-center text-white space-y-2">
+          <div>
+            <p className="text-sm font-semibold">الحساب الرئيسي:</p>
+            <p className="text-sm">
+              اسم المستخدم: <strong>flyboy</strong> | كلمة المرور: <strong>Ksa@123456</strong>
+            </p>
+          </div>
+          <div>
+            <p className="text-sm font-semibold">المستخدمين الجدد:</p>
+            <p className="text-sm">
+              كلمة المرور الافتراضية: <strong>password123</strong>
+            </p>
+          </div>
         </div>
       </div>
     </div>
