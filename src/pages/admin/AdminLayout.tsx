@@ -129,7 +129,7 @@ const AdminLayout = () => {
                   )}
                 >
                   <Home className="ml-2" size={18} />
-                  <span>{!sidebarCollapsed && "الرئيسية"}</span>
+                  <span className="md:block block">{!sidebarCollapsed && "الرئيسية"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -146,7 +146,7 @@ const AdminLayout = () => {
                   )}
                 >
                   <Image className="ml-2" size={18} />
-                  <span>{!sidebarCollapsed && "السلايدات"}</span>
+                  <span className="md:block block">{!sidebarCollapsed && "السلايدات"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -161,7 +161,7 @@ const AdminLayout = () => {
                   )}
                 >
                   <Calendar className="ml-2" size={18} />
-                  <span>{!sidebarCollapsed && "الحفلات"}</span>
+                  <span className="md:block block">{!sidebarCollapsed && "الحفلات"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -176,7 +176,7 @@ const AdminLayout = () => {
                   )}
                 >
                   <Users2 className="ml-2" size={18} />
-                  <span>{!sidebarCollapsed && "شركاء النجاح"}</span>
+                  <span className="md:block block">{!sidebarCollapsed && "شركاء النجاح"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -191,7 +191,7 @@ const AdminLayout = () => {
                   )}
                 >
                   <Info className="ml-2" size={18} />
-                  <span>{!sidebarCollapsed && "نبذة عنا"}</span>
+                  <span className="md:block block">{!sidebarCollapsed && "نبذة عنا"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -206,7 +206,7 @@ const AdminLayout = () => {
                   )}
                 >
                   <ArrowRight className="ml-2" size={18} />
-                  <span>{!sidebarCollapsed && "منصات التواصل"}</span>
+                  <span className="md:block block">{!sidebarCollapsed && "منصات التواصل"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               
@@ -224,7 +224,7 @@ const AdminLayout = () => {
                     )}
                   >
                     <Users className="ml-2" size={18} />
-                    <span>{!sidebarCollapsed && "المستخدمين"}</span>
+                    <span className="md:block block">{!sidebarCollapsed && "المستخدمين"}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               )}
@@ -237,7 +237,7 @@ const AdminLayout = () => {
               className="w-full bg-flyboy-purple hover:bg-flyboy-purple/80 text-white border border-flyboy-gold/30"
             >
               <LogOut className="ml-2 h-4 w-4" />
-              {!sidebarCollapsed && "تسجيل الخروج"}
+              {!sidebarCollapsed && <span className="md:block block">تسجيل الخروج</span>}
             </Button>
           </SidebarFooter>
         </Sidebar>
