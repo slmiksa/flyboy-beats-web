@@ -19,7 +19,8 @@ const EventsSection = () => {
       whatsapp_number: '966500000000',
       description: null,
       location: null,
-      date: null
+      date: null,
+      keywords: 'DJ Flyboy, دي جي Flyboy, Flyboy DJ سعودي, DJ حفلات خاصة, مهرجان, festival, حفلة موسيقية'
     },
     {
       title: 'Beach Party',
@@ -27,7 +28,8 @@ const EventsSection = () => {
       whatsapp_number: '966500000000',
       description: null,
       location: null,
-      date: null
+      date: null,
+      keywords: 'DJ Flyboy, دي جي Flyboy, Beach Party, حفلة شاطئية, DJ شاطئ, DJ للحفلات الشاطئية'
     },
     {
       title: 'Night Sound',
@@ -35,7 +37,8 @@ const EventsSection = () => {
       whatsapp_number: '966500000000',
       description: null,
       location: null,
-      date: null
+      date: null,
+      keywords: 'DJ Flyboy, دي جي Flyboy, Night Sound, صوت الليل, DJ ليلي, DJ حفلات ليلية, DJ سهرات'
     },
     {
       title: 'Club Mix',
@@ -43,7 +46,8 @@ const EventsSection = () => {
       whatsapp_number: '966500000000',
       description: null,
       location: null,
-      date: null
+      date: null,
+      keywords: 'DJ Flyboy, دي جي Flyboy, Club Mix, نادي, ميكس, DJ للنوادي, DJ ميكس, DJ Club, ميكس حفلات'
     }
   ];
 
@@ -85,6 +89,28 @@ const EventsSection = () => {
     setSelectedEvent(event);
     setDialogOpen(true);
   };
+
+  // Generate SEO meta tags based on event keywords if available
+  useEffect(() => {
+    if (events.length > 0) {
+      // Collect all keywords from events into one string
+      const allKeywords = events
+        .map(event => event.keywords)
+        .filter(Boolean)
+        .join(', ');
+      
+      // Create a meta tag for keywords if it doesn't exist
+      if (allKeywords) {
+        let metaKeywords = document.querySelector('meta[name="keywords"]');
+        if (!metaKeywords) {
+          metaKeywords = document.createElement('meta');
+          metaKeywords.setAttribute('name', 'keywords');
+          document.head.appendChild(metaKeywords);
+        }
+        metaKeywords.setAttribute('content', allKeywords);
+      }
+    }
+  }, [events]);
 
   return (
     <section className="py-16 bg-flyboy-dark">

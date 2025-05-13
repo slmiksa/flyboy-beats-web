@@ -27,6 +27,7 @@ export type Event = {
   image_url: string;
   description: string | null;
   whatsapp_number: string | null;
+  keywords: string | null;
   created_at: string;
   updated_at: string;
 };

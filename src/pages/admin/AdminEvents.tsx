@@ -10,6 +10,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -22,7 +23,8 @@ const AdminEvents = () => {
     location: "",
     description: "",
     whatsapp_number: "",
-    image_url: ""
+    image_url: "",
+    keywords: ""
   });
   const [uploading, setUploading] = useState(false);
   const [importingDefaults, setImportingDefaults] = useState(false);
@@ -35,7 +37,8 @@ const AdminEvents = () => {
       whatsapp_number: '966500000000',
       description: null,
       location: null,
-      date: null
+      date: null,
+      keywords: 'DJ Flyboy, دي جي Flyboy, Flyboy DJ سعودي, DJ حفلات خاصة, مهرجان, festival, حفلة موسيقية'
     },
     {
       title: 'Beach Party',
@@ -43,7 +46,8 @@ const AdminEvents = () => {
       whatsapp_number: '966500000000',
       description: null,
       location: null,
-      date: null
+      date: null,
+      keywords: 'DJ Flyboy, دي جي Flyboy, Beach Party, حفلة شاطئية, DJ شاطئ, DJ للحفلات الشاطئية'
     },
     {
       title: 'Night Sound',
@@ -51,7 +55,8 @@ const AdminEvents = () => {
       whatsapp_number: '966500000000',
       description: null,
       location: null,
-      date: null
+      date: null,
+      keywords: 'DJ Flyboy, دي جي Flyboy, Night Sound, صوت الليل, DJ ليلي, DJ حفلات ليلية, DJ سهرات'
     },
     {
       title: 'Club Mix',
@@ -59,7 +64,8 @@ const AdminEvents = () => {
       whatsapp_number: '966500000000',
       description: null,
       location: null,
-      date: null
+      date: null,
+      keywords: 'DJ Flyboy, دي جي Flyboy, Club Mix, نادي, ميكس, DJ للنوادي, DJ ميكس, DJ Club, ميكس حفلات'
     }
   ];
 
@@ -137,6 +143,7 @@ const AdminEvents = () => {
             description: formData.description,
             whatsapp_number: formData.whatsapp_number,
             image_url: formData.image_url,
+            keywords: formData.keywords,
             updated_at: new Date().toISOString()
           })
           .eq("id", currentEvent.id);
@@ -152,7 +159,8 @@ const AdminEvents = () => {
             location: formData.location || null,
             description: formData.description || null,
             whatsapp_number: formData.whatsapp_number || null,
-            image_url: formData.image_url
+            image_url: formData.image_url,
+            keywords: formData.keywords || 'DJ Flyboy, دي جي Flyboy, Flyboy DJ سعودي, DJ حفلات خاصة'
           });
         
         if (error) throw error;
@@ -176,7 +184,8 @@ const AdminEvents = () => {
       location: event.location || "",
       description: event.description || "",
       whatsapp_number: event.whatsapp_number || "",
-      image_url: event.image_url
+      image_url: event.image_url,
+      keywords: event.keywords || ""
     });
     setIsEditing(true);
     setIsSheetOpen(true);
@@ -206,6 +215,12 @@ const AdminEvents = () => {
     setIsEditing(false);
     setCurrentEvent(null);
     setIsSheetOpen(true);
+    
+    // Set default keywords for new events
+    setFormData(prev => ({
+      ...prev,
+      keywords: 'DJ Flyboy, دي جي Flyboy, Flyboy DJ سعودي, DJ حفلات خاصة, DJ للمناسبات الفاخرة'
+    }));
   };
 
   const importDefaultEvents = async () => {
@@ -235,7 +250,8 @@ const AdminEvents = () => {
       location: "",
       description: "",
       whatsapp_number: "",
-      image_url: ""
+      image_url: "",
+      keywords: ""
     });
   };
 
@@ -419,6 +435,20 @@ const AdminEvents = () => {
                 onChange={handleInputChange}
                 placeholder="966500000000"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="keywords">الكلمات المفتاحية (SEO)</Label>
+              <Textarea 
+                id="keywords"
+                name="keywords"
+                value={formData.keywords}
+                onChange={handleInputChange}
+                placeholder="DJ Flyboy, دي جي Flyboy, Flyboy DJ سعودي..."
+                rows={4}
+                className="resize-y"
+              />
+              <p className="text-sm text-muted-foreground">أدخل الكلمات المفتاحية مفصولة بفواصل لتحسين ظهور الموقع في محركات البحث</p>
             </div>
 
             <div className="flex justify-end space-x-2 rtl:space-x-reverse pt-4">
