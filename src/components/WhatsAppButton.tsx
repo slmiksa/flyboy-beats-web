@@ -25,7 +25,7 @@ const WhatsAppButton = () => {
   }, []);
 
   return (
-    <div className="fixed right-4 top-1/3 z-50 flex flex-col items-center">
+    <div className="fixed right-4 bottom-8 z-50 flex flex-col items-center">
       <button
         onClick={handleWhatsAppClick}
         className="group relative flex flex-col items-center"
