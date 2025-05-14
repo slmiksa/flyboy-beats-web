@@ -3,6 +3,7 @@ import { Instagram, Twitter, Youtube, MessageCircle, Facebook, Linkedin } from '
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from "@/integrations/supabase/client";
 import { SocialMedia } from '@/types/database.types';
+
 const SocialMediaBar = () => {
   const isMobile = useIsMobile();
   const [socialLinks, setSocialLinks] = useState<SocialMedia[]>([]);
@@ -70,18 +71,19 @@ const SocialMediaBar = () => {
   if (socialLinks.length === 0 && !isLoading) {
     return null;
   }
+  
   return <div className="bg-flyboy-dark py-6">
-      {/* Improved title with proper Arabic text display */}
+      {/* Improved title with better spacing between text and line */}
       <div className={`
-          flex justify-center items-center mb-5 
+          flex justify-center items-center mb-6
           transition-all duration-700 ease-out 
           ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}
         `}>
         <div className="relative">
-          <h2 className="text-flyboy-gold text-xl md:text-2xl font-bold tracking-wide text-center">حسابات السوشال ميديا</h2>
-          {/* Enhanced decorative elements */}
-          <div className="absolute h-[2px] bg-gradient-to-r from-transparent via-flyboy-gold to-transparent w-full bottom-0 left-0"></div>
-          <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-flyboy-gold rounded-full pulse-glow"></div>
+          <h2 className="text-flyboy-gold text-xl md:text-2xl font-bold tracking-wide text-center mb-4">حسابات السوشال ميديا</h2>
+          {/* Enhanced decorative line with better spacing */}
+          <div className="absolute h-[2px] bg-gradient-to-r from-transparent via-flyboy-gold to-transparent w-full -bottom-2 left-0"></div>
+          <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-flyboy-gold rounded-full pulse-glow"></div>
         </div>
       </div>
 
@@ -92,4 +94,5 @@ const SocialMediaBar = () => {
       </div>
     </div>;
 };
+
 export default SocialMediaBar;
