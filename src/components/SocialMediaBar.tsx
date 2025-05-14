@@ -3,7 +3,6 @@ import { Instagram, Twitter, Youtube, MessageCircle, Facebook, Linkedin } from '
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from "@/integrations/supabase/client";
 import { SocialMedia } from '@/types/database.types';
-
 const SocialMediaBar = () => {
   const isMobile = useIsMobile();
   const [socialLinks, setSocialLinks] = useState<SocialMedia[]>([]);
@@ -71,7 +70,6 @@ const SocialMediaBar = () => {
   if (socialLinks.length === 0 && !isLoading) {
     return null;
   }
-  
   return <div className="bg-flyboy-dark py-6">
       {/* Improved title with better spacing between text and line */}
       <div className={`
@@ -94,5 +92,4 @@ const SocialMediaBar = () => {
       </div>
     </div>;
 };
-
 export default SocialMediaBar;
