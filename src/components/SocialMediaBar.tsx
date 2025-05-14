@@ -44,8 +44,7 @@ const SocialMediaBar = () => {
         viewBox="0 0 24 24" 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg" 
-        className="text-snapchat"
-        style={{ filter: 'drop-shadow(0 0 1px rgba(0,0,0,0.3))' }}
+        className="text-flyboy-gold"
       >
         <path 
           d="M12 2c3.681 0 5.606 2.57 5.478 5.447-.043 1.019-.192 3.404-.192 3.553a.636.636 0 00.64.585 3.07 3.07 0 001.326-.258c.425-.192.82-.384.82-.384.276-.128.532.064.425.383-.149.384-.276.575-.405.767 0 0-.234.362-.639.67-.064.064-.128.128-.192.192-.362.319-.49.638-.426 1.022.128.575.767 1.405 1.597 1.916.404.255.83.447 1.3.575.276.064.362.362.234.575a2.36 2.36 0 01-.404.468c-.298.276-.723.511-1.17.66-.107.042-.213.17-.234.298-.64.384-.107.766-.17.957-.064.191-.276.319-.489.319a4.98 4.98 0 01-.788-.127c-.447-.107-.958-.213-1.66-.213-.256 0-.533.021-.788.064-1.5.234-2.01 1.724-4.398 1.724-2.388 0-2.92-1.511-4.397-1.724a5.95 5.95 0 00-.788-.064c-.703 0-1.192.106-1.661.213-.255.064-.532.127-.788.127a.394.394 0 01-.49-.32c-.063-.19-.105-.572-.17-.956-.021-.128-.127-.256-.233-.298-.447-.149-.873-.384-1.17-.66a2.36 2.36 0 01-.405-.468c-.128-.213-.042-.51.235-.575.468-.128.894-.32 1.298-.575.83-.51 1.47-1.34 1.598-1.916.064-.384-.064-.703-.426-1.022-.064-.064-.127-.128-.191-.192-.405-.308-.639-.67-.639-.67-.13-.192-.256-.383-.405-.766-.107-.32.149-.512.426-.384 0 0 .394.192.819.384.383.17.82.257 1.326.257.341 0 .575-.213.64-.585 0-.15-.15-2.534-.192-3.553C6.394 4.57 8.32 2 12 2z"
@@ -97,7 +96,7 @@ const SocialMediaBar = () => {
             href={link.url} 
             target="_blank" 
             rel="noreferrer noopener" 
-            className={`${iconContainerSize} rounded-full bg-flyboy-dark border-2 ${link.platform === 'snapchat' ? 'border-snapchat' : 'border-flyboy-gold border-opacity-40'} flex items-center justify-center ${link.platform === 'snapchat' ? 'hover:bg-snapchat hover:bg-opacity-10' : 'hover:border-opacity-60'} transition-all duration-300`}
+            className={`${iconContainerSize} rounded-full bg-flyboy-dark border-2 border-flyboy-gold border-opacity-40 flex items-center justify-center hover:border-opacity-60 transition-all duration-300`}
             title={link.platform}
             aria-label={`Visit our ${link.platform} page`}
           >
