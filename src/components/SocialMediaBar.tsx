@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Instagram, Twitter, Youtube, MessageCircle, Facebook, Linkedin } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -100,26 +99,19 @@ const SocialMediaBar = () => {
 
   return (
     <div className="bg-flyboy-dark py-6">
-      {/* Innovative title with animation effects */}
+      {/* Improved title with proper Arabic text display */}
       <div 
         className={`
           flex justify-center items-center mb-5 
-          transition-all duration-1000 ease-out 
+          transition-all duration-700 ease-out 
           ${titleVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}
         `}
       >
         <div className="relative">
-          <h2 className="text-flyboy-gold text-xl md:text-2xl font-bold tracking-wider">
-            <span className="inline-block animate-float opacity-90 mr-1">ح</span>
-            <span className="inline-block animate-float opacity-90 delay-75 mr-1">س</span>
-            <span className="inline-block animate-float opacity-90 delay-100 mr-1">ا</span>
-            <span className="inline-block animate-float opacity-90 delay-150 mr-1">ب</span>
-            <span className="inline-block animate-float opacity-90 delay-200 mr-1">ا</span>
-            <span className="inline-block animate-float opacity-90 delay-250 mr-1">ت</span>
-            <span className="inline-block animate-float opacity-90 delay-300 mr-2">ن</span>
-            <span className="inline-block animate-float opacity-90 delay-350 mr-1">ا</span>
+          <h2 className="text-flyboy-gold text-xl md:text-2xl font-bold tracking-wide text-center">
+            حساباتنا
           </h2>
-          {/* Decorative elements for the title */}
+          {/* Enhanced decorative elements */}
           <div className="absolute h-[2px] bg-gradient-to-r from-transparent via-flyboy-gold to-transparent w-full bottom-0 left-0"></div>
           <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-flyboy-gold rounded-full pulse-glow"></div>
         </div>
