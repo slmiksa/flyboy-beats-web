@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -71,7 +70,8 @@ export default {
 					light: '#f7f7f7',
 					accent: '#6c2e9c'
 				},
-				whatsapp: '#25D366'
+				whatsapp: '#25D366',
+				snapchat: '#FFFC00' // Add official Snapchat yellow
 			},
 			backgroundImage: {
 				'gradient-hero': 'linear-gradient(to bottom right, #4a1a6c, #1a0933)',
