@@ -77,10 +77,10 @@ const SubscribeButton = () => {
               <div className={`bg-flyboy-gold rounded-full h-14 w-14 flex items-center justify-center ${isPulsing ? 'animate-spin' : ''} transition-all duration-300`}>
                 <Mail size={28} className="text-black" />
                 
-                {/* Notification Dot */}
+                {/* Notification Dot - Changed from purple to green */}
                 <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-flyboy-purple opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-4 w-4 bg-flyboy-purple"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
                 </span>
               </div>
             </div>
