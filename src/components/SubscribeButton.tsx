@@ -80,7 +80,7 @@ const SubscribeButton = () => {
 
   return (
     <>
-      <div className="fixed right-4 bottom-28 z-50 flex flex-col items-center">
+      <div className="fixed right-4 bottom-48 z-50 flex flex-col items-center">
         <Button
           onClick={() => setIsOpen(true)}
           className={`group relative flex flex-col items-center bg-flyboy-purple hover:bg-flyboy-purple/90 text-white rounded-full p-3 shadow-lg ${isPulsing ? 'animate-pulse' : ''}`}
