@@ -22,10 +22,12 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     console.log("Received request to send-notification function");
     
-    // Get API key from environment variables
+    // Get API key directly from the environment
     const apiKey = Deno.env.get("RESEND_API_KEY");
+    console.log(`API key exists: ${!!apiKey}`);
+    
     if (!apiKey) {
-      console.error("RESEND_API_KEY environment variable is not set");
+      console.error("RESEND_API_KEY environment variable is not set or is empty");
       return new Response(
         JSON.stringify({ error: "Email service configuration error - API key missing" }),
         {
@@ -35,7 +37,8 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
     
-    console.log("API key found, initializing Resend client");
+    // Initialize Resend with the API key
+    console.log("Initializing Resend client with API key");
     const resend = new Resend(apiKey);
     
     // Parse request body
@@ -85,6 +88,7 @@ const handler = async (req: Request): Promise<Response> => {
       console.log(`Sending batch ${i / batchSize + 1} to ${batch.length} recipients`);
       
       try {
+        console.log("About to send email with Resend");
         const emailResponse = await resend.emails.send({
           from: "FLY BOY <onboarding@resend.dev>", // Using Resend's default domain for now
           bcc: batch,
