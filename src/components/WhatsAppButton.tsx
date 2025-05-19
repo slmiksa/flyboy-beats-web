@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Disc, Phone } from 'lucide-react';
+import { PhoneCall } from 'lucide-react';
 
 const WhatsAppButton = () => {
   const [isRotating, setIsRotating] = useState(false);
@@ -25,32 +25,32 @@ const WhatsAppButton = () => {
   }, []);
 
   return (
-    <div className="fixed right-4 bottom-8 z-50 flex flex-col items-center">
+    <div className="fixed right-4 top-[calc(50%+60px)] z-50 flex flex-col items-center">
       <button
         onClick={handleWhatsAppClick}
         className="group relative flex flex-col items-center"
         aria-label="تواصل معنا عبر واتساب"
       >
-        {/* DJ Turntable Design */}
+        {/* DJ Turntable Design - Made smaller to match SubscribeButton */}
         <div className="relative mb-2">
-          <div className="bg-black rounded-full h-16 w-16 flex items-center justify-center shadow-lg">
+          <div className="bg-black rounded-full h-12 w-12 flex items-center justify-center shadow-lg">
             <div 
-              className={`bg-flyboy-gold rounded-full h-14 w-14 flex items-center justify-center ${isRotating ? 'animate-spin' : ''} transition-all duration-300`}
+              className={`bg-flyboy-gold rounded-full h-10 w-10 flex items-center justify-center ${isRotating ? 'animate-spin' : ''} transition-all duration-300`}
             >
-              <div className="bg-black rounded-full h-4 w-4 absolute" />
-              <div className="bg-black rounded-full h-1 w-8 absolute transform rotate-45" />
-              <div className="bg-black rounded-full h-1 w-8 absolute transform -rotate-45" />
+              <div className="bg-black rounded-full h-3 w-3 absolute" />
+              <div className="bg-black rounded-full h-1 w-6 absolute transform rotate-45" />
+              <div className="bg-black rounded-full h-1 w-6 absolute transform -rotate-45" />
             </div>
           </div>
           
-          {/* WhatsApp Icon */}
-          <div className="absolute -bottom-2 -right-2 bg-whatsapp rounded-full p-2 shadow-lg pulse-glow">
-            <Phone size={14} className="text-white" />
+          {/* WhatsApp Icon - Made smaller */}
+          <div className="absolute -top-1 -right-1 bg-whatsapp rounded-full p-1.5 shadow-lg pulse-glow">
+            <PhoneCall size={12} className="text-white" />
           </div>
         </div>
         
-        {/* Button Text */}
-        <div className="bg-flyboy-gold text-black text-xs font-bold py-1 px-3 rounded-full shadow-lg transform transition-transform duration-300 group-hover:scale-110">
+        {/* Button Text - Made smaller */}
+        <div className="bg-flyboy-gold text-black text-[10px] font-bold py-1 px-2 rounded-full shadow-lg transform transition-transform duration-300 group-hover:scale-110">
           إدارة أعمالي
         </div>
         
