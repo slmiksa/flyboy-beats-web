@@ -31,10 +31,12 @@ const AdminSubscribers = () => {
   const [emailContent, setEmailContent] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [filteredSubscribers, setFilteredSubscribers] = useState<Subscriber[]>([]);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   const fetchSubscribers = useCallback(async () => {
     try {
       setLoading(true);
+      setFetchError(null);
       
       console.log("Fetching subscribers...");
       const { data, error } = await supabase
@@ -44,6 +46,7 @@ const AdminSubscribers = () => {
 
       if (error) {
         console.error("Supabase error fetching subscribers:", error);
+        setFetchError(`Error: ${error.message}`);
         throw error;
       }
       
@@ -311,19 +314,20 @@ const AdminSubscribers = () => {
               <Loader2 className="animate-spin text-flyboy-gold" size={32} />
             </div>
           ) : filteredSubscribers.length === 0 ? (
-            <div className="text-center py-8">
+            <div className="text-center py-8 space-y-2">
               <p>لا يوجد مشتركين {searchQuery ? "مطابقين لبحثك" : ""}</p>
-              {subscribers.length === 0 && (
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-2"
-                  onClick={fetchSubscribers}
-                >
-                  <Loader2 className="mr-2 h-4 w-4" />
-                  إعادة تحميل البيانات
-                </Button>
+              {fetchError && (
+                <p className="text-red-500 text-sm">{fetchError}</p>
               )}
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="mt-2"
+                onClick={fetchSubscribers}
+              >
+                <Loader2 className="mr-2 h-4 w-4" />
+                إعادة تحميل البيانات
+              </Button>
             </div>
           ) : (
             <div className="rounded-md border">
