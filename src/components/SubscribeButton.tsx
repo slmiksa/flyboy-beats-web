@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Mail, X, Send, Loader2, Music, Disc } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,9 +7,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
+
 const emailSchema = z.string().email({
   message: 'يرجى إدخال بريد إلكتروني صالح'
 });
+
 const SubscribeButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
@@ -26,6 +29,7 @@ const SubscribeButton = () => {
     }, 10000);
     return () => clearInterval(interval);
   }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -68,45 +72,44 @@ const SubscribeButton = () => {
       setIsSubmitting(false);
     }
   };
-  return <>
+
+  return (
+    <>
       <div className="fixed right-4 bottom-48 z-50 flex flex-col items-center">
-        <Button onClick={() => setIsOpen(true)} className={`group relative flex flex-col items-center bg-flyboy-purple hover:bg-flyboy-purple/90 text-white rounded-full p-3 shadow-lg ${isPulsing ? 'animate-pulse' : ''}`} aria-label="اشترك في الإشعارات" size="icon">
-          {/* Mail Icon with Animation */}
-          <div className="relative">
-            <Mail size={28} className={`text-flyboy-gold ${isPulsing ? 'animate-bounce' : ''}`} />
-            <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-flyboy-gold opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-4 w-4 bg-flyboy-gold"></span>
-            </span>
+        <button
+          onClick={() => setIsOpen(true)}
+          className="group relative flex flex-col items-center"
+          aria-label="اشترك في الإشعارات"
+        >
+          {/* DJ Turntable/Disc Design for Subscribe Button */}
+          <div className="relative mb-2">
+            <div className="bg-black rounded-full h-16 w-16 flex items-center justify-center shadow-lg">
+              <div 
+                className={`bg-flyboy-gold rounded-full h-14 w-14 flex items-center justify-center ${isPulsing ? 'animate-spin' : ''} transition-all duration-300`}
+              >
+                <Mail size={28} className="text-black" />
+                
+                {/* Notification Dot */}
+                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-flyboy-purple opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-4 w-4 bg-flyboy-purple"></span>
+                </span>
+              </div>
+            </div>
           </div>
           
-          {/* Label that appears on hover */}
-          <span className="absolute -bottom-20 opacity-0 group-hover:opacity-100 transition-opacity bg-flyboy-gold text-black text-sm font-bold rounded-full shadow-lg whitespace-nowrap flex flex-col items-center px-[13px] py-[6px] mx-0 my-[15px]">
-            <span>نابع حفلاتي</span>
-            <div className="flex gap-1 mt-1">
-              <Disc size={12} className="text-black animate-spin" />
-              <Disc size={12} className="text-black animate-spin" style={{
-              animationDuration: '3s'
-            }} />
-              <Disc size={12} className="text-black animate-spin" style={{
-              animationDuration: '2s'
-            }} />
-            </div>
-          </span>
-        </Button>
-        
-        {/* Animated equalizer bars */}
-        <div className="mt-2 flex space-x-1 rtl:space-x-reverse">
-          <div className="equalizer-bar h-3 w-1 bg-flyboy-gold"></div>
-          <div className="equalizer-bar h-5 w-1 bg-flyboy-gold"></div>
-          <div className="equalizer-bar h-2 w-1 bg-flyboy-gold"></div>
+          {/* Button Text */}
+          <div className="bg-flyboy-gold text-black text-xs font-bold py-1 px-3 rounded-full shadow-lg transform transition-transform duration-300 group-hover:scale-110">
+            نابع حفلاتي
+          </div>
           
-        </div>
-        
-        {/* نابع حفلاتي text below the button */}
-        <div className="mt-3 text-flyboy-gold font-bold text-center text-sm glow-text">
-          نابع حفلاتي
-        </div>
+          {/* Equalizer Effect */}
+          <div className="equalizer-container mt-1">
+            <div className="equalizer-bar"></div>
+            <div className="equalizer-bar"></div>
+            <div className="equalizer-bar"></div>
+          </div>
+        </button>
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -141,6 +144,8 @@ const SubscribeButton = () => {
           </form>
         </DialogContent>
       </Dialog>
-    </>;
+    </>
+  );
 };
+
 export default SubscribeButton;
