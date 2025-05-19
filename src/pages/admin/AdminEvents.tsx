@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -216,7 +216,17 @@ const AdminEvents = () => {
 
   const handleSendEmail = async () => {
     try {
-      setIsSendingEmail(true);
+      setIsSending(true);
+      
+      if (!emailSubject.trim()) {
+        toast.error("يرجى إدخال عنوان للرسالة");
+        return;
+      }
+      
+      if (!emailContent.trim()) {
+        toast.error("يرجى إدخال محتوى الرسالة");
+        return;
+      }
       
       // Get all active subscribers
       const { data: subscribers, error: fetchError } = await supabase
@@ -224,21 +234,27 @@ const AdminEvents = () => {
         .select("email")
         .eq("is_active", true);
       
-      if (fetchError) throw fetchError;
+      if (fetchError) {
+        console.error("Error fetching subscribers:", fetchError);
+        throw fetchError;
+      }
       
       if (!subscribers || subscribers.length === 0) {
         toast.error("لا يوجد مشتركين نشطين");
+        setIsSending(false);
         return;
       }
       
-      console.log("Sending notification to subscribers:", subscribers.length);
+      const emails = subscribers.map(s => s.email);
+      
+      console.log("Sending notification to subscribers:", emails.length);
       console.log("Email subject:", emailSubject);
       console.log("Email content preview:", emailContent.substring(0, 100) + "...");
       
       // Send email notification through edge function
       const { data, error } = await supabase.functions.invoke("send-notification", {
         body: {
-          emails: subscribers.map(s => s.email),
+          emails: emails,
           subject: emailSubject,
           html: emailContent
         }
@@ -259,9 +275,9 @@ const AdminEvents = () => {
       fetchEvents();
     } catch (error: any) {
       console.error("Error sending email notification:", error);
-      toast.error(`حدث خطأ أثناء إرسال الإشعارات: ${error.message}`);
+      toast.error(`حدث خطأ أثناء إرسال الإشعارات: ${error.message || "خطأ غير معروف"}`);
     } finally {
-      setIsSendingEmail(false);
+      setIsSending(false);
     }
   };
 

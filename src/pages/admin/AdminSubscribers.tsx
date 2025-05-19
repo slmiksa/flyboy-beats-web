@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -36,13 +35,18 @@ const AdminSubscribers = () => {
     try {
       setLoading(true);
       
+      console.log("Fetching subscribers...");
       const { data, error } = await supabase
         .from("email_subscribers")
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error fetching subscribers:", error);
+        throw error;
+      }
       
+      console.log("Subscribers fetched:", data ? data.length : 0);
       setSubscribers(data || []);
     } catch (error) {
       console.error("Error fetching subscribers:", error);
@@ -204,7 +208,7 @@ const AdminSubscribers = () => {
       
       console.log("Sending email to:", selectedEmails);
       console.log("Email subject:", emailSubject);
-      console.log("Email content:", emailContent);
+      console.log("Email content length:", emailContent.length);
       
       const { data, error } = await supabase.functions.invoke("send-notification", {
         body: {
@@ -225,9 +229,9 @@ const AdminSubscribers = () => {
       setIsMailDialogOpen(false);
       setEmailSubject("");
       setEmailContent("");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending email:", error);
-      toast.error("فشل في إرسال البريد الإلكتروني");
+      toast.error(`فشل في إرسال البريد الإلكتروني: ${error.message || "خطأ غير معروف"}`);
     } finally {
       setIsSending(false);
     }

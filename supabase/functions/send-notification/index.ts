@@ -2,8 +2,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -23,9 +21,28 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     console.log("Received request to send-notification function");
-    const { emails, subject, html } = await req.json() as EmailRequest;
     
-    console.log(`Request data: ${emails.length} recipients, subject: ${subject}`);
+    // Get API key from environment variables
+    const apiKey = Deno.env.get("RESEND_API_KEY");
+    if (!apiKey) {
+      console.error("RESEND_API_KEY environment variable is not set");
+      return new Response(
+        JSON.stringify({ error: "Email service configuration error - API key missing" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+    
+    console.log(`Using Resend API key: ${apiKey.substring(0, 5)}...`);
+    const resend = new Resend(apiKey);
+    
+    // Parse request body
+    const requestData = await req.json() as EmailRequest;
+    const { emails, subject, html } = requestData;
+    
+    console.log(`Request data: ${emails?.length || 0} recipients, subject: ${subject}`);
 
     if (!emails || emails.length === 0) {
       return new Response(
@@ -37,34 +54,39 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Verify Resend API key is loaded
-    const apiKey = Deno.env.get("RESEND_API_KEY");
-    if (!apiKey) {
-      console.error("RESEND_API_KEY environment variable is not set");
+    if (!subject) {
       return new Response(
-        JSON.stringify({ error: "Email service configuration error" }),
+        JSON.stringify({ error: "Subject is required" }),
         {
-          status: 500,
+          status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         }
       );
     }
-    
-    console.log(`Using Resend API key: ${apiKey.substring(0, 5)}...`);
 
-    // Send to each email in batches of 50 to prevent timeouts
-    const batchSize = 50;
+    if (!html) {
+      return new Response(
+        JSON.stringify({ error: "Email content (html) is required" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Send to each email in batches of 25 to prevent timeouts
+    const batchSize = 25;
     const results = [];
+    const errors = [];
 
     for (let i = 0; i < emails.length; i += batchSize) {
       const batch = emails.slice(i, i + batchSize);
       
       console.log(`Sending batch ${i / batchSize + 1} to ${batch.length} recipients`);
       
-      // Use BCC to hide other recipients' emails
       try {
         const emailResponse = await resend.emails.send({
-          from: "FLY BOY <info@flyboy.com>", // Update with your verified domain
+          from: "FLY BOY <info@flyboy.com>", // Should be a verified domain in production
           bcc: batch,
           subject,
           html,
@@ -74,12 +96,30 @@ const handler = async (req: Request): Promise<Response> => {
         console.log(`Sent batch ${i / batchSize + 1} successfully, response:`, emailResponse);
       } catch (error) {
         console.error(`Error sending batch ${i / batchSize + 1}:`, error);
-        throw error;
+        errors.push({
+          batch: i / batchSize + 1, 
+          error: error instanceof Error ? error.message : String(error)
+        });
       }
     }
 
+    if (errors.length > 0 && results.length === 0) {
+      // All batches failed
+      return new Response(
+        JSON.stringify({ error: "Failed to send all emails", details: errors }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
     return new Response(
-      JSON.stringify({ message: "Emails sent successfully", results }),
+      JSON.stringify({ 
+        message: `Emails sent successfully: ${results.length * batchSize} of ${emails.length}`,
+        results,
+        errors: errors.length > 0 ? errors : undefined
+      }),
       {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -88,7 +128,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in send-notification function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error.message || "Unknown error occurred" }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Mail, X, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -40,17 +39,24 @@ const SubscribeButton = () => {
       // Validate email
       emailSchema.parse(email);
       
+      console.log("Attempting to subscribe email:", email);
+      
       // Save email to database
-      const { error: dbError } = await supabase
+      const { data, error: dbError } = await supabase
         .from('email_subscribers')
-        .insert({ email });
+        .insert([{ email }])
+        .select();
       
       if (dbError) {
+        console.error("Error inserting subscriber:", dbError);
+        
         if (dbError.code === '23505') { // Unique violation
           throw new Error('أنت مشترك بالفعل في القائمة البريدية');
         }
         throw new Error(dbError.message);
       }
+      
+      console.log("Subscriber added successfully:", data);
       
       toast.success('تم الاشتراك بنجاح!', {
         description: 'سيتم إشعارك بأحدث الفعاليات والحفلات'
@@ -59,6 +65,8 @@ const SubscribeButton = () => {
       setIsOpen(false);
       setEmail('');
     } catch (err: any) {
+      console.error("Error in subscription:", err);
+      
       if (err instanceof z.ZodError) {
         setError('يرجى إدخال بريد إلكتروني صالح');
       } else {
