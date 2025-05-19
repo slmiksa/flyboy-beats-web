@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Mail, X, Send, Loader2, Music, Disc } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,9 +7,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
+
 const emailSchema = z.string().email({
   message: 'يرجى إدخال بريد إلكتروني صالح'
 });
+
 const SubscribeButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
@@ -26,6 +29,7 @@ const SubscribeButton = () => {
     }, 10000);
     return () => clearInterval(interval);
   }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -68,28 +72,30 @@ const SubscribeButton = () => {
       setIsSubmitting(false);
     }
   };
+
   return <>
-      <div className="fixed right-4 bottom-48 z-50 flex flex-col items-center">
+      {/* Moved to middle of right side and made smaller */}
+      <div className="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center">
         <button onClick={() => setIsOpen(true)} className="group relative flex flex-col items-center" aria-label="اشترك في الإشعارات">
-          {/* DJ Turntable/Disc Design for Subscribe Button */}
+          {/* DJ Turntable/Disc Design for Subscribe Button - Made smaller */}
           <div className="relative mb-2">
-            <div className="bg-black rounded-full h-16 w-16 flex items-center justify-center shadow-lg">
-              <div className={`bg-flyboy-gold rounded-full h-14 w-14 flex items-center justify-center ${isPulsing ? 'animate-spin' : ''} transition-all duration-300`}>
-                <Mail size={28} className="text-black" />
+            <div className="bg-black rounded-full h-12 w-12 flex items-center justify-center shadow-lg">
+              <div className={`bg-flyboy-gold rounded-full h-10 w-10 flex items-center justify-center ${isPulsing ? 'animate-spin' : ''} transition-all duration-300`}>
+                <Mail size={20} className="text-black" />
                 
                 {/* Notification Dot - Changed from purple to green */}
-                <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center">
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
                 </span>
               </div>
             </div>
           </div>
           
-          {/* Button Text */}
-          <div className="bg-flyboy-gold text-black text-xs font-bold py-1 px-3 rounded-full shadow-lg transform transition-transform duration-300 group-hover:scale-110">تابع حفلاتي</div>
+          {/* Button Text - Made smaller */}
+          <div className="bg-flyboy-gold text-black text-[10px] font-bold py-1 px-2 rounded-full shadow-lg transform transition-transform duration-300 group-hover:scale-110">تابع حفلاتي</div>
           
-          {/* Equalizer Effect */}
+          {/* Equalizer Effect - Made smaller */}
           <div className="equalizer-container mt-1">
             <div className="equalizer-bar"></div>
             <div className="equalizer-bar"></div>
@@ -132,4 +138,5 @@ const SubscribeButton = () => {
       </Dialog>
     </>;
 };
+
 export default SubscribeButton;
