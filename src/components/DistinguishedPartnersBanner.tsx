@@ -91,7 +91,7 @@ const DistinguishedPartnersBanner = () => {
         </div>
         
         <Button asChild variant="secondary" className="mt-2 text-sm font-medium">
-          <Link to="/distinguished-partners">
+          <Link to="/partners/distinguished">
             مشاهدة الكل
           </Link>
         </Button>

@@ -70,7 +70,7 @@ const SuccessPartnersBanner = () => {
         </div>
         
         <Button asChild variant="secondary" className="mt-2 text-sm font-medium">
-          <Link to="/all-partners">
+          <Link to="/partners">
             مشاهدة الكل
           </Link>
         </Button>

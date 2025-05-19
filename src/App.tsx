@@ -72,6 +72,7 @@ function App() {
               <Route path="/about" element={<Layout><About /><SubscribeButton /><WhatsAppButton /></Layout>} />
               <Route path="/partners" element={<Layout><AllPartners /><SubscribeButton /><WhatsAppButton /></Layout>} />
               <Route path="/partners/distinguished" element={<Layout><DistinguishedPartners /><SubscribeButton /><WhatsAppButton /></Layout>} />
+              <Route path="/distinguished-partners" element={<Navigate to="/partners/distinguished" replace />} />
               
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
