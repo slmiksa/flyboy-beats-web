@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -216,7 +217,7 @@ const AdminEvents = () => {
 
   const handleSendEmail = async () => {
     try {
-      setIsSending(true);
+      setIsSendingEmail(true);
       
       if (!emailSubject.trim()) {
         toast.error("يرجى إدخال عنوان للرسالة");
@@ -241,7 +242,7 @@ const AdminEvents = () => {
       
       if (!subscribers || subscribers.length === 0) {
         toast.error("لا يوجد مشتركين نشطين");
-        setIsSending(false);
+        setIsSendingEmail(false);
         return;
       }
       
@@ -277,7 +278,7 @@ const AdminEvents = () => {
       console.error("Error sending email notification:", error);
       toast.error(`حدث خطأ أثناء إرسال الإشعارات: ${error.message || "خطأ غير معروف"}`);
     } finally {
-      setIsSending(false);
+      setIsSendingEmail(false);
     }
   };
 
