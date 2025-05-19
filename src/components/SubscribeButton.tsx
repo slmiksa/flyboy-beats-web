@@ -80,7 +80,7 @@ const SubscribeButton = () => {
           {/* DJ Turntable/Disc Design for Subscribe Button - Made smaller */}
           <div className="relative mb-2">
             <div className="bg-black rounded-full h-12 w-12 flex items-center justify-center shadow-lg">
-              <div className={`bg-flyboy-gold rounded-full h-10 w-10 flex items-center justify-center ${isPulsing ? 'animate-spin' : ''} transition-all duration-300`}>
+              <div className={`bg-flyboy-gold rounded-full h-10 w-10 flex items-center justify-center transition-all duration-300`}>
                 <Mail size={20} className="text-black" />
                 
                 {/* Notification Dot - Changed from purple to green */}
