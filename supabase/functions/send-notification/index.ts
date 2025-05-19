@@ -80,8 +80,9 @@ const handler = async (req: Request): Promise<Response> => {
     const results = [];
     const errors = [];
 
-    // Using flyboysite@gmail.com as the primary recipient since it's the only allowed recipient with test API key
-    const primaryRecipient = "flyboysite@gmail.com";
+    // Using verified domain for sending
+    const fromEmail = "FLY BOY <info@mail.flyboydj.com>";
+    console.log(`Sending with verified from address: ${fromEmail}`);
 
     for (let i = 0; i < emails.length; i += batchSize) {
       const batch = emails.slice(i, i + batchSize);
@@ -91,9 +92,8 @@ const handler = async (req: Request): Promise<Response> => {
       try {
         console.log("About to send email with Resend");
         const emailResponse = await resend.emails.send({
-          from: "FLY BOY <onboarding@resend.dev>",
-          to: [primaryRecipient], // Using the account email as primary recipient
-          bcc: batch,
+          from: fromEmail,
+          to: batch, // Send directly to recipients now that we have a verified domain
           subject,
           html,
         });
@@ -104,7 +104,8 @@ const handler = async (req: Request): Promise<Response> => {
         console.error(`Error sending batch ${i / batchSize + 1}:`, error);
         errors.push({
           batch: i / batchSize + 1, 
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
+          recipients: batch
         });
       }
     }
