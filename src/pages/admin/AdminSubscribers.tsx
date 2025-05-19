@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Loader2, Search, Trash2, Download, Upload, Send, FileSpreadsheet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -202,7 +202,11 @@ const AdminSubscribers = () => {
     try {
       setIsSending(true);
       
-      const { error } = await supabase.functions.invoke("send-notification", {
+      console.log("Sending email to:", selectedEmails);
+      console.log("Email subject:", emailSubject);
+      console.log("Email content:", emailContent);
+      
+      const { data, error } = await supabase.functions.invoke("send-notification", {
         body: {
           emails: selectedEmails,
           subject: emailSubject,
@@ -210,7 +214,12 @@ const AdminSubscribers = () => {
         }
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error from function:", error);
+        throw error;
+      }
+      
+      console.log("Response from email function:", data);
       
       toast.success(`تم إرسال البريد الإلكتروني إلى ${selectedEmails.length} مشترك`);
       setIsMailDialogOpen(false);
@@ -367,6 +376,7 @@ const AdminSubscribers = () => {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle className="text-center mb-4">إرسال بريد إلكتروني للمشتركين</DialogTitle>
+            <DialogDescription>أدخل تفاصيل الرسالة أدناه لإرسالها إلى المشتركين المحددين</DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">

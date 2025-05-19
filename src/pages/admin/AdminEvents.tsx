@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -232,8 +231,12 @@ const AdminEvents = () => {
         return;
       }
       
+      console.log("Sending notification to subscribers:", subscribers.length);
+      console.log("Email subject:", emailSubject);
+      console.log("Email content preview:", emailContent.substring(0, 100) + "...");
+      
       // Send email notification through edge function
-      const { error } = await supabase.functions.invoke("send-notification", {
+      const { data, error } = await supabase.functions.invoke("send-notification", {
         body: {
           emails: subscribers.map(s => s.email),
           subject: emailSubject,
@@ -241,7 +244,12 @@ const AdminEvents = () => {
         }
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error from function:", error);
+        throw error;
+      }
+      
+      console.log("Response from email function:", data);
       
       toast.success(`تم إرسال الإشعار بنجاح إلى ${subscribers.length} مشترك`);
       setIsEmailDialogOpen(false);

@@ -22,7 +22,10 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    console.log("Received request to send-notification function");
     const { emails, subject, html } = await req.json() as EmailRequest;
+    
+    console.log(`Request data: ${emails.length} recipients, subject: ${subject}`);
 
     if (!emails || emails.length === 0) {
       return new Response(
@@ -34,6 +37,21 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // Verify Resend API key is loaded
+    const apiKey = Deno.env.get("RESEND_API_KEY");
+    if (!apiKey) {
+      console.error("RESEND_API_KEY environment variable is not set");
+      return new Response(
+        JSON.stringify({ error: "Email service configuration error" }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+    
+    console.log(`Using Resend API key: ${apiKey.substring(0, 5)}...`);
+
     // Send to each email in batches of 50 to prevent timeouts
     const batchSize = 50;
     const results = [];
@@ -41,16 +59,23 @@ const handler = async (req: Request): Promise<Response> => {
     for (let i = 0; i < emails.length; i += batchSize) {
       const batch = emails.slice(i, i + batchSize);
       
-      // Use BCC to hide other recipients' emails
-      const emailResponse = await resend.emails.send({
-        from: "FLY BOY <info@flyboy.com>", // Update with your verified domain
-        bcc: batch,
-        subject,
-        html,
-      });
+      console.log(`Sending batch ${i / batchSize + 1} to ${batch.length} recipients`);
       
-      results.push(emailResponse);
-      console.log(`Sent batch ${i / batchSize + 1} to ${batch.length} recipients`);
+      // Use BCC to hide other recipients' emails
+      try {
+        const emailResponse = await resend.emails.send({
+          from: "FLY BOY <info@flyboy.com>", // Update with your verified domain
+          bcc: batch,
+          subject,
+          html,
+        });
+        
+        results.push(emailResponse);
+        console.log(`Sent batch ${i / batchSize + 1} successfully, response:`, emailResponse);
+      } catch (error) {
+        console.error(`Error sending batch ${i / batchSize + 1}:`, error);
+        throw error;
+      }
     }
 
     return new Response(
@@ -66,7 +91,7 @@ const handler = async (req: Request): Promise<Response> => {
       JSON.stringify({ error: error.message }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
   }
