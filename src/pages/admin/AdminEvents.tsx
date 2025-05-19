@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Pencil, Trash2, Loader2, Info } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, Info, Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Event } from "@/types/database.types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -13,6 +13,9 @@ import { toast } from "@/components/ui/sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -29,6 +32,13 @@ const AdminEvents = () => {
     keywords: ""
   });
   const [uploading, setUploading] = useState(false);
+  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [emailSubject, setEmailSubject] = useState("");
+  const [emailContent, setEmailContent] = useState("");
+  const [showSuccessPrompt, setShowSuccessPrompt] = useState(false);
+  const [shouldSendEmail, setShouldSendEmail] = useState(false);
+  const [subscribersCount, setSubscribersCount] = useState(0);
 
   // Fetch events data
   const fetchEvents = async () => {
@@ -49,8 +59,23 @@ const AdminEvents = () => {
     }
   };
 
+  // Get subscriber count
+  const fetchSubscribersCount = async () => {
+    try {
+      const { count, error } = await supabase
+        .from("email_subscribers")
+        .select("*", { count: 'exact', head: true });
+        
+      if (error) throw error;
+      setSubscribersCount(count || 0);
+    } catch (error) {
+      console.error("Error fetching subscribers count:", error);
+    }
+  };
+
   useEffect(() => {
     fetchEvents();
+    fetchSubscribersCount();
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -111,9 +136,12 @@ const AdminEvents = () => {
         
         if (error) throw error;
         toast.success("تم تحديث الحفلة بنجاح");
+        setIsSheetOpen(false);
+        resetForm();
+        fetchEvents();
       } else {
         // Create new event
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from("events")
           .insert({
             title: formData.title,
@@ -122,19 +150,110 @@ const AdminEvents = () => {
             whatsapp_number: formData.whatsapp_number || null,
             image_url: formData.image_url,
             keywords: formData.keywords || 'DJ Flyboy, دي جي Flyboy, Flyboy DJ سعودي, DJ حفلات خاصة'
-          });
+          })
+          .select();
         
         if (error) throw error;
-        toast.success("تم إضافة الحفلة بنجاح");
+        
+        if (shouldSendEmail && subscribersCount > 0) {
+          setShowSuccessPrompt(true);
+          prepareEventEmail(data?.[0]);
+        } else {
+          toast.success("تم إضافة الحفلة بنجاح");
+          setIsSheetOpen(false);
+          resetForm();
+          fetchEvents();
+        }
       }
-      
-      // Reset and close
-      setIsSheetOpen(false);
-      resetForm();
-      fetchEvents();
     } catch (error) {
       console.error("Error saving event:", error);
       toast.error("فشل في حفظ الحفلة");
+    }
+  };
+
+  const prepareEventEmail = (event: Event) => {
+    if (!event) return;
+    
+    // Set default email content
+    setEmailSubject(`حفلة جديدة: ${event.title}`);
+    
+    // Create HTML email with event details
+    const htmlContent = `
+      <div dir="rtl" style="font-family: Arial, sans-serif; text-align: right; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #1e0b39; margin-bottom: 20px;">حفلة جديدة: ${event.title}</h1>
+        
+        <div style="margin-bottom: 20px;">
+          <img src="${event.image_url}" alt="${event.title}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px;"/>
+        </div>
+        
+        ${event.description ? `<p style="font-size: 16px; line-height: 1.6; margin-bottom: 16px;">${event.description}</p>` : ''}
+        
+        ${event.location ? `
+        <p style="margin-bottom: 8px; font-size: 14px;">
+          <strong>الموقع:</strong> ${event.location}
+        </p>
+        ` : ''}
+        
+        <div style="background-color: #f5f5f5; padding: 16px; border-radius: 8px; margin-top: 24px;">
+          <p style="margin: 0; font-size: 14px;">للتواصل والحجز:</p>
+          ${event.whatsapp_number ? `
+          <a href="https://wa.me/${event.whatsapp_number}" style="display: inline-block; background-color: #25D366; color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; margin-top: 8px;">
+            تواصل عبر الواتساب
+          </a>
+          ` : ''}
+        </div>
+        
+        <div style="margin-top: 32px; border-top: 1px solid #eee; padding-top: 16px;">
+          <p style="font-size: 12px; color: #777;">
+            تم إرسال هذا البريد الإلكتروني لأنك مشترك في قائمة FLY BOY البريدية.
+          </p>
+        </div>
+      </div>
+    `;
+    
+    setEmailContent(htmlContent);
+    setIsEmailDialogOpen(true);
+  };
+
+  const handleSendEmail = async () => {
+    try {
+      setIsSendingEmail(true);
+      
+      // Get all active subscribers
+      const { data: subscribers, error: fetchError } = await supabase
+        .from("email_subscribers")
+        .select("email")
+        .eq("is_active", true);
+      
+      if (fetchError) throw fetchError;
+      
+      if (!subscribers || subscribers.length === 0) {
+        toast.error("لا يوجد مشتركين نشطين");
+        return;
+      }
+      
+      // Send email notification through edge function
+      const { error } = await supabase.functions.invoke("send-notification", {
+        body: {
+          emails: subscribers.map(s => s.email),
+          subject: emailSubject,
+          html: emailContent
+        }
+      });
+      
+      if (error) throw error;
+      
+      toast.success(`تم إرسال الإشعار بنجاح إلى ${subscribers.length} مشترك`);
+      setIsEmailDialogOpen(false);
+      setIsSheetOpen(false);
+      setShowSuccessPrompt(false);
+      resetForm();
+      fetchEvents();
+    } catch (error: any) {
+      console.error("Error sending email notification:", error);
+      toast.error(`حدث خطأ أثناء إرسال الإشعارات: ${error.message}`);
+    } finally {
+      setIsSendingEmail(false);
     }
   };
 
@@ -175,6 +294,7 @@ const AdminEvents = () => {
     resetForm();
     setIsEditing(false);
     setCurrentEvent(null);
+    setShouldSendEmail(true);
     setIsSheetOpen(true);
     
     // Set default keywords for new events
@@ -193,6 +313,11 @@ const AdminEvents = () => {
       image_url: "",
       keywords: ""
     });
+    setShouldSendEmail(false);
+  };
+
+  const handleNotifySubscribers = (event: Event) => {
+    prepareEventEmail(event);
   };
 
   // Helper function to truncate text
@@ -288,6 +413,15 @@ const AdminEvents = () => {
                           onClick={() => handleEdit(event)}
                         >
                           <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => handleNotifySubscribers(event)}
+                          disabled={subscribersCount === 0}
+                          title={subscribersCount === 0 ? "لا يوجد مشتركون" : "إرسال إشعار للمشتركين"}
+                        >
+                          <Mail className="h-4 w-4" />
                         </Button>
                         <Button 
                           variant="destructive" 
@@ -414,6 +548,23 @@ const AdminEvents = () => {
               <p className="text-sm text-muted-foreground">أدخل الكلمات المفتاحية مفصولة بفواصل لتحسين ظهور الموقع في محركات البحث</p>
             </div>
 
+            {!isEditing && (
+              <div className="flex items-center space-x-2 rtl:space-x-reverse">
+                <Switch
+                  id="send-email"
+                  checked={shouldSendEmail}
+                  onCheckedChange={setShouldSendEmail}
+                  disabled={subscribersCount === 0}
+                />
+                <div className="space-y-0.5">
+                  <Label htmlFor="send-email">إرسال إشعار للمشتركين</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {subscribersCount > 0 ? `سيتم إرسال إشعار إلى ${subscribersCount} مشترك` : "لا يوجد مشتركون حالياً"}
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-end space-x-2 rtl:space-x-reverse pt-4">
               <Button 
                 type="button" 
@@ -432,6 +583,88 @@ const AdminEvents = () => {
           </form>
         </SheetContent>
       </Sheet>
+
+      <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
+        <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl">إرسال إشعار للمشتركين</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="email-subject">عنوان الرسالة</Label>
+              <Input 
+                id="email-subject"
+                value={emailSubject}
+                onChange={(e) => setEmailSubject(e.target.value)}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="email-content">محتوى الرسالة (HTML)</Label>
+                <Badge variant="outline">HTML</Badge>
+              </div>
+              <Textarea 
+                id="email-content"
+                value={emailContent}
+                onChange={(e) => setEmailContent(e.target.value)}
+                rows={12}
+                className="font-mono text-xs"
+              />
+            </div>
+            
+            <div className="border rounded-md p-4">
+              <h3 className="font-medium mb-2">معاينة الرسالة:</h3>
+              <div className="bg-white rounded-md p-4 h-[300px] overflow-auto">
+                <div dangerouslySetInnerHTML={{ __html: emailContent }} />
+              </div>
+            </div>
+            
+            <div className="bg-muted p-3 rounded-md">
+              <p className="text-sm">
+                سيتم إرسال هذا الإشعار إلى {subscribersCount} مشترك
+              </p>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                if (showSuccessPrompt) {
+                  setIsEmailDialogOpen(false);
+                  setIsSheetOpen(false);
+                  setShowSuccessPrompt(false);
+                  resetForm();
+                  fetchEvents();
+                } else {
+                  setIsEmailDialogOpen(false);
+                }
+              }}
+              disabled={isSendingEmail}
+            >
+              {showSuccessPrompt ? 'تخطي الإرسال' : 'إلغاء'}
+            </Button>
+            <Button 
+              onClick={handleSendEmail}
+              disabled={isSendingEmail}
+            >
+              {isSendingEmail ? (
+                <>
+                  <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                  جاري الإرسال...
+                </>
+              ) : (
+                <>
+                  <Mail className="ml-2 h-4 w-4" />
+                  إرسال الإشعار
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -1,64 +1,99 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Index from "./pages/Index";
-import About from "./pages/About";
-import NotFound from "./pages/NotFound";
-import Layout from "./components/Layout";
-import DistinguishedPartners from "./pages/DistinguishedPartners";
-import AllPartners from "./pages/AllPartners";
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminLayout from "./pages/admin/AdminLayout";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminSlides from "./pages/admin/AdminSlides";
-import AdminEvents from "./pages/admin/AdminEvents";
-import AdminPartners from "./pages/admin/AdminPartners";
-import AdminAbout from "./pages/admin/AdminAbout";
-import AdminUsers from "./pages/admin/AdminUsers";
-import AdminSocialMedia from "./pages/admin/AdminSocialMedia";
-import AdminMaintenance from "./pages/admin/AdminMaintenance";
-import { AdminAuthProvider } from "./contexts/AdminAuthContext";
-import { SiteSettingsProvider } from "./contexts/SiteSettingsContext";
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Index from '@/pages/Index';
+import About from '@/pages/About';
+import NotFound from '@/pages/NotFound';
+import AllPartners from '@/pages/AllPartners';
+import DistinguishedPartners from '@/pages/DistinguishedPartners';
+import AdminLogin from '@/pages/admin/AdminLogin';
+import AdminLayout from '@/pages/admin/AdminLayout';
+import AdminDashboard from '@/pages/admin/AdminDashboard';
+import AdminSlides from '@/pages/admin/AdminSlides';
+import AdminEvents from '@/pages/admin/AdminEvents';
+import AdminPartners from '@/pages/admin/AdminPartners';
+import AdminAbout from '@/pages/admin/AdminAbout';
+import AdminSocialMedia from '@/pages/admin/AdminSocialMedia';
+import AdminUsers from '@/pages/admin/AdminUsers';
+import AdminMaintenance from '@/pages/admin/AdminMaintenance';
+import AdminSubscribers from '@/pages/admin/AdminSubscribers';
+import { Toaster } from '@/components/ui/sonner';
+import { AdminAuthProvider } from '@/contexts/AdminAuthContext';
+import { SiteSettingsProvider } from '@/contexts/SiteSettingsContext';
+import Layout from '@/components/Layout';
+import WhatsAppButton from '@/components/WhatsAppButton';
+import { ThemeProvider } from '@/components/ThemeProvider';
+import { useScrollToTop } from '@/hooks/use-mobile';
 
-const queryClient = new QueryClient();
+function App() {
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Use the scroll to top hook
+  useScrollToTop();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+  useEffect(() => {
+    // Simulate loading time to allow animations, fonts, etc to load
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 400);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-flyboy-purple">
+        <div className="pulse-glow">
+          <img 
+            src="/lovable-uploads/391e10d1-c56a-4816-ad0c-15fd941a3b2f.png" 
+            alt="FLY BOY Logo" 
+            className="w-48 h-48 object-contain animate-bounce" 
+          />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem
+      disableTransitionOnChange
+    >
       <SiteSettingsProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout><Index /></Layout>} />
-            <Route path="/about" element={<Layout><About /></Layout>} />
-            <Route path="/distinguished-partners" element={<Layout><DistinguishedPartners /></Layout>} />
-            <Route path="/all-partners" element={<Layout><AllPartners /></Layout>} />
-            
-            {/* Admin Routes - All wrapped within a single AdminAuthProvider */}
-            <Route element={<AdminAuthProvider />}>
+        <AdminAuthProvider>
+          <Router>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<Layout><Index /></Layout>} />
+              <Route path="/about" element={<Layout><About /></Layout>} />
+              <Route path="/partners" element={<Layout><AllPartners /></Layout>} />
+              <Route path="/partners/distinguished" element={<Layout><DistinguishedPartners /></Layout>} />
+              
+              {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
-                <Route path="maintenance" element={<AdminMaintenance />} />
                 <Route path="slides" element={<AdminSlides />} />
                 <Route path="events" element={<AdminEvents />} />
+                <Route path="subscribers" element={<AdminSubscribers />} />
                 <Route path="partners" element={<AdminPartners />} />
                 <Route path="about" element={<AdminAbout />} />
-                <Route path="users" element={<AdminUsers />} />
                 <Route path="social-media" element={<AdminSocialMedia />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="maintenance" element={<AdminMaintenance />} />
               </Route>
-            </Route>
-            
-            <Route path="*" element={<Layout><NotFound /></Layout>} />
-          </Routes>
-        </BrowserRouter>
+              
+              <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
+              <Route path="*" element={<Layout><NotFound /></Layout>} />
+            </Routes>
+          </Router>
+          <Toaster richColors />
+        </AdminAuthProvider>
       </SiteSettingsProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    </ThemeProvider>
+  );
+}
 
 export default App;

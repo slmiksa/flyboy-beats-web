@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAdminAuth } from "@/contexts/AdminAuthContext";
-import { LayoutDashboard, Home, Users, Image, Calendar, Users2, Info, ArrowRight, LogOut, ChevronRight, ChevronLeft, Construction } from "lucide-react";
+import { LayoutDashboard, Home, Users, Image, Calendar, Users2, Info, ArrowRight, LogOut, ChevronRight, ChevronLeft, Construction, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -145,6 +145,21 @@ const AdminLayout = () => {
                 >
                   <Calendar className={cn("ml-2", isRouteActive("/admin/events") ? "text-flyboy-gold" : "")} size={18} />
                   <span className={cn("md:block block", isRouteActive("/admin/events") ? "text-flyboy-gold" : "")}>{!sidebarCollapsed && "الحفلات"}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  onClick={() => navigate("/admin/subscribers")} 
+                  isActive={isRouteActive("/admin/subscribers")} 
+                  tooltip="المشتركون" 
+                  className={cn(
+                    "hover:bg-flyboy-purple/60", 
+                    isRouteActive("/admin/subscribers") ? "bg-flyboy-purple text-flyboy-gold font-bold shadow-md" : ""
+                  )}
+                >
+                  <Mail className={cn("ml-2", isRouteActive("/admin/subscribers") ? "text-flyboy-gold" : "")} size={18} />
+                  <span className={cn("md:block block", isRouteActive("/admin/subscribers") ? "text-flyboy-gold" : "")}>{!sidebarCollapsed && "المشتركون"}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               

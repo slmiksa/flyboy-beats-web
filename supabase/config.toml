@@ -1,33 +1,57 @@
 
 project_id = "firfwpammvhmgfyjzeii"
 
-[storage.logos]
-public = true
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[realtime]
+enabled = true
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://127.0.0.1"
+
+[inbucket]
+enabled = true
+port = 54324
+
+[auth]
+enabled = true
+site_url = "http://127.0.0.1:5173"
+
+[storage]
+enabled = true
+
+[seed_data]
+enabled = true
+
+[functions]
+port = 9999
+
+[functions.send-notification]
+verify_jwt = true
 
 [auth.email]
+enable_confirmations = false
+double_confirm_changes = false
 enable_signup = true
+site_url = "http://localhost:5173"
 
-[postgres.policies]
-[postgres.policies.social_media.select]
-schema = "public"
-table = "social_media"
-action = "SELECT"
-expression = "true"
+[vector]
+enabled = false
 
-[postgres.policies.social_media.insert]
-schema = "public"
-table = "social_media"
-action = "INSERT"
-expression = "true"
+[auth.external.google]
+enabled = false
 
-[postgres.policies.social_media.update]
-schema = "public"
-table = "social_media" 
-action = "UPDATE"
-expression = "true"
-
-[postgres.policies.social_media.delete]
-schema = "public"
-table = "social_media"
-action = "DELETE"
-expression = "true"
+[secrets]
+RESEND_API_KEY = "re_FkMz9Vg3_6zrxog2hxfLze7Uxc4Sr7C3B"

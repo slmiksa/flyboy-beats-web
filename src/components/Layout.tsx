@@ -4,6 +4,8 @@ import { useLocation } from 'react-router-dom';
 import Footer from './Footer';
 import MaintenancePage from './MaintenancePage';
 import { useSiteSettings } from '@/contexts/SiteSettingsContext';
+import SubscribeButton from './SubscribeButton';
+import WhatsAppButton from './WhatsAppButton';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -32,6 +34,12 @@ const Layout = ({ children, noPadding = false }: LayoutProps) => {
       <main className={`flex-1 ${noPadding ? '' : 'container mx-auto px-4 py-6'}`}>
         {children}
       </main>
+      {!isAdminRoute && (
+        <>
+          <SubscribeButton />
+          <WhatsAppButton />
+        </>
+      )}
       <Footer />
     </div>
   );
