@@ -21,6 +21,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { AdminAuthProvider } from '@/contexts/AdminAuthContext';
 import { SiteSettingsProvider } from '@/contexts/SiteSettingsContext';
 import Layout from '@/components/Layout';
+import SubscribeButton from '@/components/SubscribeButton';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { ThemeProvider } from '@/components/ThemeProvider';
 // We'll use this component to apply the scroll-to-top functionality
@@ -64,12 +65,13 @@ function App() {
           <Router>
             {/* Add ScrollToTop component inside Router */}
             <ScrollToTop />
+            {/* Add these buttons for all non-admin routes */}
             <Routes>
               {/* Public Routes */}
-              <Route path="/" element={<Layout><Index /></Layout>} />
-              <Route path="/about" element={<Layout><About /></Layout>} />
-              <Route path="/partners" element={<Layout><AllPartners /></Layout>} />
-              <Route path="/partners/distinguished" element={<Layout><DistinguishedPartners /></Layout>} />
+              <Route path="/" element={<Layout><Index /><SubscribeButton /><WhatsAppButton /></Layout>} />
+              <Route path="/about" element={<Layout><About /><SubscribeButton /><WhatsAppButton /></Layout>} />
+              <Route path="/partners" element={<Layout><AllPartners /><SubscribeButton /><WhatsAppButton /></Layout>} />
+              <Route path="/partners/distinguished" element={<Layout><DistinguishedPartners /><SubscribeButton /><WhatsAppButton /></Layout>} />
               
               {/* Admin Routes */}
               <Route path="/admin/login" element={<AdminLogin />} />
@@ -86,7 +88,7 @@ function App() {
               </Route>
               
               <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
-              <Route path="*" element={<Layout><NotFound /></Layout>} />
+              <Route path="*" element={<Layout><NotFound /><SubscribeButton /><WhatsAppButton /></Layout>} />
             </Routes>
           </Router>
           <Toaster richColors />
