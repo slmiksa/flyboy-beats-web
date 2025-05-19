@@ -35,7 +35,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
     
-    console.log(`Using Resend API key: ${apiKey.substring(0, 5)}...`);
+    console.log("API key found, initializing Resend client");
     const resend = new Resend(apiKey);
     
     // Parse request body
@@ -86,7 +86,7 @@ const handler = async (req: Request): Promise<Response> => {
       
       try {
         const emailResponse = await resend.emails.send({
-          from: "FLY BOY <info@flyboy.com>", // Should be a verified domain in production
+          from: "FLY BOY <onboarding@resend.dev>", // Using Resend's default domain for now
           bcc: batch,
           subject,
           html,
@@ -138,4 +138,3 @@ const handler = async (req: Request): Promise<Response> => {
 };
 
 serve(handler);
-
