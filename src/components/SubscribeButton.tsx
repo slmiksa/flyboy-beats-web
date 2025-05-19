@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Mail, X, Send, Loader2, Music, Disc } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,11 +6,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
-
 const emailSchema = z.string().email({
   message: 'يرجى إدخال بريد إلكتروني صالح'
 });
-
 const SubscribeButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
@@ -29,7 +26,6 @@ const SubscribeButton = () => {
     }, 10000);
     return () => clearInterval(interval);
   }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -72,21 +68,13 @@ const SubscribeButton = () => {
       setIsSubmitting(false);
     }
   };
-
-  return (
-    <>
+  return <>
       <div className="fixed right-4 bottom-48 z-50 flex flex-col items-center">
-        <button
-          onClick={() => setIsOpen(true)}
-          className="group relative flex flex-col items-center"
-          aria-label="اشترك في الإشعارات"
-        >
+        <button onClick={() => setIsOpen(true)} className="group relative flex flex-col items-center" aria-label="اشترك في الإشعارات">
           {/* DJ Turntable/Disc Design for Subscribe Button */}
           <div className="relative mb-2">
             <div className="bg-black rounded-full h-16 w-16 flex items-center justify-center shadow-lg">
-              <div 
-                className={`bg-flyboy-gold rounded-full h-14 w-14 flex items-center justify-center ${isPulsing ? 'animate-spin' : ''} transition-all duration-300`}
-              >
+              <div className={`bg-flyboy-gold rounded-full h-14 w-14 flex items-center justify-center ${isPulsing ? 'animate-spin' : ''} transition-all duration-300`}>
                 <Mail size={28} className="text-black" />
                 
                 {/* Notification Dot */}
@@ -99,9 +87,7 @@ const SubscribeButton = () => {
           </div>
           
           {/* Button Text */}
-          <div className="bg-flyboy-gold text-black text-xs font-bold py-1 px-3 rounded-full shadow-lg transform transition-transform duration-300 group-hover:scale-110">
-            نابع حفلاتي
-          </div>
+          <div className="bg-flyboy-gold text-black text-xs font-bold py-1 px-3 rounded-full shadow-lg transform transition-transform duration-300 group-hover:scale-110">تابع حفلاتي</div>
           
           {/* Equalizer Effect */}
           <div className="equalizer-container mt-1">
@@ -144,8 +130,6 @@ const SubscribeButton = () => {
           </form>
         </DialogContent>
       </Dialog>
-    </>
-  );
+    </>;
 };
-
 export default SubscribeButton;
