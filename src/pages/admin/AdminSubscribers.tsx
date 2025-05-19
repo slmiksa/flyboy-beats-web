@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -46,7 +47,7 @@ const AdminSubscribers = () => {
         throw error;
       }
       
-      console.log("Subscribers fetched:", data ? data.length : 0);
+      console.log("Subscribers fetched:", data ? data.length : 0, data);
       setSubscribers(data || []);
     } catch (error) {
       console.error("Error fetching subscribers:", error);
@@ -312,6 +313,17 @@ const AdminSubscribers = () => {
           ) : filteredSubscribers.length === 0 ? (
             <div className="text-center py-8">
               <p>لا يوجد مشتركين {searchQuery ? "مطابقين لبحثك" : ""}</p>
+              {subscribers.length === 0 && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="mt-2"
+                  onClick={fetchSubscribers}
+                >
+                  <Loader2 className="mr-2 h-4 w-4" />
+                  إعادة تحميل البيانات
+                </Button>
+              )}
             </div>
           ) : (
             <div className="rounded-md border">
