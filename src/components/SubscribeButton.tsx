@@ -41,7 +41,7 @@ const SubscribeButton = () => {
       
       console.log("Attempting to subscribe email:", email);
       
-      // Save email to database
+      // Save email to database with anonymous access
       const { data, error: dbError } = await supabase
         .from('email_subscribers')
         .insert([{ email }])
