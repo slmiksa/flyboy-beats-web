@@ -88,7 +88,8 @@ const handler = async (req: Request): Promise<Response> => {
       try {
         console.log("About to send email with Resend");
         const emailResponse = await resend.emails.send({
-          from: "FLY BOY <onboarding@resend.dev>", // Using Resend's default domain for now
+          from: "FLY BOY <onboarding@resend.dev>",
+          to: ["noreply@flyboy.com"], // Adding required 'to' field
           bcc: batch,
           subject,
           html,
