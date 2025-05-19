@@ -22,12 +22,11 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     console.log("Received request to send-notification function");
     
-    // Get API key directly from the environment
-    const apiKey = Deno.env.get("RESEND_API_KEY");
-    console.log(`API key exists: ${!!apiKey}`);
+    // Fixed API key - hardcoded from config
+    const apiKey = "re_EwjDpEYx_2CU8Ezj8VRNgwSxRLiXxs8f3";
     
     if (!apiKey) {
-      console.error("RESEND_API_KEY environment variable is not set or is empty");
+      console.error("API key is missing");
       return new Response(
         JSON.stringify({ error: "Email service configuration error - API key missing" }),
         {
@@ -37,7 +36,6 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
     
-    // Initialize Resend with the API key
     console.log("Initializing Resend client with API key");
     const resend = new Resend(apiKey);
     

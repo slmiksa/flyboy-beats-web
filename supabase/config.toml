@@ -52,6 +52,3 @@ enabled = false
 
 [auth.external.google]
 enabled = false
-
-[secrets]
-RESEND_API_KEY = "re_EwjDpEYx_2CU8Ezj8VRNgwSxRLiXxs8f3"
