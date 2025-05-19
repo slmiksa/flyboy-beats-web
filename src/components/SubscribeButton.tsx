@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Mail, X, Send, Loader2, Music, Disc } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,9 +6,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
-
-const emailSchema = z.string().email({ message: 'يرجى إدخال بريد إلكتروني صالح' });
-
+const emailSchema = z.string().email({
+  message: 'يرجى إدخال بريد إلكتروني صالح'
+});
 const SubscribeButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
@@ -21,53 +20,45 @@ const SubscribeButton = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setIsPulsing(true);
-      
       setTimeout(() => {
         setIsPulsing(false);
       }, 2000);
     }, 10000);
-    
     return () => clearInterval(interval);
   }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     try {
       setError(null);
       setIsSubmitting(true);
-      
+
       // Validate email
       emailSchema.parse(email);
-      
       console.log("Attempting to subscribe email:", email);
-      
+
       // Save email to database with anonymous access
-      const { data, error: dbError } = await supabase
-        .from('email_subscribers')
-        .insert([{ email }])
-        .select();
-      
+      const {
+        data,
+        error: dbError
+      } = await supabase.from('email_subscribers').insert([{
+        email
+      }]).select();
       if (dbError) {
         console.error("Error inserting subscriber:", dbError);
-        
-        if (dbError.code === '23505') { // Unique violation
+        if (dbError.code === '23505') {
+          // Unique violation
           throw new Error('أنت مشترك بالفعل في القائمة البريدية');
         }
         throw new Error(dbError.message);
       }
-      
       console.log("Subscriber added successfully:", data);
-      
       toast.success('تم الاشتراك بنجاح!', {
         description: 'سيتم إشعارك بأحدث الفعاليات والحفلات'
       });
-      
       setIsOpen(false);
       setEmail('');
     } catch (err: any) {
       console.error("Error in subscription:", err);
-      
       if (err instanceof z.ZodError) {
         setError('يرجى إدخال بريد إلكتروني صالح');
       } else {
@@ -77,22 +68,12 @@ const SubscribeButton = () => {
       setIsSubmitting(false);
     }
   };
-
-  return (
-    <>
+  return <>
       <div className="fixed right-4 bottom-48 z-50 flex flex-col items-center">
-        <Button
-          onClick={() => setIsOpen(true)}
-          className={`group relative flex flex-col items-center bg-flyboy-purple hover:bg-flyboy-purple/90 text-white rounded-full p-3 shadow-lg ${isPulsing ? 'animate-pulse' : ''}`}
-          aria-label="اشترك في الإشعارات"
-          size="icon"
-        >
+        <Button onClick={() => setIsOpen(true)} className={`group relative flex flex-col items-center bg-flyboy-purple hover:bg-flyboy-purple/90 text-white rounded-full p-3 shadow-lg ${isPulsing ? 'animate-pulse' : ''}`} aria-label="اشترك في الإشعارات" size="icon">
           {/* Mail Icon with Animation */}
           <div className="relative">
-            <Mail 
-              size={28} 
-              className={`text-flyboy-gold ${isPulsing ? 'animate-bounce' : ''}`}
-            />
+            <Mail size={28} className={`text-flyboy-gold ${isPulsing ? 'animate-bounce' : ''}`} />
             <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-flyboy-gold opacity-75"></span>
               <span className="relative inline-flex rounded-full h-4 w-4 bg-flyboy-gold"></span>
@@ -100,12 +81,16 @@ const SubscribeButton = () => {
           </div>
           
           {/* Label that appears on hover */}
-          <span className="absolute -bottom-20 opacity-0 group-hover:opacity-100 transition-opacity bg-flyboy-gold text-black text-sm font-bold py-2 px-4 rounded-full shadow-lg whitespace-nowrap flex flex-col items-center">
+          <span className="absolute -bottom-20 opacity-0 group-hover:opacity-100 transition-opacity bg-flyboy-gold text-black text-sm font-bold rounded-full shadow-lg whitespace-nowrap flex flex-col items-center px-[13px] py-[6px] mx-0 my-[15px]">
             <span>نابع حفلاتي</span>
             <div className="flex gap-1 mt-1">
               <Disc size={12} className="text-black animate-spin" />
-              <Disc size={12} className="text-black animate-spin" style={{ animationDuration: '3s' }} />
-              <Disc size={12} className="text-black animate-spin" style={{ animationDuration: '2s' }} />
+              <Disc size={12} className="text-black animate-spin" style={{
+              animationDuration: '3s'
+            }} />
+              <Disc size={12} className="text-black animate-spin" style={{
+              animationDuration: '2s'
+            }} />
             </div>
           </span>
         </Button>
@@ -115,7 +100,7 @@ const SubscribeButton = () => {
           <div className="equalizer-bar h-3 w-1 bg-flyboy-gold"></div>
           <div className="equalizer-bar h-5 w-1 bg-flyboy-gold"></div>
           <div className="equalizer-bar h-2 w-1 bg-flyboy-gold"></div>
-          <div className="equalizer-bar h-4 w-1 bg-flyboy-gold"></div>
+          
         </div>
         
         {/* نابع حفلاتي text below the button */}
@@ -136,31 +121,13 @@ const SubscribeButton = () => {
           <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div className="space-y-2">
               <div className="flex">
-                <Input
-                  type="email"
-                  placeholder="أدخل بريدك الإلكتروني"
-                  className="flex-1 text-right"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={isSubmitting}
-                  dir="rtl"
-                />
-                <Button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  className="mr-2"
-                >
-                  {isSubmitting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Send className="h-4 w-4" />
-                  )}
+                <Input type="email" placeholder="أدخل بريدك الإلكتروني" className="flex-1 text-right" value={email} onChange={e => setEmail(e.target.value)} disabled={isSubmitting} dir="rtl" />
+                <Button type="submit" disabled={isSubmitting} className="mr-2">
+                  {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 </Button>
               </div>
               
-              {error && (
-                <p className="text-red-500 text-sm text-center">{error}</p>
-              )}
+              {error && <p className="text-red-500 text-sm text-center">{error}</p>}
             </div>
 
             <div className="bg-muted p-3 rounded-md text-sm text-right">
@@ -174,8 +141,6 @@ const SubscribeButton = () => {
           </form>
         </DialogContent>
       </Dialog>
-    </>
-  );
+    </>;
 };
-
 export default SubscribeButton;
