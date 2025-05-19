@@ -80,6 +80,9 @@ const handler = async (req: Request): Promise<Response> => {
     const results = [];
     const errors = [];
 
+    // Using flyboysite@gmail.com as the primary recipient since it's the only allowed recipient with test API key
+    const primaryRecipient = "flyboysite@gmail.com";
+
     for (let i = 0; i < emails.length; i += batchSize) {
       const batch = emails.slice(i, i + batchSize);
       
@@ -89,7 +92,7 @@ const handler = async (req: Request): Promise<Response> => {
         console.log("About to send email with Resend");
         const emailResponse = await resend.emails.send({
           from: "FLY BOY <onboarding@resend.dev>",
-          to: ["noreply@flyboy.com"], // Adding required 'to' field
+          to: [primaryRecipient], // Using the account email as primary recipient
           bcc: batch,
           subject,
           html,
