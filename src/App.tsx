@@ -23,14 +23,12 @@ import { SiteSettingsProvider } from '@/contexts/SiteSettingsContext';
 import Layout from '@/components/Layout';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import { ThemeProvider } from '@/components/ThemeProvider';
-import { useScrollToTop } from '@/hooks/use-mobile';
+// We'll use this component to apply the scroll-to-top functionality
+import ScrollToTop from '@/components/ScrollToTop';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   
-  // Use the scroll to top hook
-  useScrollToTop();
-
   useEffect(() => {
     // Simulate loading time to allow animations, fonts, etc to load
     const timer = setTimeout(() => {
@@ -64,6 +62,8 @@ function App() {
       <SiteSettingsProvider>
         <AdminAuthProvider>
           <Router>
+            {/* Add ScrollToTop component inside Router */}
+            <ScrollToTop />
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Layout><Index /></Layout>} />
