@@ -1,4 +1,6 @@
+
 import * as React from "react"
+import { useLocation } from "react-router-dom"
 
 const MOBILE_BREAKPOINT = 768
 
@@ -16,4 +18,15 @@ export function useIsMobile() {
   }, [])
 
   return !!isMobile
+}
+
+/**
+ * Hook to scroll to top when route changes
+ */
+export function useScrollToTop() {
+  const { pathname } = useLocation()
+  
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 }
