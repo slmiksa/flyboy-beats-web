@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { Mail, X, Send, Loader2 } from 'lucide-react';
+import { Mail, X, Send, Loader2, Music, Disc } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -79,7 +80,7 @@ const SubscribeButton = () => {
 
   return (
     <>
-      <div className="fixed left-4 bottom-28 z-50 flex flex-col items-center">
+      <div className="fixed right-4 bottom-28 z-50 flex flex-col items-center">
         <Button
           onClick={() => setIsOpen(true)}
           className={`group relative flex flex-col items-center bg-flyboy-purple hover:bg-flyboy-purple/90 text-white rounded-full p-3 shadow-lg ${isPulsing ? 'animate-pulse' : ''}`}
@@ -89,26 +90,37 @@ const SubscribeButton = () => {
           {/* Mail Icon with Animation */}
           <div className="relative">
             <Mail 
-              size={24} 
+              size={28} 
               className={`text-flyboy-gold ${isPulsing ? 'animate-bounce' : ''}`}
             />
-            <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center">
+            <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-flyboy-gold opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-flyboy-gold"></span>
+              <span className="relative inline-flex rounded-full h-4 w-4 bg-flyboy-gold"></span>
             </span>
           </div>
           
           {/* Label that appears on hover */}
-          <span className="absolute -bottom-8 opacity-0 group-hover:opacity-100 transition-opacity bg-flyboy-gold text-black text-xs font-bold py-1 px-3 rounded-full shadow-lg whitespace-nowrap">
-            اشترك في الإشعارات
+          <span className="absolute -bottom-20 opacity-0 group-hover:opacity-100 transition-opacity bg-flyboy-gold text-black text-sm font-bold py-2 px-4 rounded-full shadow-lg whitespace-nowrap flex flex-col items-center">
+            <span>نابع حفلاتي</span>
+            <div className="flex gap-1 mt-1">
+              <Disc size={12} className="text-black animate-spin" />
+              <Disc size={12} className="text-black animate-spin" style={{ animationDuration: '3s' }} />
+              <Disc size={12} className="text-black animate-spin" style={{ animationDuration: '2s' }} />
+            </div>
           </span>
         </Button>
         
         {/* Animated equalizer bars */}
         <div className="mt-2 flex space-x-1 rtl:space-x-reverse">
-          <div className="equalizer-bar h-2 w-1 bg-flyboy-gold"></div>
           <div className="equalizer-bar h-3 w-1 bg-flyboy-gold"></div>
-          <div className="equalizer-bar h-1 w-1 bg-flyboy-gold"></div>
+          <div className="equalizer-bar h-5 w-1 bg-flyboy-gold"></div>
+          <div className="equalizer-bar h-2 w-1 bg-flyboy-gold"></div>
+          <div className="equalizer-bar h-4 w-1 bg-flyboy-gold"></div>
+        </div>
+        
+        {/* نابع حفلاتي text below the button */}
+        <div className="mt-3 text-flyboy-gold font-bold text-center text-sm glow-text">
+          نابع حفلاتي
         </div>
       </div>
 

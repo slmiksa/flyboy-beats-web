@@ -8,6 +8,7 @@ import SuccessPartnersBanner from '@/components/SuccessPartnersBanner';
 import DistinguishedPartnersBanner from '@/components/DistinguishedPartnersBanner';
 import SocialMediaBar from '@/components/SocialMediaBar';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import SubscribeButton from '@/components/SubscribeButton';
 import { Music, Disc, Volume2, Headphones, Mic, Radio, Music4, FileMusic } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
