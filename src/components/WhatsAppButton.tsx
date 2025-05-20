@@ -4,10 +4,11 @@ import { PhoneCall } from 'lucide-react';
 
 const WhatsAppButton = () => {
   const [isRotating, setIsRotating] = useState(false);
-  const phoneNumber = '966508520075';
+  const phoneNumber = '966508520075'; // Number is already correct
   
   // Handle the WhatsApp click
   const handleWhatsAppClick = () => {
+    // Make sure the URL format is correct for WhatsApp
     window.open(`https://wa.me/${phoneNumber}`, '_blank');
   };
 
