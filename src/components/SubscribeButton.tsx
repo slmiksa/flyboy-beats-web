@@ -71,7 +71,7 @@ const SubscribeButton = () => {
   return <>
       {/* Moved to middle of right side and made smaller */}
       <div className="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center">
-        <button onClick={() => setIsOpen(true)} aria-label="اشترك في الإشعارات" className="group relative flex flex-col items-center mx-[11px]">
+        <button onClick={() => setIsOpen(true)} aria-label="اشترك في الإشعارات" className="group relative flex flex-col items-center mx-0">
           {/* DJ Turntable/Disc Design for Subscribe Button - Made smaller */}
           <div className="relative mb-2">
             <div className="bg-black rounded-full h-12 w-12 flex items-center justify-center shadow-lg">
