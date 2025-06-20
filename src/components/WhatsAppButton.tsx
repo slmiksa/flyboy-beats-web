@@ -50,9 +50,9 @@ const WhatsAppButton = () => {
           </div>
         </div>
         
-        {/* Button Text - Made smaller */}
+        {/* Button Text - Changed text */}
         <div className="bg-flyboy-gold text-black text-[10px] font-bold py-1 px-2 rounded-full shadow-lg transform transition-transform duration-300 group-hover:scale-110">
-          إدارة أعمالي
+          أسأل عن حفلاتنا
         </div>
         
         {/* Equalizer Effect */}
