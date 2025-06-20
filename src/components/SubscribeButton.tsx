@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Mail, X, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,11 +6,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
-
 const emailSchema = z.string().email({
   message: 'يرجى إدخال بريد إلكتروني صالح'
 });
-
 const SubscribeButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
@@ -29,7 +26,6 @@ const SubscribeButton = () => {
     }, 10000);
     return () => clearInterval(interval);
   }, []);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -72,11 +68,10 @@ const SubscribeButton = () => {
       setIsSubmitting(false);
     }
   };
-
   return <>
       {/* Moved to middle of right side and made smaller */}
       <div className="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center">
-        <button onClick={() => setIsOpen(true)} className="group relative flex flex-col items-center" aria-label="اشترك في الإشعارات">
+        <button onClick={() => setIsOpen(true)} aria-label="اشترك في الإشعارات" className="group relative flex flex-col items-center mx-[11px]">
           {/* DJ Turntable/Disc Design for Subscribe Button - Made smaller */}
           <div className="relative mb-2">
             <div className="bg-black rounded-full h-12 w-12 flex items-center justify-center shadow-lg">
@@ -138,5 +133,4 @@ const SubscribeButton = () => {
       </Dialog>
     </>;
 };
-
 export default SubscribeButton;
