@@ -41,6 +41,9 @@ port = 9999
 [functions.send-notification]
 verify_jwt = false
 
+[functions.admin-login]
+verify_jwt = false
+
 [auth.email]
 enable_confirmations = false
 double_confirm_changes = false

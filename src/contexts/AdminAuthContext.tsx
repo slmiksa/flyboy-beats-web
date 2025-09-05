@@ -18,27 +18,6 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const [authInitialized, setAuthInitialized] = useState(false);
 
-  // Function to fetch admin user data by username
-  const fetchAdminUser = async (username: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('username', username)
-        .single();
-      
-      if (error || !data) {
-        console.error("Error fetching admin user:", error);
-        return null;
-      }
-      
-      return data as AdminUser;
-    } catch (error) {
-      console.error("Fetch admin error:", error);
-      return null;
-    }
-  };
-
   // Simple authentication check - primarily based on localStorage now
   const checkAuth = async () => {
     try {
@@ -46,20 +25,20 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
       
       // Check if we have an admin session in localStorage
       const adminUsername = localStorage.getItem('admin_username');
-      if (adminUsername) {
-        // Set admin username for RLS policies
-        await supabase.rpc('set_config', {
-          setting_name: 'app.admin_username',
-          setting_value: adminUsername,
-          is_local: false
-        });
+      const sessionToken = localStorage.getItem('admin_session_token');
+      
+      if (adminUsername && sessionToken) {
+        // Create a basic admin user object for display purposes
+        const adminData: AdminUser = {
+          id: sessionToken,
+          username: adminUsername,
+          is_super_admin: localStorage.getItem('admin_is_super') === 'true',
+          created_at: new Date().toISOString()
+        };
         
-        const adminData = await fetchAdminUser(adminUsername);
-        if (adminData) {
-          console.log("Admin user authenticated from localStorage:", adminData.username);
-          setAdminUser(adminData);
-          return true;
-        }
+        console.log("Admin user authenticated from localStorage:", adminData.username);
+        setAdminUser(adminData);
+        return true;
       }
       
       return false;
@@ -85,43 +64,34 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
     try {
       console.log("Starting login process for:", username);
       
-      // Set admin username in session for RLS policies
-      await supabase.rpc('set_config', {
-        setting_name: 'app.admin_username',
-        setting_value: username,
-        is_local: false
+      // Create an edge function call to verify credentials securely
+      const { data, error } = await supabase.functions.invoke('admin-login', {
+        body: { username, password }
       });
       
-      // Verify password using database function
-      const { data: isValid, error: verifyError } = await supabase.rpc('verify_admin_password', {
-        input_username: username,
-        input_password: password
-      });
-      
-      if (verifyError) {
-        console.error("Password verification error:", verifyError);
+      if (error) {
+        console.error("Login function error:", error);
         return { success: false, error: "حدث خطأ أثناء تسجيل الدخول" };
       }
       
-      if (!isValid) {
-        return { success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" };
+      if (!data.success) {
+        return { success: false, error: data.error || "اسم المستخدم أو كلمة المرور غير صحيحة" };
       }
       
-      // Fetch user data after successful verification
-      const { data: adminData, error: fetchError } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('username', username)
-        .maybeSingle();
+      // Store authentication data in localStorage
+      localStorage.setItem('admin_username', username);
+      localStorage.setItem('admin_session_token', data.sessionToken);
+      localStorage.setItem('admin_is_super', data.isSuperAdmin.toString());
       
-      if (fetchError || !adminData) {
-        console.error("Error fetching admin data:", fetchError);
-        return { success: false, error: "حدث خطأ أثناء تسجيل الدخول" };
-      }
+      const adminData: AdminUser = {
+        id: data.sessionToken,
+        username: username,
+        is_super_admin: data.isSuperAdmin,
+        created_at: new Date().toISOString()
+      };
       
       console.log("Login successful for user:", username);
       setAdminUser(adminData);
-      localStorage.setItem('admin_username', username);
       return { success: true };
     } catch (error: any) {
       console.error("Login error:", error);
@@ -132,6 +102,8 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
   const logout = async () => {
     console.log("Logging out...");
     localStorage.removeItem('admin_username');
+    localStorage.removeItem('admin_session_token');
+    localStorage.removeItem('admin_is_super');
     setAdminUser(null);
   };
 
