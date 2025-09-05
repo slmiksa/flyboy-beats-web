@@ -47,6 +47,13 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
       // Check if we have an admin session in localStorage
       const adminUsername = localStorage.getItem('admin_username');
       if (adminUsername) {
+        // Set admin username for RLS policies
+        await supabase.rpc('set_config', {
+          setting_name: 'app.admin_username',
+          setting_value: adminUsername,
+          is_local: false
+        });
+        
         const adminData = await fetchAdminUser(adminUsername);
         if (adminData) {
           console.log("Admin user authenticated from localStorage:", adminData.username);
@@ -78,30 +85,44 @@ export const AdminAuthProvider = ({ children }: { children?: ReactNode }) => {
     try {
       console.log("Starting login process for:", username);
       
-      // Check if the user exists first
-      const { data, error } = await supabase
+      // Set admin username in session for RLS policies
+      await supabase.rpc('set_config', {
+        setting_name: 'app.admin_username',
+        setting_value: username,
+        is_local: false
+      });
+      
+      // Verify password using database function
+      const { data: isValid, error: verifyError } = await supabase.rpc('verify_admin_password', {
+        input_username: username,
+        input_password: password
+      });
+      
+      if (verifyError) {
+        console.error("Password verification error:", verifyError);
+        return { success: false, error: "حدث خطأ أثناء تسجيل الدخول" };
+      }
+      
+      if (!isValid) {
+        return { success: false, error: "اسم المستخدم أو كلمة المرور غير صحيحة" };
+      }
+      
+      // Fetch user data after successful verification
+      const { data: adminData, error: fetchError } = await supabase
         .from('admin_users')
         .select('*')
         .eq('username', username)
-        .single();
+        .maybeSingle();
       
-      if (error || !data) {
-        console.error("Admin user not found");
-        return { success: false, error: "اسم المستخدم غير موجود" };
+      if (fetchError || !adminData) {
+        console.error("Error fetching admin data:", fetchError);
+        return { success: false, error: "حدث خطأ أثناء تسجيل الدخول" };
       }
       
-      // Check if the password matches
-      const adminData = data as AdminUser;
-      
-      // Use safe property access with optional chaining
-      if (adminData?.password === password) {
-        console.log("Login successful for user with custom password:", username);
-        setAdminUser(adminData);
-        localStorage.setItem('admin_username', username);
-        return { success: true };
-      } else {
-        return { success: false, error: "كلمة المرور غير صحيحة" };
-      }
+      console.log("Login successful for user:", username);
+      setAdminUser(adminData);
+      localStorage.setItem('admin_username', username);
+      return { success: true };
     } catch (error: any) {
       console.error("Login error:", error);
       return { success: false, error: "حدث خطأ أثناء تسجيل الدخول" };
